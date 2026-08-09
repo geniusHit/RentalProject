@@ -1,0 +1,299 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Poppins, sans-serif;
+}
+
+body {
+    background: #fafaf8;
+}
+
+.how-container {
+    width: 95%;
+    margin: auto;
+    padding: 30px 0 70px;
+}
+
+/* HERO */
+
+.hero {
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: white;
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, .08);
+}
+
+.hero-left {
+
+    padding: 70px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.hero-left h1 {
+
+    font-size: 58px;
+    margin: 15px 0;
+    color: #222;
+}
+
+.hero-left p {
+
+    color: #666;
+    line-height: 32px;
+    font-size: 18px;
+}
+
+.breadcrumb {
+
+    color: #999;
+    font-size: 15px;
+}
+
+.hero-right img {
+
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* SECTION */
+
+.steps-section {
+
+    text-align: center;
+    margin-top: 90px;
+}
+
+.steps-section h2 {
+
+    font-size: 44px;
+    color: #222;
+}
+
+.steps-section>p {
+
+    color: #666;
+    margin-top: 15px;
+}
+
+/* STEPS */
+
+.steps {
+
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    margin-top: 55px;
+}
+
+.step-card {
+
+    background: white;
+    border-radius: 25px;
+    padding: 40px 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
+    position: relative;
+}
+
+.number {
+
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 42px;
+    height: 42px;
+    background: #2f5d34;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+}
+
+.icon {
+
+    width: 90px;
+    height: 90px;
+    background: #eef5ea;
+    border-radius: 50%;
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 36px;
+    color: #2f5d34;
+}
+
+.step-card h3 {
+
+    margin-bottom: 15px;
+}
+
+.step-card p {
+
+    color: #666;
+    line-height: 28px;
+}
+
+/* FEATURES */
+
+.features {
+
+    margin-top: 90px;
+    text-align: center;
+}
+
+.features h2 {
+
+    font-size: 42px;
+}
+
+.feature-grid {
+
+    margin-top: 55px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 25px;
+}
+
+.feature {
+
+    background: white;
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, .08);
+}
+
+.feature-icon {
+
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    background: #eef5ea;
+    color: #2f5d34;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    font-size: 30px;
+}
+
+.feature h4 {
+
+    margin-top: 20px;
+    font-weight: 500;
+}
+
+/* CTA */
+
+.cta {
+
+    margin-top: 90px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: white;
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, .08);
+}
+
+.cta-left {
+
+    padding: 70px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.cta-left h2 {
+
+    font-size: 46px;
+    line-height: 60px;
+}
+
+.cta-left p {
+
+    color: #666;
+    margin: 20px 0 35px;
+    line-height: 30px;
+}
+
+.cta-left button {
+
+    width: 220px;
+    height: 55px;
+    border: none;
+    border-radius: 10px;
+    background: #2f5d34;
+    color: white;
+    font-size: 17px;
+    cursor: pointer;
+}
+
+.cta-right img {
+
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:992px) {
+
+    .hero,
+    .cta {
+        grid-template-columns: 1fr;
+    }
+
+    .steps {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .feature-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .hero-left {
+        padding: 45px;
+    }
+
+    .cta-left {
+        padding: 45px;
+    }
+
+}
+
+@media(max-width:700px) {
+
+    .steps {
+        grid-template-columns: 1fr;
+    }
+
+    .feature-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-left h1 {
+        font-size: 42px;
+    }
+
+    .steps-section h2,
+    .features h2 {
+        font-size: 32px;
+    }
+
+    .cta-left h2 {
+        font-size: 34px;
+        line-height: 45px;
+    }
+
+}

@@ -1,0 +1,45 @@
+.products {
+    display: flex;
+    padding: 0px 100px;
+    gap: 40px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.product {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    border-radius: 10px;
+    border: 1px solid beige;
+    overflow: hidden;
+}
+
+.img {
+    width: 200px;
+    height: 150px;
+    background-position: center;
+    background-size: cover;
+}
+
+.prodName {
+    font-weight: bold;
+}
+
+.rentNowButton {
+    width: 100%;
+    background-color: #4d7c44;
+    color: white;
+    border: none;
+    padding: 7px;
+    border-radius: 4px;
+    font-size: 11pt;
+}
+
+.details {
+    padding: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
