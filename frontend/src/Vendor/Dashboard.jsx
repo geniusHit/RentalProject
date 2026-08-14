@@ -42,7 +42,7 @@ const VendorDashboard = () => {
             console.log("img = ", img)
             formData.append("image", img)
         }
-        const saveImages = await fetch("http://localhost:5000/save-product-images", {
+        const saveImages = await fetch("http://localhost:8000/save-product-images", {
             method: "POST",
             body: formData,
         })
@@ -54,7 +54,7 @@ const VendorDashboard = () => {
         console.log("images = ", images)
         let data2 = { ...data, imageNames: saveImagesName }
         console.log("data2 = ", data2)
-        const result = await fetch("http://localhost:5000/add-product", {
+        const result = await fetch("http://localhost:8000/add-product", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

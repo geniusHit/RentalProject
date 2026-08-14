@@ -41,4 +41,6 @@ router.post("/my-rental-items", controller.myRentalItems)
 
 router.get("/check", controller.check)
 
+router.post("/search-products", controller.searchProducts)
+
 module.exports = router

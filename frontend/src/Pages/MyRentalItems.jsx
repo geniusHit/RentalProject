@@ -25,7 +25,7 @@ const MyRentalItems = () => {
     const [products, setProducts] = useState([])
 
     const searchItems = async (req, res) => {
-        const rentalItems = await fetch("http://localhost:5000/my-rental-items", {
+        const rentalItems = await fetch("http://localhost:8000/my-rental-items", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -57,7 +57,7 @@ const MyRentalItems = () => {
                     products.map((prod, index) => {
                         return <div className='product' key={index}>
                             <div className='img' style={{
-                                backgroundImage: `url(http://localhost:5000/uploads/${prod.imageNames[0]})`
+                                backgroundImage: `url(http://localhost:8000/uploads/${prod.imageNames[0]})`
                             }}></div>
                             <div className='details'>
                                 <div className='prodName'>{prod.name}</div>

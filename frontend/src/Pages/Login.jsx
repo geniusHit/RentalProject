@@ -33,7 +33,7 @@ const Login = () => {
     const submit = async (data) => {
         console.log("data = ", data)
 
-        const login = await fetch("http://localhost:5000/login-user", {
+        const login = await fetch("http://localhost:8000/login-user", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

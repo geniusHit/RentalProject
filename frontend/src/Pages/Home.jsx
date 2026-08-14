@@ -38,7 +38,7 @@ const Home = () => {
     }, []);
 
     const getProducts = async () => {
-        const response = await fetch("http://localhost:5000/get-products")
+        const response = await fetch("http://localhost:8000/get-products")
         const result = await response.json()
         console.log("result = ", result)
         setProducts(result)
@@ -140,7 +140,7 @@ const Home = () => {
 
             <Footer />
 
-            {/* {products.length > 0 && <img src={`http://localhost:5000/uploads/${(products[products.length-1]).imageNames[0]}`} />} */}
+            {/* {products.length > 0 && <img src={`http://localhost:8000/uploads/${(products[products.length-1]).imageNames[0]}`} />} */}
         </div>
     )
 }

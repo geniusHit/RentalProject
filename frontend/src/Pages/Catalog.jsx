@@ -7,13 +7,14 @@ import { FaRegUser } from "react-icons/fa";
 import '../Style/Catalog.css'
 import NavBar from '../Components/NavBar';
 import Footer from '../Components/Footer';
+import { useForm } from "react-hook-form"
 
 const Catalog = () => {
     const [products, setProducts] = useState([])
-    const port = process.env.PORT;
+    // const port = process.env.PORT;
 
     const getProducts = async () => {
-        const response = await fetch(`http://localhost:${port}/get-products`)
+        const response = await fetch(`http://localhost:8000/get-products`)
         const result = await response.json()
         setProducts(result)
     }
@@ -38,12 +39,34 @@ const Catalog = () => {
         })
     }
 
+    const { watch, register, handleSubmit } = useForm()
+
+    localStorage.setItem("search", "")
+
+    const search = async (data) => {
+        localStorage.setItem("search", data.search)
+
+        const prods = await fetch("http://localhost:8000/search-products", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({search: data.search})
+        })
+        const result = await prods.json()
+        console.log("prods = ", result)
+
+        setProducts(result)
+    }
+
     return (
         <div>
             <NavBar />
 
-            <form className='search-form'>
-                <input type='text' placeholder='Search furniture and appliances by type, style, or price...' className='search-input' />
+            <form className='search-form' onSubmit={handleSubmit(search)}>
+                <input type='text' placeholder='Search furniture and appliances by type, style, or price...' className='search-input'
+                {...register("search")} />
+                <input type='submit' className='search-btn' />
             </form>
 
             <br /><br />
@@ -53,7 +76,7 @@ const Catalog = () => {
                     products.map((prod, index) => {
                         return <div className='product' key={index}>
                             <div className='img' style={{
-                                backgroundImage: `url(http://localhost:5000/uploads/${prod.imageNames[0]})`
+                                backgroundImage: `url(http://localhost:8000/uploads/${prod.imageNames[0]})`
                             }}></div>
                             <div className='details'>
                                 <div className='prodName'>{prod.name}</div>

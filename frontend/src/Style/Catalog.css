@@ -1,9 +1,8 @@
 .products {
     display: flex;
     padding: 0px 100px;
-    gap: 40px;
+    gap: 80px;
     flex-wrap: wrap;
-    justify-content: space-between;
 }
 
 .product {
@@ -34,6 +33,7 @@
     padding: 7px;
     border-radius: 4px;
     font-size: 11pt;
+    text-align: center;
 }
 
 .details {
@@ -42,4 +42,8 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+}
+
+.search-btn{
+    width: 100px;
 }

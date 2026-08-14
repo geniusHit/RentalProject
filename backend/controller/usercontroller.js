@@ -81,7 +81,7 @@ const productsModel = mongoose.model("product", products)
 exports.addProduct = async (req, res) => {
     console.log("req.body = ", req.body)
     const product = await new productsModel(req.body)
-    const result = await result.save()
+    const result = await product.save()
 
     res.status(200).json({
         success: true
@@ -96,8 +96,8 @@ exports.getProducts = async (req, res) => {
 
 exports.loginUser = async (req, res) => {
     console.log("req.body = ", req.body)
-    const user = await usersModel.find({password: req.body.password, email: req.body.email})
-    
+    const user = await usersModel.find({ password: req.body.password, email: req.body.email })
+
     res.send(user)
 }
 
@@ -187,11 +187,27 @@ exports.addRentalItems = async (req, res) => {
 exports.myRentalItems = async (req, res) => {
     console.log("req.body = ", req.body)
 
-    const items = await rentalItems.find({userName: req.body.name, email: req.body.email})
+    const items = await rentalItems.find({ userName: req.body.name, email: req.body.email })
     res.send(items)
 }
 
 exports.check = async (req, res) => {
-    const items = await usersModel.find({name: {$regex: "Thakur", $options: "i"}})
+    const items = await usersModel.find({ name: { $regex: "Thakur", $options: "i" } })
     res.send(items)
+}
+
+exports.searchProducts = async (req, res) => {
+    const searchKey = req.body.search;
+    // console.log("req.body = ", req.body)
+    const products = await productsModel.find({
+        $or: [
+            { name: { $regex: searchKey, $options: 'i' } },
+            { brand: { $regex: searchKey, $options: 'i' } },
+            { condition: { $regex: searchKey, $options: 'i' } },
+            { description: { $regex: searchKey, $options: 'i' } },
+            { notes: { $regex: searchKey, $options: 'i' } }
+        ]
+    });
+
+    res.send(products)
 }
