@@ -140,9 +140,9 @@ const HowItWorks = () => {
 
                 {/* Features */}
 
-                <section className="features">
+                <section className="features">  
 
-                    <h2>Why Choose FurniRent?</h2>
+                    <h2>Why Choose FurniRent?</h2> <br />
 
                     <div className="feature-grid">
 

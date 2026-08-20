@@ -13,6 +13,7 @@ import {
 } from "react-icons/fa";
 
 import "../Style/VendorDashboardStyle.css";
+import { Link } from "react-router-dom";
 
 const VendorDashboard = () => {
     const [activePage, setActivePage] = React.useState("dashboard");
@@ -20,6 +21,8 @@ const VendorDashboard = () => {
     const { register, handleSubmit } = useForm()
     const [images, setImages] = useState([])
     const [imageUrls, setImageUrls] = useState([])
+    const [rentalProducts, setRentalProducts] = useState([])
+    const [products, setProducts] = useState([])
 
     const browseFiles = (e) => {
         console.log("browseInput.current = ", browseInput.current)
@@ -35,6 +38,7 @@ const VendorDashboard = () => {
 
     console.log("images = ", images)
     console.log("imageUrls = ", imageUrls)
+    console.log("activePage = ", activePage)
 
     const submit = async (data) => {
         let formData = new FormData();
@@ -134,13 +138,32 @@ const VendorDashboard = () => {
         },
     ];
 
+    const getRentalProducts = async () => {
+        const rp = await fetch("http://localhost:8000/all-rentals")
+        const result = await rp.json()
+        setRentalProducts(result)
+    }
+
+    const getProducts = async () => {
+        const response = await fetch(`http://localhost:8000/get-products`)
+        const result = await response.json()
+        setProducts(result)
+    }
+
+    useEffect(() => {
+        getRentalProducts()
+        getProducts()
+    }, [])
+
+    console.log("products = ", products)
+
     return (
         <div className="vendor-dashboard">
 
             {/* Sidebar */}
 
             <aside className="sidebar">
-                <h2 className="logo">FurniRent</h2>
+                <Link to="/" className="logoLink"> <h2 className="logo">FurniRent</h2> </Link>
 
                 <ul>
                     <li
@@ -150,8 +173,7 @@ const VendorDashboard = () => {
                         Dashboard
                     </li>
 
-                    <li>Inventory</li>
-                    <li>Manage Inventory</li>
+                    <li onClick={() => setActivePage("manageInventory")}>Manage Inventory</li>
 
                     <li
                         className={activePage === "addProduct" ? "active" : ""}
@@ -160,14 +182,9 @@ const VendorDashboard = () => {
                         Add Product
                     </li>
 
-                    <li>Rentals</li>
-                    <li>Orders</li>
-                    <li>Deliveries</li>
-                    <li>Pickups</li>
-                    <li>Maintenance</li>
-                    <li>Reports</li>
-                    <li>Reviews</li>
-                    <li>Settings</li>
+                    <li onClick={() => setActivePage("rentals")}>Rentals</li>
+                    <li onClick={() => setActivePage("deliveries")}>Deliveries</li>
+                    <li onClick={() => setActivePage("reviews")}>Reviews</li>
                 </ul>
             </aside>
 
@@ -182,13 +199,9 @@ const VendorDashboard = () => {
 
                         <div className="topbar">
                             <div>
-                                <h1>Welcome Back Vendor 👋</h1>
+                                <h2>Welcome Back Vendor</h2>
                                 <p>Here's what's happening today.</p>
                             </div>
-
-                            <button className="add-btn">
-                                <FaPlus /> Add Product
-                            </button>
                         </div>
 
                         {/* Stats */}
@@ -198,7 +211,7 @@ const VendorDashboard = () => {
                             <div className="stat-card">
                                 <FaCouch className="stat-icon" />
                                 <h3>Total Rentals</h3>
-                                <h2>128</h2>
+                                <h2>{rentalProducts.length}</h2>
                             </div>
 
                             <div className="stat-card">
@@ -212,13 +225,6 @@ const VendorDashboard = () => {
                                 <h3>Upcoming Deliveries</h3>
                                 <h2>12</h2>
                             </div>
-
-                            <div className="stat-card">
-                                <FaTools className="stat-icon" />
-                                <h3>Maintenance Requests</h3>
-                                <h2>5</h2>
-                            </div>
-
                         </div>
 
                         {/* Rentals Table */}
@@ -367,7 +373,7 @@ const VendorDashboard = () => {
                         </div>
                     </>
 
-                ) : (
+                ) : activePage === "addProduct" ? (
 
                     <form onSubmit={handleSubmit(submit)} method="POST" encType="multipart/form-data">
                         <div className="add-product-page">
@@ -531,7 +537,6 @@ const VendorDashboard = () => {
                                             {...register("stockKeepingUnit")}
                                         />
                                     </div>
-
                                 </div>
                             </div>
 
@@ -594,6 +599,76 @@ const VendorDashboard = () => {
 
                         </div>
                     </form>
+                ) : activePage === "manageInventory" ? (
+                    <div>
+                        <h2>Manage Inventory</h2>
+
+                        <div className="card">
+                            <div className="card-header">
+                                <h2>Products</h2>
+                            </div>
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Brand</th>
+                                        <th>Condition</th>
+                                        <th>Material</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Return Policy</th>
+                                        <th>Assembly Required</th>
+                                        <th>Delivery Charge</th>
+                                        <th>Description</th>
+                                        <th>Security Deposit</th>
+                                        <th>Stock Keeping Unit</th>
+                                        <th>Notes</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {products.map((item) => (
+                                        <tr key={item.id}>
+                                            <td>{item.name}</td>
+
+                                            <td>{item.brand}</td>
+
+                                            <td>{item.condition}</td>
+
+                                            <td>{item.material}</td>
+
+                                            <td>{item.price}</td>
+
+                                            <td>{item.quantity}</td>
+
+                                            <td>{item.returnPolicy}</td>
+
+                                            <td>{item.assemblyRequired}</td>
+
+                                            <td>{item.deliveryCharge}</td>
+
+                                            <td>{item.description}</td>
+
+                                            <td>{item.securityDeposit}</td>
+
+                                            <td>{item.stockKeepingUnit}</td>
+
+                                            <td>{item.notes}</td>
+
+                                            <td><FaEye /></td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                ) : activePage === "rentals" ? (
+                    <div>Rentals</div>
+                ) : activePage === "deliveries" ? (
+                    <div>Deliveries</div>
+                ) : activePage === "reviews" && (
+                    <div>Reviews</div>
                 )}
             </main>
         </div>

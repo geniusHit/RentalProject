@@ -4,6 +4,7 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "formidable": "^3.5.4",
+    "jsonwebtoken": "^9.0.3",
     "mongodb": "^7.5.0",
     "mongodb-atlas-cli": "^0.0.1-security",
     "mongoose": "^9.6.3",

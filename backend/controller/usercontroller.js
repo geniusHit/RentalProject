@@ -3,6 +3,8 @@ const formidable = require("formidable")
 const fs = require("fs")
 const path = require("path");
 const { type } = require("os");
+const jwt = require("jsonwebtoken")
+const SECRET = "rohit79"
 
 const users = mongoose.Schema({
     name: {
@@ -21,6 +23,7 @@ const users = mongoose.Schema({
 const usersModel = mongoose.model("users", users)
 exports.addUser = async (req, res) => {
     console.log("req.body from addUser = ", req.body)
+
     const user = await new usersModel(req.body)
     const result = await user.save();
 
@@ -95,10 +98,15 @@ exports.getProducts = async (req, res) => {
 }
 
 exports.loginUser = async (req, res) => {
-    console.log("req.body = ", req.body)
-    const user = await usersModel.find({ password: req.body.password, email: req.body.email })
+    console.log("req.body from loginUser = ", req.body)
+    const user = await usersModel.findOne({ password: req.body.password, email: req.body.email })
+    console.log("user from loginUser : ", user)
+    const token = jwt.sign({name: user.name, email: user.email, phone: user.phone, password: user.password}, SECRET, {expiresIn: "1h"})
+    console.log("JWT Token : ", token)
+    const decodedToken = jwt.verify(token, SECRET)
+    console.log("decodedToken = ", decodedToken)
 
-    res.send(user)
+    res.send({ ...user, jwtToken: token })
 }
 
 const rentalItemsSchema = mongoose.Schema({
@@ -173,27 +181,42 @@ const rentalItemsSchema = mongoose.Schema({
     notes: {
         type: String
     },
+
+    rentDays: {
+        type: Number
+    },
 })
 const rentalItems = mongoose.model("rentalItems", rentalItemsSchema)
 exports.addRentalItems = async (req, res) => {
     console.log("req.body = ", req.body)
 
-    const item = await new rentalItems(req.body)
+    const { email, name, userName } = req.body;
+    const existingProduct = await rentalItems.findOne({email: email, userName: userName, name: name});
+    console.log("existingProduct = ", existingProduct)
+    if(existingProduct)
+    {
+        res.send({message: "Product is already in Rental Items!"});
+        return;
+    }
+
+    let expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate()+1);
+    console.log("expiryDate = ", expiryDate)
+    const data = req.body;
+    const item = new rentalItems({...data, expireAt: expiryDate})
     const result = await item.save()
 
-    res.send(result)
+    res.send({message: "Product added to Rental Items"})
 }
 
 exports.myRentalItems = async (req, res) => {
-    console.log("req.body = ", req.body)
-
     const items = await rentalItems.find({ userName: req.body.name, email: req.body.email })
     res.send(items)
 }
 
-exports.check = async (req, res) => {
-    const items = await usersModel.find({ name: { $regex: "Thakur", $options: "i" } })
-    res.send(items)
+exports.allRentals = async (req, res) => {
+    const allR = await rentalItems.find({})
+    res.send(allR)
 }
 
 exports.searchProducts = async (req, res) => {
@@ -201,11 +224,11 @@ exports.searchProducts = async (req, res) => {
     // console.log("req.body = ", req.body)
     const products = await productsModel.find({
         $or: [
-            { name: { $regex: searchKey, $options: 'i' } },
-            { brand: { $regex: searchKey, $options: 'i' } },
-            { condition: { $regex: searchKey, $options: 'i' } },
-            { description: { $regex: searchKey, $options: 'i' } },
-            { notes: { $regex: searchKey, $options: 'i' } }
+            { name: { $regex: `${searchKey}`, $options: 'i' } },
+            { brand: { $regex: `${searchKey}`, $options: 'i' } },
+            { condition: { $regex: `${searchKey}`, $options: 'i' } },
+            { description: { $regex: `${searchKey}`, $options: 'i' } },
+            { notes: { $regex: `${searchKey}`, $options: 'i' } }
         ]
     });
 

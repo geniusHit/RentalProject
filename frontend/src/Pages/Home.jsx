@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { NavLink, Link } from 'react-router-dom'
+import { NavLink, Link, useNavigate } from 'react-router-dom'
 import Logo from '../assets/Logo.png'
 import person from '../assets/person.svg'
 import cimg1 from '../assets/How_to_Choose_the_Right_Furniture_for_Your_Home.webp'
@@ -19,6 +19,7 @@ import Footer from '../Components/Footer.jsx'
 
 const Home = () => {
     const [products, setProducts] = useState([])
+    const navigate = useNavigate()
 
     useEffect(() => {
         const element = document.getElementById('carouselExampleIndicators');
@@ -57,6 +58,11 @@ const Home = () => {
         console.log("check result = ", result)
     }
 
+    const searchProducts = (searchKey)=>{
+        console.log("searchKey = ", searchKey)
+        localStorage.setItem("search", searchKey)
+        navigate("/catalog")
+    }
 
     return (
         <div>
@@ -109,27 +115,27 @@ const Home = () => {
                 </button>
             </div>
 
-            <form className='search-form'>
+            {/* <form className='search-form'>
                 <input type='text' placeholder='Search furniture and appliances by type, style, or price...' className='search-input' />
-            </form>
+            </form> */}
 
             <div className='categories'>
                 <h4>Featured Categories</h4>
 
                 <div className='category-options'>
-                    <div className='category-option'>
+                    <div className='category-option' onClick={()=> searchProducts("Living Room")}>
                         <div className='img' style={{ backgroundImage: `url(${livingRoom})` }}></div>
                         <div className='title'>Living Room</div>
                     </div>
-                    <div className='category-option'>
+                    <div className='category-option' onClick={()=> searchProducts("Bedroom")}>
                         <div className='img' style={{ backgroundImage: `url(${bedroom})` }}></div>
                         <div className='title'>Bedroom</div>
                     </div>
-                    <div className='category-option'>
+                    <div className='category-option' onClick={()=> searchProducts("Office")}>
                         <div className='img' style={{ backgroundImage: `url(${office})` }}></div>
                         <div className='title'>Office</div>
                     </div>
-                    <div className='category-option'>
+                    <div className='category-option' onClick={()=> searchProducts("Outdoor")}>
                         <div className='img' style={{ backgroundImage: `url(${outdoor})` }}></div>
                         <div className='title'>Outdoor</div>
                     </div>

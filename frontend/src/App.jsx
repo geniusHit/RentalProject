@@ -12,6 +12,7 @@ import {toggleLogin} from './globalStates'
 import MyRentalItems from './Pages/MyRentalItems'
 import HowItWorks from './Pages/HowItWorks'
 import Contact from './Pages/Contact'
+import MyProfile from './Pages/MyProfile'
 
 const App = () => {
   const globalStates = useSelector((state) => state.global.value);
@@ -30,6 +31,7 @@ const App = () => {
         <Route path='/my-rental-items' element={<MyRentalItems />} />
         <Route path='/how-it-works' element={<HowItWorks />} />
         <Route path='/contact' element={<Contact />} />
+        <Route path='/myprofile' element={<MyProfile />} />
       </Routes>
       {/* <button onClick={()=>{dispatch(toggleLogin()); console.log("globalStates = ", globalStates)}}>Toggle Login</button> */}
     </BrowserRouter>

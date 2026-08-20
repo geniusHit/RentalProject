@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 import "../Style/LoginStyle.css";
 import Logo from '../assets/Logo.png'
+import { Link } from "react-router-dom"
 import livingRoom from '../assets/ChatGPT Image Jun 11, 2026, 05_03_13 PM.png'
 import { toggleLogin } from "../globalStates";
 import { useSelector, useDispatch } from "react-redux";
@@ -43,9 +44,11 @@ const Login = () => {
 
         const result = await login.json()
         console.log("result = ", result)
-        result.length > 0 && (setIsLogin(true), localStorage.setItem("isLogin", true), localStorage.setItem("name", result[0].name), localStorage.setItem("email", result[0].email), localStorage.setItem("password", result.password), navigate("/"))
-        // localStorage.setItem("isLogin", isLogin)
-        // dispatch(toggleLogin())
+        // result.length > 0 && (setIsLogin(true), localStorage.setItem("isLogin", true), localStorage.setItem("name", result[0].name), localStorage.setItem("email", result[0].email), localStorage.setItem("password", result.password), navigate("/"))
+        setIsLogin(true);
+        localStorage.setItem("isLogin", true);
+        localStorage.setItem("jwtToken", result.jwtToken);
+        // navigate("/");
     }
 
     console.log("isLogin = ", isLogin)
@@ -67,13 +70,11 @@ const Login = () => {
                         className="login-left"
                     >
                         <div className="overlay-content">
-                            <div className="logo">
-                                {/* <h1>
-                Furni<span>Rent</span>
-              </h1>
-              <p>Live Better. Rent Smarter.</p> */}
-                                <img src={Logo} width="200" />
-                            </div>
+                            <Link to="/">
+                                <div className="logo">
+                                    <img src={Logo} width="200" />
+                                </div>
+                            </Link>
 
                             <div className="welcome-text">
                                 <h2>Welcome Back!</h2>
@@ -97,9 +98,7 @@ const Login = () => {
                             <form onSubmit={handleSubmit(submit)}>
 
                                 <div className="input-group">
-                                    <label>Email Address</label>
                                     <div className="input-box">
-                                        <FaEnvelope />
                                         <input
                                             type="email"
                                             placeholder="Enter your email"
@@ -109,9 +108,7 @@ const Login = () => {
                                 </div>
 
                                 <div className="input-group">
-                                    <label>Password</label>
                                     <div className="input-box">
-                                        <FaLock />
                                         <input
                                             type="password"
                                             placeholder="Enter your password"
@@ -133,26 +130,10 @@ const Login = () => {
                                     Login <FaArrowRight />
                                 </button>
 
-                                <div className="divider">
-                                    <span>OR</span>
-                                </div>
-
-                                <button type="button" className="social-btn">
-                                    <FaGoogle />
-                                    Continue with Google
-                                </button>
-
-                                <button type="button" className="social-btn">
-                                    <FaApple />
-                                    Continue with Apple
-                                </button>
-
                                 <p className="signup-text">
-                                    Don't have an account? <a href="/signup">Sign Up</a>
+                                    Don't have an account? <Link to="/signup">Sign Up</Link>
                                 </p>
-
                             </form>
-
                         </div>
                     </div>
                 </div>
@@ -188,7 +169,7 @@ const Login = () => {
 
             {/* Footer */}
             <Footer />
-            
+
             <div className="copyright">
                 © 2024 FurniRent. All rights reserved.
             </div>

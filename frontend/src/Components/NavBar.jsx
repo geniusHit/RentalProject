@@ -5,6 +5,15 @@ import { FaRegUser } from "react-icons/fa";
 import Logo from '../assets/Logo.png'
 
 const NavBar = () => {
+    const logout = ()=> {
+        localStorage.setItem("email", "")
+        localStorage.setItem("isLogin", "false")
+        localStorage.setItem("login-user", "")
+        localStorage.setItem("name", "")
+        localStorage.setItem("password", "")
+        localStorage.setItem("search", "")
+    }
+
     return (
         <div>
             <nav className="navbar navbar-expand-lg">
@@ -24,7 +33,7 @@ const NavBar = () => {
                                     <NavLink to="/" className="nav-link active">Home</NavLink>
                                 </li>
                                 <li className="nav-item">
-                                    <NavLink className="nav-link" to="/catalog">Catalog</NavLink>
+                                    <NavLink className="nav-link" to="/catalog" onClick={() => localStorage.setItem("search", "")}>Catalog</NavLink>
                                 </li>
                                 <li className="nav-item">
                                     <NavLink className="nav-link" to="/how-it-works">How It Works</NavLink>
@@ -36,7 +45,7 @@ const NavBar = () => {
                         </span>
 
                         <NavDropdown title={<FaRegUser />}>
-                            <NavDropdown.Item as={Link} to="">
+                            <NavDropdown.Item as={Link} to="/myprofile">
                                 My Profile
                             </NavDropdown.Item>
 
@@ -54,7 +63,7 @@ const NavBar = () => {
                                 Vendor Dashboard
                             </NavDropdown.Item>
 
-                            <NavDropdown.Item as={Link} to="">
+                            <NavDropdown.Item as={Link} to="/" onClick={logout}>
                                 Logout
                             </NavDropdown.Item>
                         </NavDropdown>
