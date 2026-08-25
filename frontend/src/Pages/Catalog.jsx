@@ -33,16 +33,10 @@ const Catalog = () => {
     console.log("products = ", products)
 
     const token = jwtDecode(localStorage.getItem("jwtToken"));
-    console.log("token : ", token)
 
     const rentNow = async (product) => {
         console.log("product = ", product)
 
-        // if(loca)
-        console.log(`localStorage.getItem("isLogin") = `, localStorage.getItem("isLogin"))
-
-        const email = localStorage.getItem("email")
-        const userName = localStorage.getItem("name")
         const isLogin = JSON.parse((localStorage.getItem("isLogin")).toLowerCase())
 
         if (isLogin === true) {
@@ -58,6 +52,14 @@ const Catalog = () => {
             console.log("result = ", result)
             setItemMessage(result.message)
             setShowMessage((prevValue) => !prevValue)
+
+            const payment = await fetch(`http://localhost:8000/create-test-payment-link`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ ...product, email: token.email, userName: token.name })
+            })
         }
         else {
             navigate("/signup")
@@ -65,8 +67,6 @@ const Catalog = () => {
     }
 
     const { watch, register, handleSubmit } = useForm()
-
-    // localStorage.setItem("search", "")
 
     const searchProds = async (data) => {
         if (data !== undefined) {

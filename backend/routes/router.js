@@ -43,4 +43,8 @@ router.post("/search-products", controller.searchProducts)
 
 router.get("/all-rentals", controller.allRentals)
 
+router.post("/deliver-item", controller.deliverItem)
+
+router.post("/create-test-payment-link", controller.createTestPaymentLink)
+
 module.exports = router

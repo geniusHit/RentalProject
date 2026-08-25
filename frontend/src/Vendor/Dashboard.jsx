@@ -23,11 +23,9 @@ const VendorDashboard = () => {
     const [imageUrls, setImageUrls] = useState([])
     const [rentalProducts, setRentalProducts] = useState([])
     const [products, setProducts] = useState([])
+    const [allRentals, setAllRentals] = useState([])
 
     const browseFiles = (e) => {
-        console.log("browseInput.current = ", browseInput.current)
-        console.log("browseInput.current.files = ", browseInput.current.files)
-        console.log("e.target = ", e.target)
         let images2 = browseInput.current.files
         for (let image of images2) {
             setImages(prevImages => [...prevImages, image["name"]])
@@ -35,10 +33,6 @@ const VendorDashboard = () => {
             setImageUrls(prevImgUrls => [...prevImgUrls, imgUrl])
         }
     }
-
-    console.log("images = ", images)
-    console.log("imageUrls = ", imageUrls)
-    console.log("activePage = ", activePage)
 
     const submit = async (data) => {
         let formData = new FormData();
@@ -51,13 +45,8 @@ const VendorDashboard = () => {
             body: formData,
         })
         const saveImagesName = await saveImages.json()
-        console.log("saveImages response = ", saveImagesName)
 
-
-        console.log("data = ", data)
-        console.log("images = ", images)
         let data2 = { ...data, imageNames: saveImagesName }
-        console.log("data2 = ", data2)
         const result = await fetch("http://localhost:8000/add-product", {
             method: "POST",
             headers: {
@@ -150,12 +139,29 @@ const VendorDashboard = () => {
         setProducts(result)
     }
 
+    const getAllRentals = async () => {
+        const response = await fetch("http://localhost:8000/all-rentals")
+        const result = await response.json()
+        setAllRentals(result)
+    }
+
     useEffect(() => {
         getRentalProducts()
         getProducts()
+        getAllRentals()
     }, [])
 
-    console.log("products = ", products)
+    const deliverItem = async (item) => {
+        console.log("item delivered")
+
+        const response = await fetch("http://localhost:8000/deliver-item", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(item)
+        })
+    }
 
     return (
         <div className="vendor-dashboard">
@@ -193,7 +199,6 @@ const VendorDashboard = () => {
             <main className="dashboard-content">
 
                 {activePage === "dashboard" ? (
-
                     <>
                         {/* Header */}
 
@@ -605,7 +610,7 @@ const VendorDashboard = () => {
 
                         <div className="card">
                             <div className="card-header">
-                                <h2>Products</h2>
+                                <h3>Products</h3>
                             </div>
 
                             <table>
@@ -624,12 +629,14 @@ const VendorDashboard = () => {
                                         <th>Security Deposit</th>
                                         <th>Stock Keeping Unit</th>
                                         <th>Notes</th>
+                                        <th>View</th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
                                     {products.map((item) => (
-                                        <tr key={item.id}>
+                                        <tr key={item._id}>
+
                                             <td>{item.name}</td>
 
                                             <td>{item.brand}</td>
@@ -664,7 +671,82 @@ const VendorDashboard = () => {
                         </div>
                     </div>
                 ) : activePage === "rentals" ? (
-                    <div>Rentals</div>
+                    <div>
+                        <h2>Rentals</h2>
+
+                        <div className="card">
+                            <div className="card-header">
+                                <h3>Products</h3>
+                            </div>
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Brand</th>
+                                        <th>Condition</th>
+                                        <th>Material</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Return Policy</th>
+                                        <th>Assembly Required</th>
+                                        <th>Delivery Charge</th>
+                                        <th>Description</th>
+                                        <th>Security Deposit</th>
+                                        <th>Stock Keeping Unit</th>
+                                        <th>Notes</th>
+                                        <th>Rent Days</th>
+                                        <th>User Name</th>
+                                        <th>Action</th>
+                                        <th>View</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {allRentals.map((item) => (
+                                        <tr key={item._id}>
+
+                                            <td>{item.name}</td>
+
+                                            <td>{item.brand}</td>
+
+                                            <td>{item.condition}</td>
+
+                                            <td>{item.material}</td>
+
+                                            <td>{item.price}</td>
+
+                                            <td>{item.quantity}</td>
+
+                                            <td>{item.returnPolicy}</td>
+
+                                            <td>{item.assemblyRequired}</td>
+
+                                            <td>{item.deliveryCharge}</td>
+
+                                            <td>{item.description}</td>
+
+                                            <td>{item.securityDeposit}</td>
+
+                                            <td>{item.stockKeepingUnit}</td>
+
+                                            <td>{item.notes}</td>
+
+                                            <td>{item.rentDays}</td>
+
+                                            <td>{item.user.name}</td>
+
+                                            <td>
+                                                <button className="deliverBtn" onClick={()=> deliverItem(item)}>Deliver Item</button>
+                                            </td>
+
+                                            <td><FaEye /></td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 ) : activePage === "deliveries" ? (
                     <div>Deliveries</div>
                 ) : activePage === "reviews" && (

@@ -24,8 +24,6 @@ const Signup = () => {
     const { watch, register, handleSubmit } = useForm()
     const port = import.meta.env.PORT;
     const submit = async (data) => {
-        console.log("data = ", data)
-
         const addUser = await fetch(`http://localhost:8000/add-user`, {
             method: "POST",
             headers: {
@@ -38,11 +36,8 @@ const Signup = () => {
     return (
         <>
             <div className="login-page">
-
-                {/* Hero Section */}
                 <div className="login-container" style={{ backgroundImage: `url(${livingRoom})` }}>
 
-                    {/* Left Side */}
                     <div
                         className="login-left"
                     >
@@ -63,7 +58,6 @@ const Signup = () => {
                         </div>
                     </div>
 
-                    {/* Right Side */}
                     <div className="login-box">
                         <div className="login-card">
 
@@ -132,7 +126,6 @@ const Signup = () => {
                     </div>
                 </div>
 
-                {/* Features */}
                 <div className="features">
 
                     <div className="feature">
@@ -161,7 +154,6 @@ const Signup = () => {
                 </div>
             </div>
 
-            {/* Footer */}
             <Footer />
             <div className="copyright">
                 © 2024 FurniRent. All rights reserved.

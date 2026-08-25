@@ -9,6 +9,8 @@
     "mongodb-atlas-cli": "^0.0.1-security",
     "mongoose": "^9.6.3",
     "multer": "^2.2.0",
+    "node-fetch": "^3.3.2",
+    "nodemailer": "^9.0.5",
     "react-scripts": "^5.0.1"
   },
   "devDependencies": {

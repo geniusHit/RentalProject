@@ -1,28 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import Logo from '../assets/Logo.png'
-import { NavLink, Link } from 'react-router-dom'
-import { NavDropdown } from 'react-bootstrap';
-import { FaRegUser } from "react-icons/fa";
-import {
-    FaGoogle,
-    FaApple,
-    FaEnvelope,
-    FaLock,
-    FaArrowRight,
-    FaTruck,
-    FaHeadset,
-    FaShieldAlt,
-    FaFacebookF,
-    FaInstagram,
-    FaYoutube,
-    FaTwitter,
-} from "react-icons/fa";
 import "../Style/MyRentalItems.css"
 import NavBar from '../Components/NavBar';
 import Footer from '../Components/Footer';
+import { jwtDecode } from "jwt-decode";
 
 const MyRentalItems = () => {
     const [products, setProducts] = useState([])
+
+    const token = jwtDecode(localStorage.getItem("jwtToken"));
+
+    console.log("token : ", token)
 
     const searchItems = async (req, res) => {
         const rentalItems = await fetch("http://localhost:8000/my-rental-items", {
@@ -31,8 +18,8 @@ const MyRentalItems = () => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                email: localStorage.getItem("email"),
-                name: localStorage.getItem("name")
+                email: token.email,
+                name: token.name
             })
         })
 

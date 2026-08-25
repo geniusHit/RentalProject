@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { NavLink, Link, useNavigate } from 'react-router-dom'
-import Logo from '../assets/Logo.png'
-import person from '../assets/person.svg'
+import { Link, useNavigate } from 'react-router-dom'
 import cimg1 from '../assets/How_to_Choose_the_Right_Furniture_for_Your_Home.webp'
 import cimg2 from '../assets/smart-home-appliance-integration-kitchen.webp'
 import cimg3 from '../assets/istockphoto-2185177891-612x612.jpg'
@@ -12,8 +10,6 @@ import office from '../assets/ho-m5-1-1740657447-4ba63.avif'
 import outdoor from '../assets/203.webp'
 import working from '../assets/Screenshot 2026-06-08 193814.png'
 import Carousel from 'bootstrap/js/dist/carousel';
-import { NavDropdown } from 'react-bootstrap';
-import { FaRegUser } from "react-icons/fa";
 import NavBar from "../Components/NavBar.jsx"
 import Footer from '../Components/Footer.jsx'
 
@@ -32,34 +28,11 @@ const Home = () => {
                 wrap: true,
             });
         }
-
-        // getProducts()
-
-        check()
     }, []);
-
-    const getProducts = async () => {
-        const response = await fetch("http://localhost:8000/get-products")
-        const result = await response.json()
-        console.log("result = ", result)
-        setProducts(result)
-    }
 
     products.length > 0 && console.log("(products[products.length-1]).imageNames[0] = ", (products[products.length - 1]).imageNames[0])
 
-    console.log("localStorage.getItem('isLogin') = ", localStorage.getItem('isLogin'))
-    console.log("localStorage.getItem(name) = ", localStorage.getItem("name"))
-    console.log("localStorage.getItem(email) = ", localStorage.getItem("email"))
-    // localStorage.removeItem('isLogin')
-
-    const check = async () => {
-        const response = await fetch("http://localhost:8000/check")
-        const result = await response.json()
-        console.log("check result = ", result)
-    }
-
     const searchProducts = (searchKey)=>{
-        console.log("searchKey = ", searchKey)
         localStorage.setItem("search", searchKey)
         navigate("/catalog")
     }
@@ -115,10 +88,6 @@ const Home = () => {
                 </button>
             </div>
 
-            {/* <form className='search-form'>
-                <input type='text' placeholder='Search furniture and appliances by type, style, or price...' className='search-input' />
-            </form> */}
-
             <div className='categories'>
                 <h4>Featured Categories</h4>
 
@@ -145,8 +114,6 @@ const Home = () => {
             <div className='working' style={{ backgroundImage: `url(${working})` }}></div>
 
             <Footer />
-
-            {/* {products.length > 0 && <img src={`http://localhost:8000/uploads/${(products[products.length-1]).imageNames[0]}`} />} */}
         </div>
     )
 }

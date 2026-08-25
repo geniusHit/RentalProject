@@ -1,10 +1,7 @@
 const mongoose = require("mongoose")
-const formidable = require("formidable")
-const fs = require("fs")
-const path = require("path");
-const { type } = require("os");
 const jwt = require("jsonwebtoken")
 const SECRET = "rohit79"
+const nodemailer = require("nodemailer")
 
 const users = mongoose.Schema({
     name: {
@@ -19,14 +16,17 @@ const users = mongoose.Schema({
     password: {
         type: String
     },
+    city: {
+        type: String
+    },
+    address: {
+        type: String
+    }
 })
 const usersModel = mongoose.model("users", users)
 exports.addUser = async (req, res) => {
-    console.log("req.body from addUser = ", req.body)
-
     const user = await new usersModel(req.body)
     const result = await user.save();
-
     res.send(result)
 }
 
@@ -101,7 +101,7 @@ exports.loginUser = async (req, res) => {
     console.log("req.body from loginUser = ", req.body)
     const user = await usersModel.findOne({ password: req.body.password, email: req.body.email })
     console.log("user from loginUser : ", user)
-    const token = jwt.sign({name: user.name, email: user.email, phone: user.phone, password: user.password}, SECRET, {expiresIn: "1h"})
+    const token = jwt.sign({ name: user.name, email: user.email, phone: user.phone, password: user.password, city: user.city, address: user.address }, SECRET, { expiresIn: "1h" })
     console.log("JWT Token : ", token)
     const decodedToken = jwt.verify(token, SECRET)
     console.log("decodedToken = ", decodedToken)
@@ -110,12 +110,11 @@ exports.loginUser = async (req, res) => {
 }
 
 const rentalItemsSchema = mongoose.Schema({
-    userName: {
-        type: String
-    },
-
-    email: {
-        type: String
+    user: {
+        name: { type: String },
+        email: { type: String },
+        city: { type: String },
+        address: { type: String },
     },
 
     name: {
@@ -183,34 +182,45 @@ const rentalItemsSchema = mongoose.Schema({
     },
 
     rentDays: {
-        type: Number
+        type: Number,
+        default: 5,
     },
 })
 const rentalItems = mongoose.model("rentalItems", rentalItemsSchema)
 exports.addRentalItems = async (req, res) => {
-    console.log("req.body = ", req.body)
-
+    console.log("req.body from addRentalItems = ", req.body)
     const { email, name, userName } = req.body;
-    const existingProduct = await rentalItems.findOne({email: email, userName: userName, name: name});
-    console.log("existingProduct = ", existingProduct)
-    if(existingProduct)
-    {
-        res.send({message: "Product is already in Rental Items!"});
+    const user = await usersModel.findOne({ email: email })
+    console.log("user : ", user)
+    const existingProduct = await rentalItems.findOne({ email: email, userName: userName, name: name });
+    if (existingProduct) {
+        res.send({ message: "Product is already in Rental Items!" });
         return;
     }
 
     let expiryDate = new Date();
-    expiryDate.setDate(expiryDate.getDate()+1);
-    console.log("expiryDate = ", expiryDate)
+    expiryDate.setDate(expiryDate.getDate() + 1);
     const data = req.body;
-    const item = new rentalItems({...data, expireAt: expiryDate})
+    const item = new rentalItems({
+        ...data, user: {
+            name: userName,
+            email: email,
+            city: user.city,
+            address: user.address
+        }, expireAt: expiryDate
+    })
+    console.log("rental item : ", item)
     const result = await item.save()
 
-    res.send({message: "Product added to Rental Items"})
+    res.send({ message: "Product added to Rental Items" })
 }
 
 exports.myRentalItems = async (req, res) => {
-    const items = await rentalItems.find({ userName: req.body.name, email: req.body.email })
+    console.log("req.body from myRentalItems : ", req.body)
+    const { name, email } = req.body;
+    const items = await rentalItems.find({ "user.name": name, "user.email": email })
+    console.log("items from myRentalItems : ", items)
+
     res.send(items)
 }
 
@@ -221,7 +231,6 @@ exports.allRentals = async (req, res) => {
 
 exports.searchProducts = async (req, res) => {
     const searchKey = req.body.search;
-    // console.log("req.body = ", req.body)
     const products = await productsModel.find({
         $or: [
             { name: { $regex: `${searchKey}`, $options: 'i' } },
@@ -234,3 +243,105 @@ exports.searchProducts = async (req, res) => {
 
     res.send(products)
 }
+
+exports.deliverItem = async (req, res) => {
+    console.log("req.body from deliverItem : ", req.body)
+    const { name, email, city, address } = req.body.user
+
+    const auth = nodemailer.createTransport({
+        service: "gmail",
+        secure: true,
+        port: 465,
+        auth: {
+            user: "rohitthakur792002@gmail.com",
+            pass: "pnsg ismb vdou ccax"
+        }
+    })
+    const receiver = {
+        from: "rohitthakur792002@gmail.com",
+        to: `${email}`,
+        subject: `Team Rental Items. Item ${req.body.name} has been shipped to your provided address.`,
+        html: `<b>Hello</b> ${name}. Your ordered item ${req.body.name} has been shipped to your provided address ${address}. It will be delived in 5 days.`
+    }
+
+    auth.sendMail(receiver, (error, emailResponse) => {
+        if (error)
+            throw error;
+        console.log("success!")
+        res.end()
+    })
+
+    res.end()
+}
+
+exports.createTestPaymentLink = async (req, res)=>{
+  console.log("req.body from createTestPaymentLink : ", req.body)
+  const url = "https://sandbox.cashfree.com/pg/links";
+  const linkId = `link_${Date.now()}`;
+  const { email, } = req.body;
+  const user = await usersModel.findOne({ email: email })
+
+  const payload = {
+    link_id: linkId,
+    link_amount: Number(req.body.price),
+    link_currency: "INR",
+    link_purpose: "Test payment for project",
+    customer_details: {
+      customer_phone: "9999999999",
+      customer_email: `${user.email}`,
+      customer_name: `${user.name}`
+    },
+    link_notify: {
+      send_sms: false,
+      send_email: false
+    },
+    link_meta: {
+      return_url: `http://localhost:3000/payment-success?link_id=${linkId}`
+    }
+  };
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-version": "2023-08-01",
+      "x-client-id": process.env.CASHFREE_CLIENT_ID,
+      "x-client-secret": process.env.CASHFREE_SECRET_KEY
+    },
+    body: JSON.stringify(payload)
+  });
+
+  const data = await response.json();
+  console.log("Response:", data);
+  console.log("Payment Link URL:", data.link_url);
+  return data.link_url;
+
+  res.send({link_id: linkId})
+}
+
+exports.verifyPaymentLink = async (req, res) => {
+  try {
+    const { link_id } = req.params;
+    const url = `https://sandbox.cashfree.com/pg/links/${link_id}`;
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "x-api-version": "2023-08-01",
+        "x-client-id": process.env.CASHFREE_CLIENT_ID,
+        "x-client-secret": process.env.CASHFREE_SECRET_KEY,
+      },
+    });
+
+    const data = await response.json();
+
+    if (data.link_status === "PAID") {
+      // 1. Update database / order status here
+      return res.status(200).json({ success: true, status: "PAID", data });
+    } else {
+      return res.status(400).json({ success: false, status: data.link_status });
+    }
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};

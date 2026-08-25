@@ -19,17 +19,12 @@ import "../Style/LoginStyle.css";
 import Logo from '../assets/Logo.png'
 import { Link } from "react-router-dom"
 import livingRoom from '../assets/ChatGPT Image Jun 11, 2026, 05_03_13 PM.png'
-import { toggleLogin } from "../globalStates";
-import { useSelector, useDispatch } from "react-redux";
 import Footer from "../Components/Footer";
 
 const Login = () => {
     const { register, handleSubmit } = useForm()
     const [isLogin, setIsLogin] = useState(false)
     const navigate = useNavigate()
-
-    const globalStates = useSelector((state) => state.global.value);
-    const dispatch = useDispatch();
 
     const submit = async (data) => {
         console.log("data = ", data)
@@ -44,15 +39,12 @@ const Login = () => {
 
         const result = await login.json()
         console.log("result = ", result)
-        // result.length > 0 && (setIsLogin(true), localStorage.setItem("isLogin", true), localStorage.setItem("name", result[0].name), localStorage.setItem("email", result[0].email), localStorage.setItem("password", result.password), navigate("/"))
         setIsLogin(true);
         localStorage.setItem("isLogin", true);
         localStorage.setItem("jwtToken", result.jwtToken);
-        // navigate("/");
     }
 
     console.log("isLogin = ", isLogin)
-    console.log("globalStates isLogin = ", globalStates)
     console.log("localStorage.getItem(isLogin) = ", localStorage.getItem("isLogin"))
     console.log("localStorage.getItem(name) = ", localStorage.getItem("name"))
 
