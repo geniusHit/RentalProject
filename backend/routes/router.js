@@ -47,4 +47,6 @@ router.post("/deliver-item", controller.deliverItem)
 
 router.post("/create-test-payment-link", controller.createTestPaymentLink)
 
+router.post("/verify-payment-link", controller.verifyPaymentLink)
+
 module.exports = router

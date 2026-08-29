@@ -1,24 +1,16 @@
-import React, { useState, useEffect } from 'react'
-import { NavLink, Link, useNavigate } from 'react-router-dom';
-import Logo from '../assets/Logo.png'
-import person from '../assets/person.svg'
-import { NavDropdown } from 'react-bootstrap';
-import { FaRegUser } from "react-icons/fa";
+import { useState, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom';
 import '../Style/Catalog.css'
 import NavBar from '../Components/NavBar';
 import Footer from '../Components/Footer';
 import { useForm } from "react-hook-form"
 import { jwtDecode } from "jwt-decode";
 
-
-const SECRET = "rohit79"
-
 const Catalog = () => {
     const [products, setProducts] = useState([])
     const [itemMessage, setItemMessage] = useState("")
     const [showMessage, setShowMessage] = useState(false)
     const navigate = useNavigate()
-    // const port = process.env.PORT;
 
     const getProducts = async () => {
         const response = await fetch(`http://localhost:8000/get-products`)
@@ -30,43 +22,66 @@ const Catalog = () => {
         getProducts()
     }, [])
 
-    console.log("products = ", products)
-
     const token = jwtDecode(localStorage.getItem("jwtToken"));
 
     const rentNow = async (product) => {
-        console.log("product = ", product)
-
-        const isLogin = JSON.parse((localStorage.getItem("isLogin")).toLowerCase())
+        const isLogin = JSON.parse((localStorage.getItem("isLogin")))
 
         if (isLogin === true) {
-            const rentNow = await fetch(`http://localhost:8000/add-rental-item`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ ...product, email: token.email, userName: token.name })
-            })
-
-            const result = await rentNow.json()
-            console.log("result = ", result)
-            setItemMessage(result.message)
-            setShowMessage((prevValue) => !prevValue)
-
             const payment = await fetch(`http://localhost:8000/create-test-payment-link`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ ...product, email: token.email, userName: token.name })
+                body: JSON.stringify({ ...product, email: token?.email, userName: token?.name })
             })
+            const paymentData = await payment.json()
+            localStorage.setItem("payment_id_token", paymentData?.payment_token)
+            window.location.href = paymentData?.link_url
         }
         else {
             navigate("/signup")
         }
     }
 
-    const { watch, register, handleSubmit } = useForm()
+    const paymentVerify = async () => {
+        const paymentData = jwtDecode(localStorage.getItem("payment_id_token"));
+
+        const verifyPayment = await fetch("http://localhost:8000/verify-payment-link", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(paymentData)
+        })
+
+        const paymentStatus2 = await verifyPayment.json()
+
+        if (paymentStatus2?.link_status === "PAID" && localStorage.getItem("payment_id_token")) {
+            addRental();
+            localStorage.removeItem("payment_id_token");
+        };
+    }
+
+    localStorage.getItem("payment_id_token") && paymentVerify()
+
+    const addRental = async () => {
+        const paymentData = jwtDecode(localStorage.getItem("payment_id_token"));
+
+        const rentNow = await fetch(`http://localhost:8000/add-rental-item`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(paymentData)
+        })
+
+        const result = await rentNow.json()
+        setItemMessage(result.message)
+        setShowMessage((prevValue) => !prevValue)
+    }
+
+    const { register, handleSubmit } = useForm()
 
     const searchProds = async (data) => {
         if (data !== undefined) {
@@ -81,19 +96,12 @@ const Catalog = () => {
             body: JSON.stringify({ search: localStorage.getItem("search") })
         })
         const result = await prods.json()
-        console.log("prods = ", result)
-
         setProducts(result)
     }
 
     useEffect(() => {
         searchProds()
     }, [])
-
-    console.log(`localStorage.getItem("search") = `, localStorage.getItem("search"))
-
-    const [rentDayss, setRentDayss] = useState([])
-    console.log("rentDayss : ", rentDayss)
 
     return (
         <div>
@@ -110,8 +118,6 @@ const Catalog = () => {
             <div className='products'>
                 {
                     products.map((prod, index) => {
-                        console.log("prod = ", prod)
-
                         return <div className='product' key={index}>
                             <div className='img' style={{
                                 backgroundImage: `url(http://localhost:8000/uploads/${prod.imageNames[0]})`
@@ -127,12 +133,8 @@ const Catalog = () => {
                                         placeholder="10"
                                         max="365"
                                         min="5"
-                                        onChange={(e)=> {
-                                            // let rentD = rentDayss;
-                                            // rentD[index] = e.target.value;
-                                            // setRentDayss(rentD);
-                                            prod = {...prod, rentDays: e.target.value}
-                                            console.log("prod : ", prod)
+                                        onChange={(e) => {
+                                            prod = { ...prod, rentDays: e.target.value }
                                         }}
                                     />
                                 </div>
@@ -158,17 +160,14 @@ const Catalog = () => {
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setShowMessage(false)}>Close</button>
-                                {/* <button type="button" className="btn btn-primary">Save changes</button> */}
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>  
             }
-
 
             <br />
 
-            {/* Footer */}
             <Footer />
 
             <div className="copyright">

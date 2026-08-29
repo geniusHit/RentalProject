@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 const jwt = require("jsonwebtoken")
-const SECRET = "rohit79"
+const SECRET = process.env.JWT_SECRET
 const nodemailer = require("nodemailer")
 
 const users = mongoose.Schema({
@@ -201,8 +201,26 @@ exports.addRentalItems = async (req, res) => {
     let expiryDate = new Date();
     expiryDate.setDate(expiryDate.getDate() + 1);
     const data = req.body;
+    const data2 = {
+        name: data.name,
+        imageNames: data.imageNames,
+        sku: data.sku,
+        condition: data.condition,
+        brand: data.brand,
+        material: data.material,
+        description: data.description,
+        price: data.price,
+        quantity: data.quantity,
+        securityDeposit: data.securityDeposit,
+        stockKeepingUnit: data.stockKeepingUnit,
+        deliveryCharge: data.deliveryCharge,
+        returnPolicy: data.returnPolicy,
+        assemblyRequired: data.assemblyRequired,
+        notes: data.notes,
+        rentDays: data.rentDays,
+    }
     const item = new rentalItems({
-        ...data, user: {
+        ...data2, user: {
             name: userName,
             email: email,
             city: user.city,
@@ -274,74 +292,81 @@ exports.deliverItem = async (req, res) => {
     res.end()
 }
 
-exports.createTestPaymentLink = async (req, res)=>{
-  console.log("req.body from createTestPaymentLink : ", req.body)
-  const url = "https://sandbox.cashfree.com/pg/links";
-  const linkId = `link_${Date.now()}`;
-  const { email, } = req.body;
-  const user = await usersModel.findOne({ email: email })
+exports.createTestPaymentLink = async (req, res) => {
+    console.log("req.body from createTestPaymentLink : ", req.body)
+    const url = "https://sandbox.cashfree.com/pg/links";
+    const linkId = `link_${Date.now()}`;
+    const { email, } = req.body;
+    const user = await usersModel.findOne({ email: email })
 
-  const payload = {
-    link_id: linkId,
-    link_amount: Number(req.body.price),
-    link_currency: "INR",
-    link_purpose: "Test payment for project",
-    customer_details: {
-      customer_phone: "9999999999",
-      customer_email: `${user.email}`,
-      customer_name: `${user.name}`
-    },
-    link_notify: {
-      send_sms: false,
-      send_email: false
-    },
-    link_meta: {
-      return_url: `http://localhost:3000/payment-success?link_id=${linkId}`
-    }
-  };
-
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-version": "2023-08-01",
-      "x-client-id": process.env.CASHFREE_CLIENT_ID,
-      "x-client-secret": process.env.CASHFREE_SECRET_KEY
-    },
-    body: JSON.stringify(payload)
-  });
-
-  const data = await response.json();
-  console.log("Response:", data);
-  console.log("Payment Link URL:", data.link_url);
-  return data.link_url;
-
-  res.send({link_id: linkId})
-}
-
-exports.verifyPaymentLink = async (req, res) => {
-  try {
-    const { link_id } = req.params;
-    const url = `https://sandbox.cashfree.com/pg/links/${link_id}`;
+    const payload = {
+        link_id: linkId,
+        link_amount: Number(req.body.price),
+        link_currency: "INR",
+        link_purpose: "Test payment for project",
+        customer_details: {
+            customer_phone: "9999999999",
+            customer_email: `${user.email}`,
+            customer_name: `${user.name}`
+        },
+        link_notify: {
+            send_sms: false,
+            send_email: false
+        },
+        link_meta: {
+            return_url: `http://localhost:5173/catalog`
+        }
+    };
 
     const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "x-api-version": "2023-08-01",
-        "x-client-id": process.env.CASHFREE_CLIENT_ID,
-        "x-client-secret": process.env.CASHFREE_SECRET_KEY,
-      },
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "x-api-version": "2023-08-01",
+            "x-client-id": process.env.CASHFREE_CLIENT_ID,
+            "x-client-secret": process.env.CASHFREE_SECRET_KEY
+        },
+        body: JSON.stringify(payload)
     });
 
     const data = await response.json();
+    console.log("Response:", data);
+    console.log("Payment Link URL:", data.link_url);
+    const token = jwt.sign({ ...req.body, link_id: data.link_id }, process.env.JWT_SECRET, { expiresIn: "1h" })
+    console.log("payment jwt token : ", token)
 
-    if (data.link_status === "PAID") {
-      // 1. Update database / order status here
-      return res.status(200).json({ success: true, status: "PAID", data });
-    } else {
-      return res.status(400).json({ success: false, status: data.link_status });
+    res.send({...data, payment_token: token})
+}
+
+exports.verifyPaymentLink = async (req, res) => {
+    try {
+        const { link_id } = req.body;
+        console.log("req.body from verifyPaymentLink : ", req.body)
+        console.log("link_id from verifyPaymentLink : ", link_id)
+        console.log("req.body from verifyPaymentLink : ", req.body)
+        const url = `https://sandbox.cashfree.com/pg/links/${link_id}`;
+
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                "x-api-version": "2023-08-01",
+                "x-client-id": process.env.CASHFREE_CLIENT_ID,
+                "x-client-secret": process.env.CASHFREE_SECRET_KEY,
+            },
+        });
+
+        const data = await response.json();
+        console.log("data from verifyPaymentLink : ", data)
+
+        res.send(data)
+
+        // if (data.link_status === "PAID") {
+        //   // 1. Update database / order status here
+        //   return res.status(200).json({ success: true, status: "PAID", data });
+        // } else {
+        //   return res.status(400).json({ success: false, status: data.link_status });
+        // }
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
     }
-  } catch (error) {
-    return res.status(500).json({ success: false, message: error.message });
-  }
 };

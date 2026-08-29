@@ -634,8 +634,8 @@ const VendorDashboard = () => {
                                 </thead>
 
                                 <tbody>
-                                    {products.map((item) => (
-                                        <tr key={item._id}>
+                                    {products.map((item, index) => (
+                                        <tr key={index}>
 
                                             <td>{item.name}</td>
 
@@ -703,8 +703,8 @@ const VendorDashboard = () => {
                                 </thead>
 
                                 <tbody>
-                                    {allRentals.map((item) => (
-                                        <tr key={item._id}>
+                                    {allRentals.map((item, index) => (
+                                        <tr key={index}>
 
                                             <td>{item.name}</td>
 
