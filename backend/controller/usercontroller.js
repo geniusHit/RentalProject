@@ -21,6 +21,10 @@ const users = mongoose.Schema({
     },
     address: {
         type: String
+    },
+    isLoggedIn : {
+        type: Boolean,
+        default: false,
     }
 })
 const usersModel = mongoose.model("users", users)
@@ -98,6 +102,11 @@ exports.getProducts = async (req, res) => {
 
 exports.loginUser = async (req, res) => {
     const user = await usersModel.findOne({ password: req.body.password, email: req.body.email })
+    console.log("user : ", user)
+    console.log("user._id : ", user._id)
+    console.log("user._id.toString() : ", user._id.toString())
+    const userId = user._id.toString()
+    const toggleLogin = await usersModel.findByIdAndUpdate(userId, {isLoggedIn: !user?.loggedIn})
     const token = jwt.sign({ name: user.name, email: user.email, phone: user.phone, password: user.password, city: user.city, address: user.address }, SECRET, { expiresIn: "1h" })
     const decodedToken = jwt.verify(token, SECRET)
 

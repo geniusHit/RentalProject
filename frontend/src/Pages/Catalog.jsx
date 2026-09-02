@@ -1,4 +1,3 @@
-'use client';
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom';
 import '../Style/Catalog.css'
@@ -6,6 +5,7 @@ import NavBar from '../Components/NavBar';
 import Footer from '../Components/Footer';
 import { useForm } from "react-hook-form"
 import { jwtDecode } from "jwt-decode";
+import { Redis } from '@upstash/redis'
 
 const Catalog = () => {
     const [products, setProducts] = useState([])
@@ -17,13 +17,22 @@ const Catalog = () => {
         const response = await fetch(`http://localhost:8000/get-products`)
         const result = await response.json()
         setProducts(result)
+
+        const redis = new Redis({
+            url: process.env.UPSTASH_REDIS_REST_URL,
+            token: process.env.UPSTASH_REDIS_REST_TOKEN,
+        })
+
+        await redis.set("foo", "bar");
+        const foo = await redis.get("foo");
+        console.log("foo : ", foo)
     }
 
     useEffect(() => {
         getProducts()
     }, [])
 
-    const token = localStorage.getItem("login-user")? jwtDecode(localStorage.getItem("login-user")) : {};
+    const token = localStorage.getItem("login-user") ? jwtDecode(localStorage.getItem("login-user")) : {};
 
     const rentNow = async (product) => {
         const isLogin = JSON.parse(localStorage.getItem("isLogin"))
@@ -46,7 +55,7 @@ const Catalog = () => {
     }
 
     const paymentVerify = async () => {
-        const paymentData = localStorage.getItem("payment_id_token")? jwtDecode(localStorage.getItem("payment_id_token")) : {};
+        const paymentData = localStorage.getItem("payment_id_token") ? jwtDecode(localStorage.getItem("payment_id_token")) : {};
 
         const verifyPayment = await fetch("http://localhost:8000/verify-payment-link", {
             method: "POST",
@@ -164,7 +173,7 @@ const Catalog = () => {
                             </div>
                         </div>
                     </div>
-                </div>  
+                </div>
             }
 
             <br />
