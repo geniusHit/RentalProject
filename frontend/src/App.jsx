@@ -16,17 +16,22 @@ const App = () => {
   useEffect(() => {
     const ab = async () => {
       const redis = new Redis({
-        url: "https://unbiased-gazelle-40519.upstash.io",
-        token: "AZ5HAAIgcDE1ZjVkNTJkYmJiNzU0NzZiOWNiODhjMjY3NGI1ODcxNA",
+        url: 'https://unbiased-gazelle-40519.upstash.io',
+        token: 'Ap5HAAIgcDF3JPG-x9A50Dhkk4wAXQDDsqLf7zzs4gVNrXMt_CgVDQ',
       })
+      // const redis = new Redis({
+      //   url: "https://unbiased-gazelle-40519.upstash.io",
+      //   // AZ5HAAIgcDE1ZjVkNTJkYmJiNzU0NzZiOWNiODhjMjY3NGI1ODcxNA
+      //   token: "AZ5HAAIgcDE1ZjVkNTJkYmJiNzU0NzZiOWNiODhjMjY3NGI1ODcxNA",
+      // })
 
-      await redis.set("foo", "bar");
+      // await redis.set("foo", "bar");
       const foo = await redis.get("foo");
       console.log("foo : ", foo)
 
-      await redis.set("width", "600");
-      const width = await redis.get("width")
-      console.log("width : ", width)
+      // await redis.set("width", "600");
+      // const width = await redis.get("width")
+      // console.log("width : ", width)
     }
 
     ab()
