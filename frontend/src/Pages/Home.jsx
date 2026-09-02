@@ -1,3 +1,4 @@
+'use client';
 import React, { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import livingRoom from '../assets/15adafbb-ddea-45f5-a2ec-afd9008065f0.webp'
