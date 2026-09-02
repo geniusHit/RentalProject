@@ -41,14 +41,12 @@ const Login = () => {
         console.log("result = ", result)
         setIsLogin(true);
         localStorage.setItem("isLogin", true);
-        localStorage.setItem("jwtToken", result.jwtToken);
+        localStorage.setItem("login-user", result.jwtToken);
+        navigate("/")
     }
 
     console.log("isLogin = ", isLogin)
     console.log("localStorage.getItem(isLogin) = ", localStorage.getItem("isLogin"))
-    console.log("localStorage.getItem(name) = ", localStorage.getItem("name"))
-
-    // localStorage.removeItem("isLogin")
 
     return (
         <>

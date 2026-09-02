@@ -82,7 +82,6 @@ const products = mongoose.Schema({
 })
 const productsModel = mongoose.model("product", products)
 exports.addProduct = async (req, res) => {
-    console.log("req.body = ", req.body)
     const product = await new productsModel(req.body)
     const result = await product.save()
 
@@ -98,13 +97,9 @@ exports.getProducts = async (req, res) => {
 }
 
 exports.loginUser = async (req, res) => {
-    console.log("req.body from loginUser = ", req.body)
     const user = await usersModel.findOne({ password: req.body.password, email: req.body.email })
-    console.log("user from loginUser : ", user)
     const token = jwt.sign({ name: user.name, email: user.email, phone: user.phone, password: user.password, city: user.city, address: user.address }, SECRET, { expiresIn: "1h" })
-    console.log("JWT Token : ", token)
     const decodedToken = jwt.verify(token, SECRET)
-    console.log("decodedToken = ", decodedToken)
 
     res.send({ ...user, jwtToken: token })
 }
@@ -185,13 +180,20 @@ const rentalItemsSchema = mongoose.Schema({
         type: Number,
         default: 5,
     },
+
+    rentedDate: {
+        type: String
+    },
+
+    deliveryStatus: {
+        type: String,
+        default: "PENDING"
+    }
 })
 const rentalItems = mongoose.model("rentalItems", rentalItemsSchema)
 exports.addRentalItems = async (req, res) => {
-    console.log("req.body from addRentalItems = ", req.body)
     const { email, name, userName } = req.body;
     const user = await usersModel.findOne({ email: email })
-    console.log("user : ", user)
     const existingProduct = await rentalItems.findOne({ email: email, userName: userName, name: name });
     if (existingProduct) {
         res.send({ message: "Product is already in Rental Items!" });
@@ -218,6 +220,8 @@ exports.addRentalItems = async (req, res) => {
         assemblyRequired: data.assemblyRequired,
         notes: data.notes,
         rentDays: data.rentDays,
+        rentedDate: new Date(),
+        deliveryStatus: "PENDING",
     }
     const item = new rentalItems({
         ...data2, user: {
@@ -225,19 +229,16 @@ exports.addRentalItems = async (req, res) => {
             email: email,
             city: user.city,
             address: user.address
-        }, expireAt: expiryDate
+        }
     })
-    console.log("rental item : ", item)
     const result = await item.save()
 
     res.send({ message: "Product added to Rental Items" })
 }
 
 exports.myRentalItems = async (req, res) => {
-    console.log("req.body from myRentalItems : ", req.body)
     const { name, email } = req.body;
     const items = await rentalItems.find({ "user.name": name, "user.email": email })
-    console.log("items from myRentalItems : ", items)
 
     res.send(items)
 }
@@ -263,8 +264,15 @@ exports.searchProducts = async (req, res) => {
 }
 
 exports.deliverItem = async (req, res) => {
-    console.log("req.body from deliverItem : ", req.body)
-    const { name, email, city, address } = req.body.user
+    const { name, email, city, address } = req.body.user;
+    console.log("req.body : ", req.body)
+    const data = req.body
+    const updatedData = {...data, deliveryStatus: "DELIVERED"}
+    console.log("updatedData : ", updatedData)
+
+    const updateRentalItems = await rentalItems.findByIdAndUpdate(data._id, 
+        { $set: updatedData }
+    )
 
     const auth = nodemailer.createTransport({
         service: "gmail",
@@ -293,7 +301,6 @@ exports.deliverItem = async (req, res) => {
 }
 
 exports.createTestPaymentLink = async (req, res) => {
-    console.log("req.body from createTestPaymentLink : ", req.body)
     const url = "https://sandbox.cashfree.com/pg/links";
     const linkId = `link_${Date.now()}`;
     const { email, } = req.body;
@@ -330,20 +337,14 @@ exports.createTestPaymentLink = async (req, res) => {
     });
 
     const data = await response.json();
-    console.log("Response:", data);
-    console.log("Payment Link URL:", data.link_url);
     const token = jwt.sign({ ...req.body, link_id: data.link_id }, process.env.JWT_SECRET, { expiresIn: "1h" })
-    console.log("payment jwt token : ", token)
 
-    res.send({...data, payment_token: token})
+    res.send({ ...data, payment_token: token })
 }
 
 exports.verifyPaymentLink = async (req, res) => {
     try {
         const { link_id } = req.body;
-        console.log("req.body from verifyPaymentLink : ", req.body)
-        console.log("link_id from verifyPaymentLink : ", link_id)
-        console.log("req.body from verifyPaymentLink : ", req.body)
         const url = `https://sandbox.cashfree.com/pg/links/${link_id}`;
 
         const response = await fetch(url, {
@@ -356,17 +357,38 @@ exports.verifyPaymentLink = async (req, res) => {
         });
 
         const data = await response.json();
-        console.log("data from verifyPaymentLink : ", data)
 
         res.send(data)
-
-        // if (data.link_status === "PAID") {
-        //   // 1. Update database / order status here
-        //   return res.status(200).json({ success: true, status: "PAID", data });
-        // } else {
-        //   return res.status(400).json({ success: false, status: data.link_status });
-        // }
     } catch (error) {
         return res.status(500).json({ success: false, message: error.message });
     }
 };
+
+exports.updateInventory = async (req, res) => {
+    try {
+        const data = req.body;
+        data.map(async (product, index) => {
+            const { _id, ...updateData } = product;
+            const updatedProduct = await productsModel.findByIdAndUpdate(
+                _id,
+                { $set: updateData },
+            );
+        })
+
+        res.send({ message: "Inventory has been updated." })
+    }
+    catch (err) {
+        return res.status(400).json({ success: false, message: err.message })
+    }
+}
+
+exports.itemsDeliveryStatus = async (req, res) => {
+    try{
+        const pending = await rentalItems.find({deliveryStatus: "PENDING"})
+        const delivered = await rentalItems.find({deliveryStatus: "DELIVERED"});
+        res.json({pending: pending, delivered: delivered})
+    }
+    catch (err) {
+        return res.status(400).json({success: false, message: err.message})
+    }
+}

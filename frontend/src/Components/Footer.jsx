@@ -10,22 +10,8 @@ const Footer = () => {
         <div>
             <footer className="footer">
 
-                <div className="footer-column">
-                    {/* <h2>
-                                                Furni<span>Rent</span>
-                                            </h2>
-                                            <p>
-                                                High-quality furniture for every home and lifestyle.
-                                                Rent. Live. Love.
-                                            </p> */}
+                <div className="footer-logo">
                     <img src={Logo} width="200" />
-
-                    <div className="social-icons">
-                        {/* <FaFacebookF />
-                                    <FaInstagram />
-                                    <FaTwitter />
-                                    <FaYoutube /> */}
-                    </div>
                 </div>
 
                 <div className="footer-column">

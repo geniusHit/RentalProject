@@ -24,9 +24,13 @@ const VendorDashboard = () => {
     const [rentalProducts, setRentalProducts] = useState([])
     const [products, setProducts] = useState([])
     const [allRentals, setAllRentals] = useState([])
+    const [showMessage, setShowMessage] = useState(false)
+    const [deliveryStatus, setDeliveryStatus] = useState([])
+    const [availableProducts, setAvailableProducts] = useState(0)
 
     const browseFiles = (e) => {
-        let images2 = browseInput.current.files
+        let images2 = browseInput.current.files;
+
         for (let image of images2) {
             setImages(prevImages => [...prevImages, image["name"]])
             let imgUrl = URL.createObjectURL(image)
@@ -37,7 +41,6 @@ const VendorDashboard = () => {
     const submit = async (data) => {
         let formData = new FormData();
         for (let img of browseInput.current.files) {
-            console.log("img = ", img)
             formData.append("image", img)
         }
         const saveImages = await fetch("http://localhost:8000/save-product-images", {
@@ -54,36 +57,7 @@ const VendorDashboard = () => {
             },
             body: JSON.stringify(data2)
         })
-
-        console.log("add product completed")
     }
-
-    const rentals = [
-        {
-            id: "FR1234",
-            customer: "Ananya T.",
-            product: "Luxe 3-Seater Sofa",
-            duration: "3 Months",
-            delivery: "May 20, 2024",
-            status: "Confirmed",
-        },
-        {
-            id: "FR1235",
-            customer: "Rahul M.",
-            product: "Modern Queen Bed",
-            duration: "6 Months",
-            delivery: "May 21, 2024",
-            status: "Scheduled",
-        },
-        {
-            id: "FR1236",
-            customer: "Priya S.",
-            product: "Ergonomic Office Chair",
-            duration: "1 Month",
-            delivery: "May 22, 2024",
-            status: "Pending",
-        },
-    ];
 
     const schedules = [
         {
@@ -149,11 +123,10 @@ const VendorDashboard = () => {
         getRentalProducts()
         getProducts()
         getAllRentals()
+        getDeliveryStatus()
     }, [])
 
     const deliverItem = async (item) => {
-        console.log("item delivered")
-
         const response = await fetch("http://localhost:8000/deliver-item", {
             method: "POST",
             headers: {
@@ -163,11 +136,37 @@ const VendorDashboard = () => {
         })
     }
 
+    const saveInventory = async () => {
+        const saveApi = await fetch("http://localhost:8000/update-inventory", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(products)
+        })
+
+        setShowMessage(true)
+    }
+
+    const getDeliveryStatus = async () => {
+        const items = await fetch("http://localhost:8000/items-delivery-status")
+        const result = await items.json()
+        console.log("result : ", result)
+        setDeliveryStatus(result)
+    }
+
+    console.log("allRentals : ", allRentals)
+    console.log("allRentals.slice(0, 1) : ", allRentals.slice(0, 1))
+    console.log("products : ", products)
+    useEffect(() => {
+        products.length > 0 && products.map((prod) => {
+            setAvailableProducts((prev) => Number(prev + prod.quantity))
+        })
+    }, [products])
+    console.log("availableProducts : ", availableProducts)
+
     return (
         <div className="vendor-dashboard">
-
-            {/* Sidebar */}
-
             <aside className="sidebar">
                 <Link to="/" className="logoLink"> <h2 className="logo">FurniRent</h2> </Link>
 
@@ -179,7 +178,12 @@ const VendorDashboard = () => {
                         Dashboard
                     </li>
 
-                    <li onClick={() => setActivePage("manageInventory")}>Manage Inventory</li>
+                    <li
+                        className={activePage === "manageInventory" ? "active" : ""}
+                        onClick={() => setActivePage("manageInventory")}
+                    >
+                        Manage Inventory
+                    </li>
 
                     <li
                         className={activePage === "addProduct" ? "active" : ""}
@@ -188,20 +192,26 @@ const VendorDashboard = () => {
                         Add Product
                     </li>
 
-                    <li onClick={() => setActivePage("rentals")}>Rentals</li>
-                    <li onClick={() => setActivePage("deliveries")}>Deliveries</li>
-                    <li onClick={() => setActivePage("reviews")}>Reviews</li>
+                    <li
+                        className={activePage === "rentals" ? "active" : ""}
+                        onClick={() => setActivePage("rentals")}
+                    >
+                        Rentals
+                    </li>
+
+                    <li
+                        className={activePage === "deliveries" ? "active" : ""}
+                        onClick={() => setActivePage("deliveries")}
+                    >
+                        Deliveries
+                    </li>
                 </ul>
             </aside>
-
-            {/* Main */}
 
             <main className="dashboard-content">
 
                 {activePage === "dashboard" ? (
                     <>
-                        {/* Header */}
-
                         <div className="topbar">
                             <div>
                                 <h2>Welcome Back Vendor</h2>
@@ -209,37 +219,38 @@ const VendorDashboard = () => {
                             </div>
                         </div>
 
-                        {/* Stats */}
-
                         <div className="stats-grid">
+                            <div className="stat-card">
+                                <FaTruck className="stat-icon" />
+                                <h3>Available Quantity</h3>
+                                <h2>{availableProducts}</h2>
+                            </div>
 
                             <div className="stat-card">
                                 <FaCouch className="stat-icon" />
                                 <h3>Total Rentals</h3>
-                                <h2>{rentalProducts.length}</h2>
+                                <h2>{rentalProducts?.length}</h2>
                             </div>
 
                             <div className="stat-card">
                                 <FaClipboardList className="stat-icon" />
                                 <h3>Pending Orders</h3>
-                                <h2>8</h2>
+                                <h2>{deliveryStatus?.pending?.length}</h2>
                             </div>
 
                             <div className="stat-card">
                                 <FaTruck className="stat-icon" />
-                                <h3>Upcoming Deliveries</h3>
-                                <h2>12</h2>
+                                <h3>Delivered</h3>
+                                <h2>{deliveryStatus?.delivered?.length}</h2>
                             </div>
                         </div>
-
-                        {/* Rentals Table */}
 
                         <div className="card">
                             <div className="card-header">
                                 <h2>Recent Rentals</h2>
                             </div>
 
-                            <table>
+                            {/* <table>
                                 <thead>
                                     <tr>
                                         <th>Order ID</th>
@@ -253,8 +264,8 @@ const VendorDashboard = () => {
                                 </thead>
 
                                 <tbody>
-                                    {rentals.map((item) => (
-                                        <tr key={item.id}>
+                                    {(allRentals.slice(0, 3)).map((item, index) => (
+                                        <tr key={item._id}>
                                             <td>{item.id}</td>
 
                                             <td>
@@ -286,95 +297,67 @@ const VendorDashboard = () => {
                                         </tr>
                                     ))}
                                 </tbody>
+                            </table> */}
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Brand</th>
+                                        <th>Condition</th>
+                                        <th>Material</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Return Policy</th>
+                                        <th>Assembly Required</th>
+                                        <th>Delivery Charge</th>
+                                        <th>Description</th>
+                                        <th>Security Deposit</th>
+                                        <th>Stock Keeping Unit</th>
+                                        <th>Notes</th>
+                                        <th>Rent Days</th>
+                                        <th>User Name</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {(allRentals.slice(0, 3)).map((item, index) => (
+                                        <tr key={index}>
+
+                                            <td>{item.name}</td>
+
+                                            <td>{item.brand}</td>
+
+                                            <td>{item.condition}</td>
+
+                                            <td>{item.material}</td>
+
+                                            <td>{item.price}</td>
+
+                                            <td>{item.quantity}</td>
+
+                                            <td>{item.returnPolicy}</td>
+
+                                            <td>{item.assemblyRequired}</td>
+
+                                            <td>{item.deliveryCharge}</td>
+
+                                            <td>{item.description}</td>
+
+                                            <td>{item.securityDeposit}</td>
+
+                                            <td>{item.stockKeepingUnit}</td>
+
+                                            <td>{item.notes}</td>
+
+                                            <td>{item.rentDays}</td>
+
+                                            <td>{item.user.name}</td>
+
+                                        </tr>
+                                    ))}
+                                </tbody>
                             </table>
-                        </div>
-
-                        {/* Bottom Section */}
-
-                        <div className="bottom-grid">
-
-                            {/* Quick Actions */}
-
-                            <div className="card">
-                                <h2>Quick Actions</h2>
-
-                                <div className="action-grid">
-                                    <div className="action-box">
-                                        <FaPlus />
-                                        <p>Add Product</p>
-                                    </div>
-
-                                    <div className="action-box">
-                                        <FaBoxOpen />
-                                        <p>Manage Inventory</p>
-                                    </div>
-
-                                    <div className="action-box">
-                                        <FaClipboardList />
-                                        <p>Accept Orders</p>
-                                    </div>
-
-                                    <div className="action-box">
-                                        <FaTruck />
-                                        <p>Schedule Delivery</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Schedule */}
-
-                            <div className="card">
-                                <h2>Upcoming Schedule</h2>
-
-                                {schedules.map((item, index) => (
-                                    <div className="schedule-item" key={index}>
-                                        <div className="schedule-date">
-                                            <span>{item.month}</span>
-                                            <h3>{item.date}</h3>
-                                        </div>
-
-                                        <div>
-                                            <strong>{item.title}</strong>
-                                            <p>{item.product}</p>
-                                            <small>{item.time}</small>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-
-                        </div>
-
-                        {/* Last Row */}
-
-                        <div className="bottom-grid">
-
-                            <div className="card">
-                                <h2>Inventory Overview</h2>
-
-                                <div className="inventory-stats">
-                                    <p>Available : 120</p>
-                                    <p>Rented : 80</p>
-                                    <p>Maintenance : 20</p>
-                                    <p>Inactive : 20</p>
-                                </div>
-                            </div>
-
-                            <div className="card">
-                                <h2>Maintenance Requests</h2>
-
-                                {maintenance.map((item, index) => (
-                                    <div key={index} className="maintenance-item">
-                                        <FaTools />
-
-                                        <div>
-                                            <h4>{item.title}</h4>
-                                            <p>{item.product}</p>
-                                        </div>
-
-                                        <span>{item.priority}</span>
-                                    </div>
-                                ))}
-                            </div>
                         </div>
                     </>
 
@@ -386,8 +369,6 @@ const VendorDashboard = () => {
                                 <h1>Add Product</h1>
                                 <p>Dashboard &gt; Inventory &gt; Add Product</p>
                             </div>
-
-                            {/* PRODUCT IMAGES */}
 
                             <div className="card">
                                 <h2>Product Images</h2>
@@ -414,8 +395,6 @@ const VendorDashboard = () => {
 
                                 </div>
                             </div>
-
-                            {/* PRODUCT INFORMATION */}
 
                             <div className="card">
                                 <h2>Product Information</h2>
@@ -496,8 +475,6 @@ const VendorDashboard = () => {
 
                             </div>
 
-                            {/* PRICING */}
-
                             <div className="card">
                                 <h2>Pricing & Availability</h2>
 
@@ -545,8 +522,6 @@ const VendorDashboard = () => {
                                 </div>
                             </div>
 
-                            {/* ADDITIONAL */}
-
                             <div className="card">
                                 <h2>Additional Information</h2>
 
@@ -592,16 +567,11 @@ const VendorDashboard = () => {
                                         />
                                     </div>
                                 </div>
-
-                                <div className="btn-row">
-                                    <button className="cancel-btn">
-                                        Cancel
-                                    </button>
-
-                                    <input type="submit" className="save-btn" value="Add Product" />
-                                </div>
                             </div>
+                        </div>
 
+                        <div className="btn-row">
+                            <input type="submit" className="save-btn" value="Add Product" />
                         </div>
                     </form>
                 ) : activePage === "manageInventory" ? (
@@ -629,45 +599,165 @@ const VendorDashboard = () => {
                                         <th>Security Deposit</th>
                                         <th>Stock Keeping Unit</th>
                                         <th>Notes</th>
-                                        <th>View</th>
+                                        {/* <th>View</th> */}
                                     </tr>
                                 </thead>
 
                                 <tbody>
                                     {products.map((item, index) => (
                                         <tr key={index}>
+                                            <td><input type="text" className="inventoryInput" value={item.name} onChange={
+                                                (e) => {
+                                                    const updatedValue = e.target.value;
+                                                    setProducts((prevProducts) =>
+                                                        prevProducts.map((prod, i) =>
+                                                            i === index ? { ...prod, name: updatedValue } : prod
+                                                        )
+                                                    );
+                                                }
+                                            } /></td>
 
-                                            <td>{item.name}</td>
+                                            <td><input type="text" className="inventoryInput" value={item.brand} onChange={
+                                                (e) => {
+                                                    const updatedValue = e.target.value;
+                                                    setProducts((prevProducts) =>
+                                                        prevProducts.map((prod, i) =>
+                                                            i === index ? { ...prod, brand: updatedValue } : prod
+                                                        )
+                                                    );
+                                                }
+                                            } /></td>
 
-                                            <td>{item.brand}</td>
+                                            <td><select className="inventoryInput" value={item.condition} onChange={
+                                                (e) => {
+                                                    const updatedValue = e.target.value;
+                                                    setProducts((prevProducts) =>
+                                                        prevProducts.map((prod, i) =>
+                                                            i === index ? { ...prod, condition: updatedValue } : prod
+                                                        )
+                                                    );
+                                                }} >
+                                                <option value="Used">Used</option>
+                                                <option value="New">New</option>
+                                            </select></td>
 
-                                            <td>{item.condition}</td>
+                                            <td><input type="text" className="inventoryInput" value={item.material} onChange={
+                                                (e) => {
+                                                    const updatedValue = e.target.value;
+                                                    setProducts((prevProducts) =>
+                                                        prevProducts.map((prod, i) =>
+                                                            i === index ? { ...prod, material: updatedValue } : prod
+                                                        )
+                                                    );
+                                                }
+                                            } /></td>
 
-                                            <td>{item.material}</td>
+                                            <td><input type="text" className="inventoryInput" value={item.price} onChange={
+                                                (e) => {
+                                                    const updatedValue = e.target.value;
+                                                    setProducts((prevProducts) =>
+                                                        prevProducts.map((prod, i) =>
+                                                            i === index ? { ...prod, price: updatedValue } : prod
+                                                        )
+                                                    );
+                                                }
+                                            } /></td>
 
-                                            <td>{item.price}</td>
+                                            <td><input type="text" className="inventoryInput" value={item.quantity} onChange={
+                                                (e) => {
+                                                    const updatedValue = e.target.value;
+                                                    setProducts((prevProducts) =>
+                                                        prevProducts.map((prod, i) =>
+                                                            i === index ? { ...prod, quantity: updatedValue } : prod
+                                                        )
+                                                    );
+                                                }
+                                            } /></td>
 
-                                            <td>{item.quantity}</td>
+                                            <td><input type="text" className="inventoryInput" value={item.returnPolicy} onChange={
+                                                (e) => {
+                                                    const updatedValue = e.target.value;
+                                                    setProducts((prevProducts) =>
+                                                        prevProducts.map((prod, i) =>
+                                                            i === index ? { ...prod, returnPolicy: updatedValue } : prod
+                                                        )
+                                                    );
+                                                }} /></td>
 
-                                            <td>{item.returnPolicy}</td>
+                                            <td><select type="text" className="inventoryInput" value={item.assemblyRequired} onChange={
+                                                (e) => {
+                                                    const updatedValue = e.target.value;
+                                                    setProducts((prevProducts) =>
+                                                        prevProducts.map((prod, i) =>
+                                                            i === index ? { ...prod, assemblyRequired: updatedValue } : prod
+                                                        )
+                                                    );
+                                                }}>
+                                                <option value="Yes">Yes</option>
+                                                <option value="No">No</option>
+                                            </select></td>
 
-                                            <td>{item.assemblyRequired}</td>
+                                            <td><input type="text" className="inventoryInput" value={item.deliveryCharge} onChange={
+                                                (e) => {
+                                                    const updatedValue = e.target.value;
+                                                    setProducts((prevProducts) =>
+                                                        prevProducts.map((prod, i) =>
+                                                            i === index ? { ...prod, deliveryCharge: updatedValue } : prod
+                                                        )
+                                                    );
+                                                }} /></td>
 
-                                            <td>{item.deliveryCharge}</td>
+                                            <td><input type="text" className="inventoryInput" value={item.description} onChange={
+                                                (e) => {
+                                                    const updatedValue = e.target.value;
+                                                    setProducts((prevProducts) =>
+                                                        prevProducts.map((prod, i) =>
+                                                            i === index ? { ...prod, description: updatedValue } : prod
+                                                        )
+                                                    );
+                                                }} /></td>
 
-                                            <td>{item.description}</td>
+                                            <td><input type="text" className="inventoryInput" value={item.securityDeposit} onChange={
+                                                (e) => {
+                                                    const updatedValue = e.target.value;
+                                                    setProducts((prevProducts) =>
+                                                        prevProducts.map((prod, i) =>
+                                                            i === index ? { ...prod, securityDeposit: updatedValue } : prod
+                                                        )
+                                                    );
+                                                }} /></td>
 
-                                            <td>{item.securityDeposit}</td>
+                                            <td><input type="text" className="inventoryInput" value={item.stockKeepingUnit} onChange={
+                                                (e) => {
+                                                    const updatedValue = e.target.value;
+                                                    setProducts((prevProducts) =>
+                                                        prevProducts.map((prod, i) =>
+                                                            i === index ? { ...prod, stockKeepingUnit: updatedValue } : prod
+                                                        )
+                                                    );
+                                                }} /></td>
 
-                                            <td>{item.stockKeepingUnit}</td>
+                                            <td><input type="text" className="inventoryInput" value={item.notes} onChange={
+                                                (e) => {
+                                                    const updatedValue = e.target.value;
+                                                    setProducts((prevProducts) =>
+                                                        prevProducts.map((prod, i) =>
+                                                            i === index ? { ...prod, notes: updatedValue } : prod
+                                                        )
+                                                    );
+                                                }
+                                            } /></td>
 
-                                            <td>{item.notes}</td>
-
-                                            <td><FaEye /></td>
+                                            {/* <td><FaEye /></td> */}
                                         </tr>
                                     ))}
                                 </tbody>
                             </table>
+
+                            <br />
+                            <div>
+                                <button className="inventorySave" onClick={saveInventory}>Save</button>
+                            </div>
                         </div>
                     </div>
                 ) : activePage === "rentals" ? (
@@ -698,7 +788,7 @@ const VendorDashboard = () => {
                                         <th>Rent Days</th>
                                         <th>User Name</th>
                                         <th>Action</th>
-                                        <th>View</th>
+                                        {/* <th>View</th> */}
                                     </tr>
                                 </thead>
 
@@ -737,22 +827,114 @@ const VendorDashboard = () => {
                                             <td>{item.user.name}</td>
 
                                             <td>
-                                                <button className="deliverBtn" onClick={()=> deliverItem(item)}>Deliver Item</button>
+                                                <button className="deliverBtn" onClick={() => deliverItem(item)}>Deliver Item</button>
                                             </td>
 
-                                            <td><FaEye /></td>
+                                            {/* <td><FaEye /></td> */}
                                         </tr>
                                     ))}
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                ) : activePage === "deliveries" ? (
-                    <div>Deliveries</div>
-                ) : activePage === "reviews" && (
-                    <div>Reviews</div>
+                ) : activePage === "deliveries" && (
+                    <div>
+                        <h2>Deliveries</h2>
+
+                        <div className="card">
+                            <div className="card-header">
+                                <h3>Products</h3>
+                            </div>
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Brand</th>
+                                        <th>Condition</th>
+                                        <th>Material</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Return Policy</th>
+                                        <th>Assembly Required</th>
+                                        <th>Delivery Charge</th>
+                                        <th>Description</th>
+                                        <th>Security Deposit</th>
+                                        <th>Stock Keeping Unit</th>
+                                        <th>Notes</th>
+                                        <th>Rent Days</th>
+                                        <th>User Name</th>
+                                        <th>Rented Date</th>
+                                        <th>Delivery Status</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {deliveryStatus.delivered.map((item, index) => (
+                                        <tr key={index}>
+
+                                            <td>{item.name}</td>
+
+                                            <td>{item.brand}</td>
+
+                                            <td>{item.condition}</td>
+
+                                            <td>{item.material}</td>
+
+                                            <td>{item.price}</td>
+
+                                            <td>{item.quantity}</td>
+
+                                            <td>{item.returnPolicy}</td>
+
+                                            <td>{item.assemblyRequired}</td>
+
+                                            <td>{item.deliveryCharge}</td>
+
+                                            <td>{item.description}</td>
+
+                                            <td>{item.securityDeposit}</td>
+
+                                            <td>{item.stockKeepingUnit}</td>
+
+                                            <td>{item.notes}</td>
+
+                                            <td>{item.rentDays}</td>
+
+                                            <td>{item.user.name}</td>
+
+                                            <td>{item.rentedDate}</td>
+
+                                            <td>{item.deliveryStatus}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 )}
             </main>
+
+
+            {showMessage === true
+                &&
+                <div className="modal show d-block" tabIndex="-1">
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">Message</h5>
+                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setShowMessage(false)}></button>
+                            </div>
+                            <div className="modal-body">
+                                <p>Inventory updated successfully.</p>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setShowMessage(false)}>Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
     );
 };

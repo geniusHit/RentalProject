@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import cimg1 from '../assets/How_to_Choose_the_Right_Furniture_for_Your_Home.webp'
-import cimg2 from '../assets/smart-home-appliance-integration-kitchen.webp'
-import cimg3 from '../assets/istockphoto-2185177891-612x612.jpg'
-import cimg4 from '../assets/clean-kitchen-appliances-safely.jpg.webp'
 import livingRoom from '../assets/15adafbb-ddea-45f5-a2ec-afd9008065f0.webp'
-import bedroom from '../assets/small-modern-bedroom-interior-design-simple-latest-elegant-ideas.avif'
+import cimg5 from '../assets/nathan-fertig-FBXuXp57eM0-unsplash.jpg'
+import cimg6 from '../assets/sherzod-gulomov-P0q_HK_-GGM-unsplash (1).jpg'
+import cimg7 from '../assets/spacejoy-RqO6kwm4tZY-unsplash.jpg'
+import cimg8 from '../assets/naomi-hebert-MP0bgaS_d1c-unsplash.jpg'
+import bedroom from '../assets/istockphoto-2185177891-612x612.jpg'
 import office from '../assets/ho-m5-1-1740657447-4ba63.avif'
 import outdoor from '../assets/203.webp'
 import working from '../assets/Screenshot 2026-06-08 193814.png'
@@ -14,7 +14,6 @@ import NavBar from "../Components/NavBar.jsx"
 import Footer from '../Components/Footer.jsx'
 
 const Home = () => {
-    const [products, setProducts] = useState([])
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -29,8 +28,6 @@ const Home = () => {
             });
         }
     }, []);
-
-    products.length > 0 && console.log("(products[products.length-1]).imageNames[0] = ", (products[products.length - 1]).imageNames[0])
 
     const searchProducts = (searchKey)=>{
         localStorage.setItem("search", searchKey)
@@ -50,7 +47,7 @@ const Home = () => {
                         High-quality furniture & appliances for every home and lifestyle. Rent. Live. Love.
                     </div> <br />
 
-                    <button className='carousel-btn'>Browse Catalog ›</button>
+                    <Link to="/catalog"><button className='carousel-btn' onClick={()=>localStorage.setItem("search", "")}>Browse Catalog ›</button></Link>
                 </div>
 
                 <div className="carousel-indicators">
@@ -66,16 +63,16 @@ const Home = () => {
                 </div>
                 <div className="carousel-inner">
                     <div className="carousel-item active">
-                        <img src={cimg1} className="d-block w-100" />
+                        <img src={cimg5} className="d-block w-100" />
                     </div>
                     <div className="carousel-item">
-                        <img src={cimg2} className="d-block w-100" />
+                        <img src={cimg6} className="d-block w-100" />
                     </div>
                     <div className="carousel-item">
-                        <img src={cimg3} className="d-block w-100" />
+                        <img src={cimg7} className="d-block w-100" />
                     </div>
                     <div className="carousel-item">
-                        <img src={cimg4} className="d-block w-100" />
+                        <img src={cimg8} className="d-block w-100" />
                     </div>
                 </div>
                 <button style={{ display: "none" }} className="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">

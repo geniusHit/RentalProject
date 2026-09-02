@@ -134,7 +134,7 @@ const Contact = () => {
 
                         </div>
 
-                        <div className="info-card">
+                        {/* <div className="info-card">
 
                             <div className="icon">
                                 <FaComments />
@@ -148,7 +148,7 @@ const Contact = () => {
                                 Start Chat →
                             </span>
 
-                        </div>
+                        </div> */}
 
                     </div>
 
@@ -157,52 +157,27 @@ const Contact = () => {
                 {/* Form */}
 
                 <section className="contact-wrapper">
-
                     <div className="contact-form">
-
                         <h2>Send Us a Message</h2>
 
-                        <p>
-                            Fill the form below and we'll get back to you.
-                        </p>
+                        <p> Fill the form below and we'll get back to you. </p>
 
                         <div className="row">
+                            <input placeholder="Full Name" />
 
-                            <input
-                                placeholder="Full Name"
-                            />
+                            <input placeholder="Email Address" />
 
-                            <input
-                                placeholder="Email Address"
-                            />
+                            <input placeholder="Phone Number"/>
 
+                            <input placeholder="Subject" />
+
+                            <textarea rows="6" placeholder="Your Message"></textarea>
+
+                            <button> Send Message <FaPaperPlane /> </button>
                         </div>
-
-                        <input
-                            placeholder="Phone Number"
-                        />
-
-                        <input
-                            placeholder="Subject"
-                        />
-
-                        <textarea
-                            rows="6"
-                            placeholder="Your Message"
-                        ></textarea>
-
-                        <button>
-
-                            Send Message
-
-                            <FaPaperPlane />
-
-                        </button>
-
                     </div>
 
                     <div className="location">
-
                         <h2>Our Location</h2>
 
                         <iframe

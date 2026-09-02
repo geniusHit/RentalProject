@@ -7,7 +7,7 @@ import { jwtDecode } from "jwt-decode";
 const MyRentalItems = () => {
     const [products, setProducts] = useState([])
 
-    const token = jwtDecode(localStorage.getItem("jwtToken"));
+    const token = jwtDecode(localStorage.getItem("login-user"));
 
     console.log("token : ", token)
 

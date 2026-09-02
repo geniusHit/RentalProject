@@ -49,4 +49,8 @@ router.post("/create-test-payment-link", controller.createTestPaymentLink)
 
 router.post("/verify-payment-link", controller.verifyPaymentLink)
 
+router.post("/update-inventory", controller.updateInventory)
+
+router.get("/items-delivery-status", controller.itemsDeliveryStatus)
+
 module.exports = router

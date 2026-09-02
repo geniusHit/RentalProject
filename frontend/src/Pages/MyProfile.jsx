@@ -1,19 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import NavBar from '../Components/NavBar';
 import Footer from '../Components/Footer';
+import { jwtDecode } from "jwt-decode";
 
 export default function MyProfile() {
   const [activeTab, setActiveTab] = useState('profile');
   const [isEditing, setIsEditing] = useState(false);
 
-  const [userData, setUserData] = useState({
-    name: localStorage.getItem("name"),
-    email: localStorage.getItem("email"),
-    city: 'Bengaluru, Karnataka, India',
-    deliveryAddress: 'Flat 402, Green Valley Apartments, Indiranagar, Bengaluru - 560038',
-    memberSince: 'March 2024'
-  });
+  const [userData, setUserData] = useState();
 
   const activeRentals = [
     {
@@ -46,19 +41,26 @@ export default function MyProfile() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    console.log("name from handleInputChange : ", name)
+    console.log("value from handleInputChange : ", value)
     setUserData(prev => ({ ...prev, [name]: value }));
   };
 
+  useEffect(() => {
+    const loginUser = jwtDecode(localStorage.getItem("login-user"))
+    setUserData(loginUser)
+  }, [])
+
   return (
     <div style={{ backgroundColor: colors.bgLight, minHeight: '100vh', display: 'flex', flexDirection: 'column', color: colors.textDark }}>
-      
+
       {/* Navbar / Brand Header */}
       <NavBar />
 
       {/* Main Content Area */}
       <main className="container py-5 flex-grow-1">
         <div className="row g-5 align-items-start">
-          
+
           {/* Left Column: Welcome & Status Overview */}
           <div className="col-12 col-lg-4">
             <div className="mb-4">
@@ -66,7 +68,7 @@ export default function MyProfile() {
                 My Account
               </span>
               <h2 className="display-6 fw-bold mb-2" style={{ color: colors.textDark }}>
-                Welcome Back, {userData.name.split(' ')[0]}!
+                Welcome Back, !
               </h2>
               <p className="small mb-4" style={{ color: colors.textMuted }}>
                 Manage your active furniture subscriptions, rental agreements, and update your personal details.
@@ -75,69 +77,61 @@ export default function MyProfile() {
 
             {/* Quick Navigation Tabs */}
             <div className="list-group shadow-sm rounded-4 overflow-hidden border-0 mb-4">
-              <button 
-                onClick={() => setActiveTab('profile')} 
+              <button
+                onClick={() => setActiveTab('profile')}
                 className={`list-group-item list-group-item-action border-0 py-3 px-4 fw-semibold ${activeTab === 'profile' ? 'text-white' : ''}`}
-                style={{ 
+                style={{
                   backgroundColor: activeTab === 'profile' ? colors.primaryGreen : '#FFFFFF',
-                  color: activeTab === 'profile' ? '#FFFFFF' : colors.textDark 
+                  color: activeTab === 'profile' ? '#FFFFFF' : colors.textDark
                 }}
               >
                 👤 Personal Information
               </button>
-              <button 
-                onClick={() => setActiveTab('rentals')} 
+              <button
+                onClick={() => setActiveTab('rentals')}
                 className={`list-group-item list-group-item-action border-0 py-3 px-4 fw-semibold ${activeTab === 'rentals' ? 'text-white' : ''}`}
-                style={{ 
+                style={{
                   backgroundColor: activeTab === 'rentals' ? colors.primaryGreen : '#FFFFFF',
-                  color: activeTab === 'rentals' ? '#FFFFFF' : colors.textDark 
+                  color: activeTab === 'rentals' ? '#FFFFFF' : colors.textDark
                 }}
               >
                 🛋️ Active Furniture Rentals ({activeRentals.length})
               </button>
-            </div>
-
-            {/* Plan Support Summary Card */}
-            <div className="p-4 rounded-4 border bg-white shadow-sm" style={{ borderColor: colors.borderLight }}>
-              <h6 className="fw-bold mb-1" style={{ color: colors.textDark }}>FurniRent Shield Active</h6>
-              <p className="small mb-3" style={{ color: colors.textMuted }}>Your rented products include free maintenance and damage insurance protection.</p>
-              <div className="small fw-semibold" style={{ color: colors.primaryGreen }}>
-                Need relocation assistance? <a href="#contact" className="text-decoration-underline" style={{ color: colors.primaryGreen }}>Contact support</a>
-              </div>
             </div>
           </div>
 
           {/* Right Column: Floating Profile / Rentals Card */}
           <div className="col-12 col-lg-8">
             <div className="card border-0 rounded-4 shadow-sm p-4 p-md-5 bg-white" style={{ borderColor: colors.borderLight }}>
-              
+
               {activeTab === 'profile' ? (
                 <>
                   {/* Profile Header */}
                   <div className="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center pb-4 mb-4 border-bottom">
                     <div className="d-flex align-items-center gap-3 mb-3 mb-sm-0">
-                      <div 
+                      <div
                         className="rounded-circle d-flex align-items-center justify-content-center fw-bold fs-4 text-white shadow-sm"
                         style={{ width: '64px', height: '64px', backgroundColor: colors.primaryGreen }}
                       >
-                        {userData.name.charAt(0)}
+
                       </div>
                       <div>
-                        <h4 className="fw-bold mb-0" style={{ color: colors.textDark }}>{userData.name}</h4>
-                        <small style={{ color: colors.textMuted }}>Member since {userData.memberSince}</small>
+                        <h4 className="fw-bold mb-0" style={{ color: colors.textDark }}></h4>
+                        <small style={{ color: colors.textMuted }}>Member since </small>
                       </div>
                     </div>
 
-                    <button 
+                    <button
                       onClick={() => setIsEditing(!isEditing)}
                       className="btn btn-sm px-4 py-2 rounded-3 fw-semibold shadow-sm"
-                      style={{ 
+                      style={{
                         backgroundColor: isEditing ? colors.primaryGreen : 'transparent',
                         color: isEditing ? '#FFFFFF' : colors.primaryGreen,
                         border: `1.5px solid ${colors.primaryGreen}`
                       }}
                     >
-                      {isEditing ? 'Save Changes' : 'Edit Details'}
+                      Edit Details
+                      {/* {isEditing ? 'Save Changes' : 'Edit Details'} */}
                     </button>
                   </div>
 
@@ -145,11 +139,11 @@ export default function MyProfile() {
                   <div className="row g-4 mb-4">
                     <div className="col-12 col-md-6">
                       <label className="form-label small fw-bold text-muted text-uppercase">Full Name</label>
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         name="name"
-                        value={userData.name} 
                         disabled={!isEditing}
+                        value={userData?.name || ""}
                         onChange={handleInputChange}
                         className="form-control py-2.5 rounded-3"
                         style={{ backgroundColor: isEditing ? '#FFFFFF' : colors.bgLight, borderColor: colors.borderLight }}
@@ -158,39 +152,27 @@ export default function MyProfile() {
 
                     <div className="col-12 col-md-6">
                       <label className="form-label small fw-bold text-muted text-uppercase">Email Address</label>
-                      <input 
-                        type="email" 
+                      <input
+                        type="email"
                         name="email"
-                        value={userData.email} 
                         disabled={!isEditing}
+                        readOnly
                         onChange={handleInputChange}
+                        value={userData?.email || ""}
                         className="form-control py-2.5 rounded-3"
                         style={{ backgroundColor: isEditing ? '#FFFFFF' : colors.bgLight, borderColor: colors.borderLight }}
                       />
                     </div>
 
                     <div className="col-12 col-md-6">
-                      <label className="form-label small fw-bold text-muted text-uppercase">City / Region</label>
-                      <input 
-                        type="text" 
-                        name="city"
-                        value={userData.city} 
+                      <label className="form-label small fw-bold text-muted text-uppercase">Address</label>
+                      <textarea
+                        type="text"
+                        name="address"
                         disabled={!isEditing}
                         onChange={handleInputChange}
+                        value={userData?.address || ""}
                         className="form-control py-2.5 rounded-3"
-                        style={{ backgroundColor: isEditing ? '#FFFFFF' : colors.bgLight, borderColor: colors.borderLight }}
-                      />
-                    </div>
-
-                    <div className="col-12">
-                      <label className="form-label small fw-bold text-muted text-uppercase">Primary Delivery Address</label>
-                      <textarea 
-                        rows="2"
-                        name="deliveryAddress"
-                        value={userData.deliveryAddress} 
-                        disabled={!isEditing}
-                        onChange={handleInputChange}
-                        className="form-control rounded-3"
                         style={{ backgroundColor: isEditing ? '#FFFFFF' : colors.bgLight, borderColor: colors.borderLight }}
                       />
                     </div>
@@ -198,8 +180,8 @@ export default function MyProfile() {
 
                   {isEditing && (
                     <div className="text-end">
-                      <button 
-                        onClick={() => setIsEditing(false)} 
+                      <button
+                        onClick={() => setIsEditing(false)}
                         className="btn text-white px-4 py-2.5 rounded-3 fw-semibold shadow-sm"
                         style={{ backgroundColor: colors.primaryGreen }}
                       >
@@ -218,8 +200,8 @@ export default function MyProfile() {
 
                   <div className="d-flex flex-column gap-3">
                     {activeRentals.map(rental => (
-                      <div 
-                        key={rental.id} 
+                      <div
+                        key={rental.id}
                         className="p-3.5 p-md-4 rounded-3 border d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3"
                         style={{ backgroundColor: colors.bgLight, borderColor: colors.borderLight }}
                       >

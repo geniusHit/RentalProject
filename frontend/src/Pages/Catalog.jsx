@@ -22,7 +22,7 @@ const Catalog = () => {
         getProducts()
     }, [])
 
-    const token = jwtDecode(localStorage.getItem("jwtToken"));
+    const token = jwtDecode(localStorage.getItem("login-user"));
 
     const rentNow = async (product) => {
         const isLogin = JSON.parse((localStorage.getItem("isLogin")))
