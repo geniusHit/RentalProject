@@ -29,9 +29,9 @@ const App = () => {
       const foo = await redis.get("foo");
       console.log("foo : ", foo)
 
-      // await redis.set("width", "600");
-      // const width = await redis.get("width")
-      // console.log("width : ", width)
+      await redis.set("width", "600");
+      const width = await redis.get("width")
+      console.log("width : ", width)
     }
 
     ab()
