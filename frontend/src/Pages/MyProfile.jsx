@@ -47,7 +47,7 @@ export default function MyProfile() {
   };
 
   useEffect(() => {
-    const loginUser = jwtDecode(localStorage.getItem("login-user"))
+    const loginUser = localStorage.getItem("login-user") ? jwtDecode(localStorage.getItem("login-user")) : {}
     setUserData(loginUser)
   }, [])
 

@@ -22,10 +22,10 @@ const Catalog = () => {
         getProducts()
     }, [])
 
-    const token = jwtDecode(localStorage.getItem("login-user"));
+    const token = localStorage.getItem("login-user")? jwtDecode(localStorage.getItem("login-user")) : {};
 
     const rentNow = async (product) => {
-        const isLogin = JSON.parse((localStorage.getItem("isLogin")))
+        const isLogin = JSON.parse(localStorage.getItem("isLogin"))
 
         if (isLogin === true) {
             const payment = await fetch(`http://localhost:8000/create-test-payment-link`, {
@@ -45,7 +45,7 @@ const Catalog = () => {
     }
 
     const paymentVerify = async () => {
-        const paymentData = jwtDecode(localStorage.getItem("payment_id_token"));
+        const paymentData = localStorage.getItem("payment_id_token")? jwtDecode(localStorage.getItem("payment_id_token")) : {};
 
         const verifyPayment = await fetch("http://localhost:8000/verify-payment-link", {
             method: "POST",
@@ -66,7 +66,7 @@ const Catalog = () => {
     localStorage.getItem("payment_id_token") && paymentVerify()
 
     const addRental = async () => {
-        const paymentData = jwtDecode(localStorage.getItem("payment_id_token"));
+        const paymentData = localStorage.getItem("payment_id_token") ? jwtDecode(localStorage.getItem("payment_id_token")) : {};
 
         const rentNow = await fetch(`http://localhost:8000/add-rental-item`, {
             method: "POST",
