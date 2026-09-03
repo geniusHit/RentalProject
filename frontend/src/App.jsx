@@ -17,7 +17,7 @@ const App = () => {
     const ab = async () => {
       const redis = new Redis({
         url: 'https://unbiased-gazelle-40519.upstash.io',
-        token: 'Ap5HAAIgcDF3JPG-x9A50Dhkk4wAXQDDsqLf7zzs4gVNrXMt_CgVDQ',
+        token: 'AZ5HAAIgcDE1ZjVkNTJkYmJiNzU0NzZiOWNiODhjMjY3NGI1ODcxNA',
       })
       // const redis = new Redis({
       //   url: "https://unbiased-gazelle-40519.upstash.io",
@@ -32,6 +32,10 @@ const App = () => {
       // await redis.set("width", "600");
       const width = await redis.get("width")
       console.log("width : ", width)
+
+      await redis.set("height", "377");
+      const height = await redis.get("height")
+      console.log("height : ", height)
     }
 
     ab()
