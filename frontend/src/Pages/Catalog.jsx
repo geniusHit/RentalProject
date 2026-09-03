@@ -5,7 +5,6 @@ import NavBar from '../Components/NavBar';
 import Footer from '../Components/Footer';
 import { useForm } from "react-hook-form"
 import { jwtDecode } from "jwt-decode";
-import { Redis } from '@upstash/redis'
 
 const Catalog = () => {
     const [products, setProducts] = useState([])
@@ -17,15 +16,6 @@ const Catalog = () => {
         const response = await fetch(`http://localhost:8000/get-products`)
         const result = await response.json()
         setProducts(result)
-
-        const redis = new Redis({
-            url: process.env.UPSTASH_REDIS_REST_URL,
-            token: process.env.UPSTASH_REDIS_REST_TOKEN,
-        })
-
-        await redis.set("foo", "bar");
-        const foo = await redis.get("foo");
-        console.log("foo : ", foo)
     }
 
     useEffect(() => {

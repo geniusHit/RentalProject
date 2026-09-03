@@ -33,7 +33,7 @@ const App = () => {
       const width = await redis.get("width")
       console.log("width : ", width)
 
-      await redis.set("height", "377");
+      await redis.set("height", "874");
       const height = await redis.get("height")
       console.log("height : ", height)
 
