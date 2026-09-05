@@ -40,6 +40,8 @@ const VendorDashboard = () => {
     }
 
     const submit = async (data) => {
+        console.log("data : ", data)
+        
         let formData = new FormData();
         for (let img of browseInput.current.files) {
             formData.append("image", img)
@@ -59,48 +61,6 @@ const VendorDashboard = () => {
             body: JSON.stringify(data2)
         })
     }
-
-    const schedules = [
-        {
-            date: "20",
-            month: "MAY",
-            title: "Delivery",
-            product: "Luxe 3-Seater Sofa",
-            time: "10:00 AM",
-        },
-        {
-            date: "21",
-            month: "MAY",
-            title: "Pickup",
-            product: "Modern Queen Bed",
-            time: "02:00 PM",
-        },
-        {
-            date: "22",
-            month: "MAY",
-            title: "Delivery",
-            product: "Office Chair",
-            time: "11:00 AM",
-        },
-    ];
-
-    const maintenance = [
-        {
-            title: "Sofa Repair",
-            product: "Luxe 3-Seater Sofa",
-            priority: "High",
-        },
-        {
-            title: "Chair Wheels Replacement",
-            product: "Office Chair",
-            priority: "Medium",
-        },
-        {
-            title: "Cushion Cleaning",
-            product: "Outdoor Sofa",
-            priority: "Low",
-        },
-    ];
 
     const getRentalProducts = async () => {
         const rp = await fetch("http://localhost:8000/all-rentals")
@@ -423,12 +383,15 @@ const VendorDashboard = () => {
                                     <div>
                                         <label>Category</label>
 
-                                        <select {...register("cetegory")}>
-                                            <option>Select Category</option>
-                                            <option>Sofa</option>
-                                            <option>Bed</option>
-                                            <option>Chair</option>
-                                            <option>Table</option>
+                                        <select {...register("category")}>
+                                            <option value="">Select Category</option>
+                                            <option value="sofa">Sofa</option>
+                                            <option value="bed">Bed</option>
+                                            <option value="chair">Chair</option>
+                                            <option value="table">Table</option>
+                                            <option value="tv">TV</option>
+                                            <option value="fridge">Fridge</option>
+                                            <option value="washing-machine">Washing Machine</option>
                                         </select>
                                     </div>
 
@@ -828,7 +791,9 @@ const VendorDashboard = () => {
                                             <td>{item.user.name}</td>
 
                                             <td>
-                                                <button className="deliverBtn" onClick={() => deliverItem(item)}>Deliver Item</button>
+                                                {
+                                                item?.deliveryStatus === "PENDING"? 
+                                                    <button className="deliverBtn" onClick={() => deliverItem(item)}>Deliver Item</button> : `Delivered`}
                                             </td>
 
                                             {/* <td><FaEye /></td> */}

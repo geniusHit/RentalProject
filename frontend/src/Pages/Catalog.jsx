@@ -40,7 +40,7 @@ const Catalog = () => {
             window.location.href = paymentData?.link_url
         }
         else {
-            navigate("/signup")
+            navigate("/login")
         }
     }
 
@@ -110,7 +110,7 @@ const Catalog = () => {
             <form className='search-form' onSubmit={handleSubmit(searchProds)}>
                 <input type='text' placeholder='Search furniture and appliances by type, style, or price...' className='search-input'
                     {...register("search")} />
-                <input type='submit' className='search-btn' />
+                <input type='submit' className='search-btn' value="Search" />
             </form>
 
             <br /><br />

@@ -27,7 +27,7 @@ const users = mongoose.Schema({
             type: [String],
         },
         expireAt: {
-            type: [String],
+            type: [Date],
         },
     },
 })
@@ -90,6 +90,7 @@ const products = mongoose.Schema({
 })
 const productsModel = mongoose.model("product", products)
 exports.addProduct = async (req, res) => {
+    console.log("req.body : ", req.body)
     const product = await new productsModel(req.body)
     const result = await product.save()
 
@@ -116,7 +117,7 @@ exports.loginUser = async (req, res) => {
     const toggleLogin = await usersModel.findByIdAndUpdate(userId, {
         loggedInIPS: {
             IP: user?.loggedInIPS?.IP.length>0? [user?.loggedInIPS?.IP, req.body.IP] : req.body.IP,
-            expireAt: user?.loggedInIPS?.IP?.length>0? [user?.loggedInIPS?.IP, expiry] : expiry
+            expireAt: user?.loggedInIPS?.expireAt?.length>0? [user?.loggedInIPS?.expireAt, expiry] : expiry
         }
     })
     const token = jwt.sign({ name: user.name, email: user.email, phone: user.phone, password: user.password, city: user.city, address: user.address }, SECRET, { expiresIn: "1h" })
@@ -277,7 +278,8 @@ exports.searchProducts = async (req, res) => {
             { brand: { $regex: `${searchKey}`, $options: 'i' } },
             { condition: { $regex: `${searchKey}`, $options: 'i' } },
             { description: { $regex: `${searchKey}`, $options: 'i' } },
-            { notes: { $regex: `${searchKey}`, $options: 'i' } }
+            { notes: { $regex: `${searchKey}`, $options: 'i' } },
+            { category: { $regex: `${searchKey}`, $options: 'i' } },
         ]
     });
 
