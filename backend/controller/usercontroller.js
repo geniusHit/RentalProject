@@ -22,10 +22,14 @@ const users = mongoose.Schema({
     address: {
         type: String
     },
-    isLoggedIn : {
-        type: Boolean,
-        default: false,
-    }
+    loggedInIPS: {
+        IP: {
+            type: [String],
+        },
+        expireAt: {
+            type: [String],
+        },
+    },
 })
 const usersModel = mongoose.model("users", users)
 exports.addUser = async (req, res) => {
@@ -101,12 +105,20 @@ exports.getProducts = async (req, res) => {
 }
 
 exports.loginUser = async (req, res) => {
+    console.log("req.body : ", req.body)
     const user = await usersModel.findOne({ password: req.body.password, email: req.body.email })
     console.log("user : ", user)
     console.log("user._id : ", user._id)
     console.log("user._id.toString() : ", user._id.toString())
     const userId = user._id.toString()
-    const toggleLogin = await usersModel.findByIdAndUpdate(userId, {isLoggedIn: !user?.loggedIn})
+    let expiry = new Date()
+    expiry.setDate(expiry.getDate()+1)
+    const toggleLogin = await usersModel.findByIdAndUpdate(userId, {
+        loggedInIPS: {
+            IP: user?.loggedInIPS?.IP.length>0? [user?.loggedInIPS?.IP, req.body.IP] : req.body.IP,
+            expireAt: user?.loggedInIPS?.IP?.length>0? [user?.loggedInIPS?.IP, expiry] : expiry
+        }
+    })
     const token = jwt.sign({ name: user.name, email: user.email, phone: user.phone, password: user.password, city: user.city, address: user.address }, SECRET, { expiresIn: "1h" })
     const decodedToken = jwt.verify(token, SECRET)
 
@@ -276,10 +288,10 @@ exports.deliverItem = async (req, res) => {
     const { name, email, city, address } = req.body.user;
     console.log("req.body : ", req.body)
     const data = req.body
-    const updatedData = {...data, deliveryStatus: "DELIVERED"}
+    const updatedData = { ...data, deliveryStatus: "DELIVERED" }
     console.log("updatedData : ", updatedData)
 
-    const updateRentalItems = await rentalItems.findByIdAndUpdate(data._id, 
+    const updateRentalItems = await rentalItems.findByIdAndUpdate(data._id,
         { $set: updatedData }
     )
 
@@ -392,12 +404,12 @@ exports.updateInventory = async (req, res) => {
 }
 
 exports.itemsDeliveryStatus = async (req, res) => {
-    try{
-        const pending = await rentalItems.find({deliveryStatus: "PENDING"})
-        const delivered = await rentalItems.find({deliveryStatus: "DELIVERED"});
-        res.json({pending: pending, delivered: delivered})
+    try {
+        const pending = await rentalItems.find({ deliveryStatus: "PENDING" })
+        const delivered = await rentalItems.find({ deliveryStatus: "DELIVERED" });
+        res.json({ pending: pending, delivered: delivered })
     }
     catch (err) {
-        return res.status(400).json({success: false, message: err.message})
+        return res.status(400).json({ success: false, message: err.message })
     }
 }

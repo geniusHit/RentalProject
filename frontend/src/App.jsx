@@ -10,7 +10,7 @@ import MyRentalItems from './Pages/MyRentalItems'
 import HowItWorks from './Pages/HowItWorks'
 import Contact from './Pages/Contact'
 import MyProfile from './Pages/MyProfile'
-import { Redis } from '@upstash/redis'
+// import { Redis } from '@upstash/redis'
 
 const App = () => {
   useEffect(() => {
@@ -42,8 +42,17 @@ const App = () => {
       console.log("breadth : ", breadth)
     }
 
-    ab()
+    // ab()
+
+    getIP();
   }, [])
+
+  const getIP = async () => {
+    const response = await fetch("https://api.ipify.org?format=json");
+    const data = await response.json();
+
+    console.log(data.ip);
+  };
 
   return (
     <BrowserRouter>

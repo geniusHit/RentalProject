@@ -20,11 +20,25 @@ import Logo from '../assets/Logo.png'
 import { Link } from "react-router-dom"
 import livingRoom from '../assets/ChatGPT Image Jun 11, 2026, 05_03_13 PM.png'
 import Footer from "../Components/Footer";
+import { useEffect } from "react";
 
 const Login = () => {
     const { register, handleSubmit } = useForm()
     const [isLogin, setIsLogin] = useState(false)
+    const [IP, setIP] = useState("")
     const navigate = useNavigate()
+
+    useEffect(() => {
+        getIP()
+    }, [])
+    const getIP = async () => {
+        const response = await fetch("https://api.ipify.org?format=json");
+        const data = await response.json();
+        console.log(data.ip);
+        setIP(data.ip)
+    };
+
+    console.log("IP : ", IP)
 
     const submit = async (data) => {
         console.log("data = ", data)
@@ -34,7 +48,7 @@ const Login = () => {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify({ ...data, IP: IP})
         })
 
         const result = await login.json()
