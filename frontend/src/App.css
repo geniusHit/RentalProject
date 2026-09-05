@@ -43,7 +43,7 @@
 .search-form {
     display: flex;
     justify-content: center;
-    margin-top: 40px;
+    margin: 20px 30px;
 }
 
 .categories {
@@ -61,6 +61,7 @@
     display: flex;
     justify-content: space-between;
     padding: 40px;
+    cursor: pointer;
 }
 
 .category-options .img {
@@ -88,4 +89,51 @@
     width: 95%;
     height: 600px;
     margin: auto;
+}
+
+.hide {
+    display: none !important;
+}
+
+.navbar-expand-lg .navbar-collapse {
+    justify-content: space-between;
+}
+
+
+@media screen and (max-width: 550px) {
+    .category-options {
+        display: grid;
+        grid-template-columns: 48% 48%;
+        row-gap: 20px;
+    }
+
+    .working {
+        height: 142px;
+    }
+
+    .carousel-text {
+        font-size: 10pt;
+        padding: 10px;
+    }
+
+    .carousel-text2 {
+        font-size: 9pt;
+    }
+
+    .carousel-btn {
+        font-size: 7pt;
+    }
+
+    .carousel-btn {
+        padding: 6px;
+    }
+
+    .carousel-indicators [data-bs-target]{
+        height: 2px !important;
+        width: 10px !important;
+    }
+
+    .category-options {
+        padding: 20px;
+    }
 }

@@ -1,8 +1,7 @@
 const mongoose = require("mongoose")
-const formidable = require("formidable")
-const fs = require("fs")
-const path = require("path");
-const { type } = require("os");
+const jwt = require("jsonwebtoken")
+const SECRET = process.env.JWT_SECRET
+const nodemailer = require("nodemailer")
 
 const users = mongoose.Schema({
     name: {
@@ -17,13 +16,25 @@ const users = mongoose.Schema({
     password: {
         type: String
     },
+    city: {
+        type: String
+    },
+    address: {
+        type: String
+    },
+    loggedInIPS: {
+        IP: {
+            type: [String],
+        },
+        expireAt: {
+            type: [Date],
+        },
+    },
 })
 const usersModel = mongoose.model("users", users)
 exports.addUser = async (req, res) => {
-    console.log("req.body from addUser = ", req.body)
     const user = await new usersModel(req.body)
     const result = await user.save();
-
     res.send(result)
 }
 
@@ -79,9 +90,9 @@ const products = mongoose.Schema({
 })
 const productsModel = mongoose.model("product", products)
 exports.addProduct = async (req, res) => {
-    console.log("req.body = ", req.body)
+    console.log("req.body : ", req.body)
     const product = await new productsModel(req.body)
-    const result = await result.save()
+    const result = await product.save()
 
     res.status(200).json({
         success: true
@@ -95,19 +106,32 @@ exports.getProducts = async (req, res) => {
 }
 
 exports.loginUser = async (req, res) => {
-    console.log("req.body = ", req.body)
-    const user = await usersModel.find({password: req.body.password, email: req.body.email})
-    
-    res.send(user)
+    console.log("req.body : ", req.body)
+    const user = await usersModel.findOne({ password: req.body.password, email: req.body.email })
+    console.log("user : ", user)
+    console.log("user._id : ", user._id)
+    console.log("user._id.toString() : ", user._id.toString())
+    const userId = user._id.toString()
+    let expiry = new Date()
+    expiry.setDate(expiry.getDate()+1)
+    const toggleLogin = await usersModel.findByIdAndUpdate(userId, {
+        loggedInIPS: {
+            IP: user?.loggedInIPS?.IP.length>0? [user?.loggedInIPS?.IP, req.body.IP] : req.body.IP,
+            expireAt: user?.loggedInIPS?.expireAt?.length>0? [user?.loggedInIPS?.expireAt, expiry] : expiry
+        }
+    })
+    const token = jwt.sign({ name: user.name, email: user.email, phone: user.phone, password: user.password, city: user.city, address: user.address }, SECRET, { expiresIn: "1h" })
+    const decodedToken = jwt.verify(token, SECRET)
+
+    res.send({ ...user, jwtToken: token })
 }
 
 const rentalItemsSchema = mongoose.Schema({
-    userName: {
-        type: String
-    },
-
-    email: {
-        type: String
+    user: {
+        name: { type: String },
+        email: { type: String },
+        city: { type: String },
+        address: { type: String },
     },
 
     name: {
@@ -173,25 +197,221 @@ const rentalItemsSchema = mongoose.Schema({
     notes: {
         type: String
     },
+
+    rentDays: {
+        type: Number,
+        default: 5,
+    },
+
+    rentedDate: {
+        type: String
+    },
+
+    deliveryStatus: {
+        type: String,
+        default: "PENDING"
+    }
 })
 const rentalItems = mongoose.model("rentalItems", rentalItemsSchema)
 exports.addRentalItems = async (req, res) => {
-    console.log("req.body = ", req.body)
+    const { email, name, userName } = req.body;
+    const user = await usersModel.findOne({ email: email })
+    const existingProduct = await rentalItems.findOne({ email: email, userName: userName, name: name });
+    if (existingProduct) {
+        res.send({ message: "Product is already in Rental Items!" });
+        return;
+    }
 
-    const item = await new rentalItems(req.body)
+    let expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + 1);
+    const data = req.body;
+    const data2 = {
+        name: data.name,
+        imageNames: data.imageNames,
+        sku: data.sku,
+        condition: data.condition,
+        brand: data.brand,
+        material: data.material,
+        description: data.description,
+        price: data.price,
+        quantity: data.quantity,
+        securityDeposit: data.securityDeposit,
+        stockKeepingUnit: data.stockKeepingUnit,
+        deliveryCharge: data.deliveryCharge,
+        returnPolicy: data.returnPolicy,
+        assemblyRequired: data.assemblyRequired,
+        notes: data.notes,
+        rentDays: data.rentDays,
+        rentedDate: new Date(),
+        deliveryStatus: "PENDING",
+    }
+    const item = new rentalItems({
+        ...data2, user: {
+            name: userName,
+            email: email,
+            city: user.city,
+            address: user.address
+        }
+    })
     const result = await item.save()
 
-    res.send(result)
+    res.send({ message: "Product added to Rental Items" })
 }
 
 exports.myRentalItems = async (req, res) => {
-    console.log("req.body = ", req.body)
+    const { name, email } = req.body;
+    const items = await rentalItems.find({ "user.name": name, "user.email": email })
 
-    const items = await rentalItems.find({userName: req.body.name, email: req.body.email})
     res.send(items)
 }
 
-exports.check = async (req, res) => {
-    const items = await usersModel.find({name: {$regex: "Thakur", $options: "i"}})
-    res.send(items)
+exports.allRentals = async (req, res) => {
+    const allR = await rentalItems.find({})
+    res.send(allR)
+}
+
+exports.searchProducts = async (req, res) => {
+    const searchKey = req.body.search;
+    const products = await productsModel.find({
+        $or: [
+            { name: { $regex: `${searchKey}`, $options: 'i' } },
+            { brand: { $regex: `${searchKey}`, $options: 'i' } },
+            { condition: { $regex: `${searchKey}`, $options: 'i' } },
+            { description: { $regex: `${searchKey}`, $options: 'i' } },
+            { notes: { $regex: `${searchKey}`, $options: 'i' } },
+            { category: { $regex: `${searchKey}`, $options: 'i' } },
+        ]
+    });
+
+    res.send(products)
+}
+
+exports.deliverItem = async (req, res) => {
+    const { name, email, city, address } = req.body.user;
+    console.log("req.body : ", req.body)
+    const data = req.body
+    const updatedData = { ...data, deliveryStatus: "DELIVERED" }
+    console.log("updatedData : ", updatedData)
+
+    const updateRentalItems = await rentalItems.findByIdAndUpdate(data._id,
+        { $set: updatedData }
+    )
+
+    const auth = nodemailer.createTransport({
+        service: "gmail",
+        secure: true,
+        port: 465,
+        auth: {
+            user: "rohitthakur792002@gmail.com",
+            pass: "pnsg ismb vdou ccax"
+        }
+    })
+    const receiver = {
+        from: "rohitthakur792002@gmail.com",
+        to: `${email}`,
+        subject: `Team Rental Items. Item ${req.body.name} has been shipped to your provided address.`,
+        html: `<b>Hello</b> ${name}. Your ordered item ${req.body.name} has been shipped to your provided address ${address}. It will be delived in 5 days.`
+    }
+
+    auth.sendMail(receiver, (error, emailResponse) => {
+        if (error)
+            throw error;
+        console.log("success!")
+        res.end()
+    })
+
+    res.end()
+}
+
+exports.createTestPaymentLink = async (req, res) => {
+    const url = "https://sandbox.cashfree.com/pg/links";
+    const linkId = `link_${Date.now()}`;
+    const { email, } = req.body;
+    const user = await usersModel.findOne({ email: email })
+
+    const payload = {
+        link_id: linkId,
+        link_amount: Number(req.body.price),
+        link_currency: "INR",
+        link_purpose: "Test payment for project",
+        customer_details: {
+            customer_phone: "9999999999",
+            customer_email: `${user.email}`,
+            customer_name: `${user.name}`
+        },
+        link_notify: {
+            send_sms: false,
+            send_email: false
+        },
+        link_meta: {
+            return_url: `http://localhost:5173/catalog`
+        }
+    };
+
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "x-api-version": "2023-08-01",
+            "x-client-id": process.env.CASHFREE_CLIENT_ID,
+            "x-client-secret": process.env.CASHFREE_SECRET_KEY
+        },
+        body: JSON.stringify(payload)
+    });
+
+    const data = await response.json();
+    const token = jwt.sign({ ...req.body, link_id: data.link_id }, process.env.JWT_SECRET, { expiresIn: "1h" })
+
+    res.send({ ...data, payment_token: token })
+}
+
+exports.verifyPaymentLink = async (req, res) => {
+    try {
+        const { link_id } = req.body;
+        const url = `https://sandbox.cashfree.com/pg/links/${link_id}`;
+
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                "x-api-version": "2023-08-01",
+                "x-client-id": process.env.CASHFREE_CLIENT_ID,
+                "x-client-secret": process.env.CASHFREE_SECRET_KEY,
+            },
+        });
+
+        const data = await response.json();
+
+        res.send(data)
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+exports.updateInventory = async (req, res) => {
+    try {
+        const data = req.body;
+        data.map(async (product, index) => {
+            const { _id, ...updateData } = product;
+            const updatedProduct = await productsModel.findByIdAndUpdate(
+                _id,
+                { $set: updateData },
+            );
+        })
+
+        res.send({ message: "Inventory has been updated." })
+    }
+    catch (err) {
+        return res.status(400).json({ success: false, message: err.message })
+    }
+}
+
+exports.itemsDeliveryStatus = async (req, res) => {
+    try {
+        const pending = await rentalItems.find({ deliveryStatus: "PENDING" })
+        const delivered = await rentalItems.find({ deliveryStatus: "DELIVERED" });
+        res.json({ pending: pending, delivered: delivered })
+    }
+    catch (err) {
+        return res.status(400).json({ success: false, message: err.message })
+    }
 }

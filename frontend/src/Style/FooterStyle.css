@@ -6,7 +6,7 @@
             #1f3a1f); */
     background: #1f3a1f;
     color: white;
-    border-radius: 30px 30px 0 0;
+    /* border-radius: 30px 30px 0 0; */
     padding: 50px;
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr;
@@ -20,6 +20,7 @@
 .footer-column {
     display: flex;
     flex-direction: column;
+    text-align: center;
 }
 
 .footer-column h3 {
@@ -36,5 +37,19 @@
 @media (max-width: 992px) {
     .footer {
         grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .footer-logo {
+        display: flex;
+        justify-content: center;
+    }
+
+    .footer-column {
+        font-size: 9pt;
+    }
+
+    .footer-column h3{
+        font-size: 11pt;
     }
 }

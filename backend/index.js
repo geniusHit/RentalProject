@@ -7,6 +7,8 @@ const path = require("path");
 const router = require("./routes/router.js")
 const port = process.env.PORT
 
+console.log("port = ", port)
+
 app.use(cors())
 app.use(express.json())
 // app.use(express.urlencoded({ extended: true }))

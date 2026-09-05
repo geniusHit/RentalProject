@@ -39,6 +39,18 @@ router.post("/add-rental-item", controller.addRentalItems)
 
 router.post("/my-rental-items", controller.myRentalItems)
 
-router.get("/check", controller.check)
+router.post("/search-products", controller.searchProducts)
+
+router.get("/all-rentals", controller.allRentals)
+
+router.post("/deliver-item", controller.deliverItem)
+
+router.post("/create-test-payment-link", controller.createTestPaymentLink)
+
+router.post("/verify-payment-link", controller.verifyPaymentLink)
+
+router.post("/update-inventory", controller.updateInventory)
+
+router.get("/items-delivery-status", controller.itemsDeliveryStatus)
 
 module.exports = router

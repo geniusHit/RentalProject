@@ -17,43 +17,50 @@ import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 import "../Style/LoginStyle.css";
 import Logo from '../assets/Logo.png'
+import { Link } from "react-router-dom"
 import livingRoom from '../assets/ChatGPT Image Jun 11, 2026, 05_03_13 PM.png'
-import { toggleLogin } from "../globalStates";
-import { useSelector, useDispatch } from "react-redux";
 import Footer from "../Components/Footer";
+import { useEffect } from "react";
 
 const Login = () => {
     const { register, handleSubmit } = useForm()
     const [isLogin, setIsLogin] = useState(false)
+    const [IP, setIP] = useState("")
     const navigate = useNavigate()
 
-    const globalStates = useSelector((state) => state.global.value);
-    const dispatch = useDispatch();
+    useEffect(() => {
+        getIP()
+    }, [])
+    const getIP = async () => {
+        const response = await fetch("https://api.ipify.org?format=json");
+        const data = await response.json();
+        console.log(data.ip);
+        setIP(data.ip)
+    };
+
+    console.log("IP : ", IP)
 
     const submit = async (data) => {
         console.log("data = ", data)
 
-        const login = await fetch("http://localhost:5000/login-user", {
+        const login = await fetch("http://localhost:8000/login-user", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify({ ...data, IP: IP})
         })
 
         const result = await login.json()
         console.log("result = ", result)
-        result.length > 0 && (setIsLogin(true), localStorage.setItem("isLogin", true), localStorage.setItem("name", result[0].name), localStorage.setItem("email", result[0].email), localStorage.setItem("password", result.password), navigate("/"))
-        // localStorage.setItem("isLogin", isLogin)
-        // dispatch(toggleLogin())
+        setIsLogin(true);
+        localStorage.setItem("isLogin", true);
+        localStorage.setItem("login-user", result.jwtToken);
+        navigate("/")
     }
 
     console.log("isLogin = ", isLogin)
-    console.log("globalStates isLogin = ", globalStates)
     console.log("localStorage.getItem(isLogin) = ", localStorage.getItem("isLogin"))
-    console.log("localStorage.getItem(name) = ", localStorage.getItem("name"))
-
-    // localStorage.removeItem("isLogin")
 
     return (
         <>
@@ -67,13 +74,11 @@ const Login = () => {
                         className="login-left"
                     >
                         <div className="overlay-content">
-                            <div className="logo">
-                                {/* <h1>
-                Furni<span>Rent</span>
-              </h1>
-              <p>Live Better. Rent Smarter.</p> */}
-                                <img src={Logo} width="200" />
-                            </div>
+                            <Link to="/">
+                                <div className="logo">
+                                    <img src={Logo} width="200" />
+                                </div>
+                            </Link>
 
                             <div className="welcome-text">
                                 <h2>Welcome Back!</h2>
@@ -97,9 +102,7 @@ const Login = () => {
                             <form onSubmit={handleSubmit(submit)}>
 
                                 <div className="input-group">
-                                    <label>Email Address</label>
                                     <div className="input-box">
-                                        <FaEnvelope />
                                         <input
                                             type="email"
                                             placeholder="Enter your email"
@@ -109,9 +112,7 @@ const Login = () => {
                                 </div>
 
                                 <div className="input-group">
-                                    <label>Password</label>
                                     <div className="input-box">
-                                        <FaLock />
                                         <input
                                             type="password"
                                             placeholder="Enter your password"
@@ -133,26 +134,10 @@ const Login = () => {
                                     Login <FaArrowRight />
                                 </button>
 
-                                <div className="divider">
-                                    <span>OR</span>
-                                </div>
-
-                                <button type="button" className="social-btn">
-                                    <FaGoogle />
-                                    Continue with Google
-                                </button>
-
-                                <button type="button" className="social-btn">
-                                    <FaApple />
-                                    Continue with Apple
-                                </button>
-
                                 <p className="signup-text">
-                                    Don't have an account? <a href="/signup">Sign Up</a>
+                                    Don't have an account? <Link to="/signup">Sign Up</Link>
                                 </p>
-
                             </form>
-
                         </div>
                     </div>
                 </div>
@@ -188,7 +173,7 @@ const Login = () => {
 
             {/* Footer */}
             <Footer />
-            
+
             <div className="copyright">
                 © 2024 FurniRent. All rights reserved.
             </div>

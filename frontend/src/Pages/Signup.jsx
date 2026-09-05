@@ -1,3 +1,4 @@
+'use client';
 import React from "react";
 import {
     FaGoogle,
@@ -24,8 +25,6 @@ const Signup = () => {
     const { watch, register, handleSubmit } = useForm()
     const port = import.meta.env.PORT;
     const submit = async (data) => {
-        console.log("data = ", data)
-
         const addUser = await fetch(`http://localhost:8000/add-user`, {
             method: "POST",
             headers: {
@@ -38,22 +37,17 @@ const Signup = () => {
     return (
         <>
             <div className="login-page">
-
-                {/* Hero Section */}
                 <div className="login-container" style={{ backgroundImage: `url(${livingRoom})` }}>
 
-                    {/* Left Side */}
                     <div
                         className="login-left"
                     >
                         <div className="overlay-content">
-                            <div className="logo">
-                                {/* <h1>
-                Furni<span>Rent</span>
-              </h1>
-              <p>Live Better. Rent Smarter.</p> */}
-                                <img src={Logo} width="200" />
-                            </div>
+                            <Link to="/">
+                                <div className="logo">
+                                    <img src={Logo} width="200" />
+                                </div>
+                            </Link>
 
                             <div className="welcome-text">
                                 <h2>Welcome Back!</h2>
@@ -65,7 +59,6 @@ const Signup = () => {
                         </div>
                     </div>
 
-                    {/* Right Side */}
                     <div className="login-box">
                         <div className="login-card">
 
@@ -76,91 +69,64 @@ const Signup = () => {
 
                             <form onSubmit={handleSubmit(submit)}>
                                 <div className="input-group">
-                                    <label>Full Name</label>
-                                    <div className="input-box">
-                                        <i className="fa fa-user"></i>
-                                        <input
-                                            type="text"
-                                            placeholder="Enter your full name"
-                                            {...register("name")}
-                                        />
-                                    </div>
+                                    <input
+                                        type="text"
+                                        placeholder="Enter your full name"
+                                        {...register("name")}
+                                    />
                                 </div>
 
                                 <div className="input-group">
-                                    <label>Email Address</label>
-                                    <div className="input-box">
-                                        <FaEnvelope />
-                                        <input
-                                            type="email"
-                                            placeholder="Enter your email"
-                                            {...register("email")}
-                                        />
-                                    </div>
+                                    <input
+                                        type="email"
+                                        placeholder="Enter your email"
+                                        {...register("email")}
+                                    />
                                 </div>
 
                                 <div className="input-group">
-                                    <label>Phone Number</label>
-                                    <div className="input-box">
-                                        <i className="fa fa-phone"></i>
-                                        <input
-                                            type="tel"
-                                            placeholder="Enter your phone number"
-                                            {...register("phone")}
-                                        />
-                                    </div>
+                                    <input
+                                        type="text"
+                                        placeholder="Enter your phone number"
+                                        {...register("phone")}
+                                    />
                                 </div>
 
                                 <div className="input-group">
-                                    <label>Password</label>
-                                    <div className="input-box">
-                                        <FaLock />
-                                        <input
-                                            type="password"
-                                            placeholder="Enter your password"
-                                            {...register("password")}
-                                        />
-                                    </div>
+                                    <input
+                                        type="password"
+                                        placeholder="Enter your password"
+                                        {...register("password")}
+                                    />
                                 </div>
 
-                                <div className="login-options">
-                                    <label>
-                                        <input type="checkbox" />
-                                        Remember me
-                                    </label>
+                                <div className="input-group">
+                                    <input
+                                        type="text"
+                                        placeholder="City"
+                                        {...register("city")}
+                                    />
+                                </div>
 
-                                    <a href="/">Forgot Password?</a>
+                                <div className="input-group">
+                                    <textarea
+                                        placeholder="Delivery Address"
+                                        {...register("address")}
+                                    />
                                 </div>
 
                                 <button className="login-btn">
                                     Signup <FaArrowRight />
                                 </button>
 
-                                <div className="divider">
-                                    <span>OR</span>
-                                </div>
-
-                                <button type="button" className="social-btn">
-                                    <FaGoogle />
-                                    Continue with Google
-                                </button>
-
-                                <button type="button" className="social-btn">
-                                    <FaApple />
-                                    Continue with Apple
-                                </button>
-
                                 <p className="signup-text">
-                                    Don't have an account? <Link to="/signup">Sign Up</Link>
+                                    Already have an account? <Link to="/login">Login</Link>
                                 </p>
-
                             </form>
-
                         </div>
                     </div>
                 </div>
 
-                {/* Features */}
                 <div className="features">
 
                     <div className="feature">
@@ -189,7 +155,6 @@ const Signup = () => {
                 </div>
             </div>
 
-            {/* Footer */}
             <Footer />
             <div className="copyright">
                 © 2024 FurniRent. All rights reserved.

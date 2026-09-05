@@ -1,38 +1,26 @@
+'use client';
 import React, { useEffect, useState } from 'react'
-import Logo from '../assets/Logo.png'
-import { NavLink, Link } from 'react-router-dom'
-import { NavDropdown } from 'react-bootstrap';
-import { FaRegUser } from "react-icons/fa";
-import {
-    FaGoogle,
-    FaApple,
-    FaEnvelope,
-    FaLock,
-    FaArrowRight,
-    FaTruck,
-    FaHeadset,
-    FaShieldAlt,
-    FaFacebookF,
-    FaInstagram,
-    FaYoutube,
-    FaTwitter,
-} from "react-icons/fa";
 import "../Style/MyRentalItems.css"
 import NavBar from '../Components/NavBar';
 import Footer from '../Components/Footer';
+import { jwtDecode } from "jwt-decode";
 
 const MyRentalItems = () => {
     const [products, setProducts] = useState([])
 
+    const token = localStorage.getItem("login-user")? jwtDecode(localStorage.getItem("login-user")) : {};
+
+    console.log("token : ", token)
+
     const searchItems = async (req, res) => {
-        const rentalItems = await fetch("http://localhost:5000/my-rental-items", {
+        const rentalItems = await fetch("http://localhost:8000/my-rental-items", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                email: localStorage.getItem("email"),
-                name: localStorage.getItem("name")
+                email: token.email,
+                name: token.name
             })
         })
 
@@ -57,7 +45,7 @@ const MyRentalItems = () => {
                     products.map((prod, index) => {
                         return <div className='product' key={index}>
                             <div className='img' style={{
-                                backgroundImage: `url(http://localhost:5000/uploads/${prod.imageNames[0]})`
+                                backgroundImage: `url(http://localhost:8000/uploads/${prod.imageNames[0]})`
                             }}></div>
                             <div className='details'>
                                 <div className='prodName'>{prod.name}</div>
