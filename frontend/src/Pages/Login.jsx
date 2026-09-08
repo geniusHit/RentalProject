@@ -23,7 +23,7 @@ import Footer from "../Components/Footer";
 import { useEffect } from "react";
 
 const Login = () => {
-    const { register, handleSubmit } = useForm()
+    const { register, handleSubmit, formState: { errors }, setError } = useForm()
     const [isLogin, setIsLogin] = useState(false)
     const [IP, setIP] = useState("")
     const navigate = useNavigate()
@@ -34,33 +34,47 @@ const Login = () => {
     const getIP = async () => {
         const response = await fetch("https://api.ipify.org?format=json");
         const data = await response.json();
-        console.log(data.ip);
         setIP(data.ip)
     };
 
-    console.log("IP : ", IP)
-
     const submit = async (data) => {
-        console.log("data = ", data)
+        let expiry = new Date();
+        expiry.setDate(expiry.getDate() + 1);
 
-        const login = await fetch("http://localhost:8000/login-user", {
+        try {
+            var login = await fetch("http://localhost:8000/login-user", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ ...data, IP: IP, expiry: expiry })
+            })
+
+            if (!login.ok) {
+                throw new Error("Password is incorrect")
+            }
+
+            const result = await login.json();
+        }
+        catch (err) {
+            console.log("Password is incorrect")
+            setError("password", {
+                message: "Password is incorrect"
+            })
+            return
+        }
+
+        const currentLogin = await fetch("http://localhost:8000/manage-logged-users", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ ...data, IP: IP})
+            body: JSON.stringify({ ...data, IP: IP, expiry: expiry })
         })
 
-        const result = await login.json()
-        console.log("result = ", result)
         setIsLogin(true);
-        localStorage.setItem("isLogin", true);
-        localStorage.setItem("login-user", result.jwtToken);
         navigate("/")
     }
-
-    console.log("isLogin = ", isLogin)
-    console.log("localStorage.getItem(isLogin) = ", localStorage.getItem("isLogin"))
 
     return (
         <>
@@ -106,8 +120,11 @@ const Login = () => {
                                         <input
                                             type="email"
                                             placeholder="Enter your email"
-                                            {...register("email")}
+                                            {...register("email", {
+                                                required: { value: true, message: "Email is required" },
+                                            })}
                                         />
+                                        <div className="error">{errors?.email?.message}</div>
                                     </div>
                                 </div>
 
@@ -118,6 +135,8 @@ const Login = () => {
                                             placeholder="Enter your password"
                                             {...register("password")}
                                         />
+
+                                        <div className="error">{errors?.password?.message}</div>
                                     </div>
                                 </div>
 

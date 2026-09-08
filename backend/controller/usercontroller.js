@@ -16,20 +16,20 @@ const users = mongoose.Schema({
     password: {
         type: String
     },
-    city: {
-        type: String
+    pincode: {
+        type: Number
     },
     address: {
         type: String
     },
-    loggedInIPS: {
+    loggedInIPS: [{
         IP: {
-            type: [String],
+            type: String,
         },
         expireAt: {
-            type: [Date],
-        },
-    },
+            type: Date,
+        }
+    }],
 })
 const usersModel = mongoose.model("users", users)
 exports.addUser = async (req, res) => {
@@ -90,7 +90,6 @@ const products = mongoose.Schema({
 })
 const productsModel = mongoose.model("product", products)
 exports.addProduct = async (req, res) => {
-    console.log("req.body : ", req.body)
     const product = await new productsModel(req.body)
     const result = await product.save()
 
@@ -106,24 +105,25 @@ exports.getProducts = async (req, res) => {
 }
 
 exports.loginUser = async (req, res) => {
-    console.log("req.body : ", req.body)
-    const user = await usersModel.findOne({ password: req.body.password, email: req.body.email })
-    console.log("user : ", user)
-    console.log("user._id : ", user._id)
-    console.log("user._id.toString() : ", user._id.toString())
-    const userId = user._id.toString()
-    let expiry = new Date()
-    expiry.setDate(expiry.getDate()+1)
-    const toggleLogin = await usersModel.findByIdAndUpdate(userId, {
-        loggedInIPS: {
-            IP: user?.loggedInIPS?.IP.length>0? [user?.loggedInIPS?.IP, req.body.IP] : req.body.IP,
-            expireAt: user?.loggedInIPS?.expireAt?.length>0? [user?.loggedInIPS?.expireAt, expiry] : expiry
-        }
-    })
-    const token = jwt.sign({ name: user.name, email: user.email, phone: user.phone, password: user.password, city: user.city, address: user.address }, SECRET, { expiresIn: "1h" })
-    const decodedToken = jwt.verify(token, SECRET)
+    try {
+        const user = await usersModel.findOne({ password: req.body.password, email: req.body.email })
+        const userId = user._id.toString()
+        const loginInSystem = await usersModel.findByIdAndUpdate(userId, {
+            $push: {
+                loggedInIPS: {
+                    IP: req.body.IP,
+                    expireAt: req.body.expiry
+                }
+            }
+        })
+        const token = jwt.sign({ name: user.name, email: user.email, phone: user.phone, password: user.password, city: user.city, address: user.address }, SECRET, { expiresIn: "1h" })
+        const decodedToken = jwt.verify(token, SECRET)
 
-    res.send({ ...user, jwtToken: token })
+        res.send({ ...user, jwtToken: token })
+    }
+    catch(err){
+        return res.status(400).json({success: false, message: err.message})
+    }
 }
 
 const rentalItemsSchema = mongoose.Schema({
@@ -260,7 +260,7 @@ exports.addRentalItems = async (req, res) => {
 
 exports.myRentalItems = async (req, res) => {
     const { name, email } = req.body;
-    const items = await rentalItems.find({ "user.name": name, "user.email": email })
+    const items = await rentalItems.find({ "user.email": email })
 
     res.send(items)
 }
@@ -288,10 +288,8 @@ exports.searchProducts = async (req, res) => {
 
 exports.deliverItem = async (req, res) => {
     const { name, email, city, address } = req.body.user;
-    console.log("req.body : ", req.body)
     const data = req.body
     const updatedData = { ...data, deliveryStatus: "DELIVERED" }
-    console.log("updatedData : ", updatedData)
 
     const updateRentalItems = await rentalItems.findByIdAndUpdate(data._id,
         { $set: updatedData }
@@ -414,4 +412,61 @@ exports.itemsDeliveryStatus = async (req, res) => {
     catch (err) {
         return res.status(400).json({ success: false, message: err.message })
     }
+}
+
+const loggedUsers = mongoose.Schema({
+    email: {
+        type: String,
+    },
+    IP: {
+        type: String,
+    },
+    expiry: {
+        type: Date
+    }
+})
+const loggedUsersModel = mongoose.model("loggedUsers", loggedUsers)
+exports.manageLoggedUsers = async (req, res) => {
+    try {
+        const newLoggedUser = await new loggedUsersModel(req.body)
+        await newLoggedUser.save()
+
+        res.send(newLoggedUser)
+    }
+    catch (err) {
+        return res.status(400).json({ success: false, message: err.message })
+    }
+}
+
+exports.getLoginUser = async (req, res) => {
+    const loggedUser = await loggedUsersModel.findOne({ IP: req.body.IP })
+    const user = loggedUser !== null && await usersModel.findOne({ email: loggedUser.email })
+
+    res.send({ loggedUser: loggedUser, user: user })
+}
+
+
+const paymentToken = mongoose.Schema({
+    payment_token: {
+        type: String,
+    }
+})
+const paymentTokenModel = mongoose.model("paymentToken", paymentToken)
+exports.savePaymentToken = async (req, res) => {
+    const token = await new paymentTokenModel(req.body)
+    await token.save()
+
+    res.send("Payment token saved successfully.")
+}
+
+exports.getPaymentToken = async (req, res) => {
+    const token = await paymentTokenModel.find({})
+
+    res.send(token)
+}
+
+exports.deletePaymentToken = async (req, res) => {
+    const deleteToken = await paymentTokenModel.deleteMany({})
+
+    res.send(deleteToken)
 }

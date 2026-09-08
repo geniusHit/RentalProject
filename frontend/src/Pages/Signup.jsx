@@ -1,5 +1,4 @@
-'use client';
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
     FaGoogle,
     FaApple,
@@ -14,7 +13,7 @@ import {
     FaYoutube,
     FaTwitter,
 } from "react-icons/fa";
-import { Link } from "react-router-dom"
+import { Link, NavLink, useNavigate } from "react-router-dom"
 import "../Style/LoginStyle.css";
 import Logo from '../assets/Logo.png'
 import livingRoom from '../assets/ChatGPT Image Jun 11, 2026, 05_03_13 PM.png'
@@ -22,17 +21,34 @@ import { useForm } from "react-hook-form"
 import Footer from "../Components/Footer";
 
 const Signup = () => {
-    const { watch, register, handleSubmit } = useForm()
+    const { watch, register, handleSubmit, formState: {errors} } = useForm()
     const port = import.meta.env.PORT;
+    const [IP, setIP] = useState()
+    const navigate = useNavigate()
+
     const submit = async (data) => {
+        let expiry = new Date();
+        expiry.setDate(expiry.getDate() + 1);
+
         const addUser = await fetch(`http://localhost:8000/add-user`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify({...data, IP: IP, expiry: expiry})
         })
+
+        navigate("/login")
     }
+
+    useEffect(() => {
+        getIP()
+    }, [])
+    const getIP = async () => {
+        const response = await fetch("https://api.ipify.org?format=json");
+        const data = await response.json();
+        setIP(data.ip)
+    };
 
     return (
         <>
@@ -72,47 +88,71 @@ const Signup = () => {
                                     <input
                                         type="text"
                                         placeholder="Enter your full name"
-                                        {...register("name")}
+                                        {...register("name", {
+                                            required: {value: true, message: "Full Name is required"}
+                                        })}
                                     />
+
+                                    <div className="error">{errors?.name?.message}</div>
                                 </div>
 
                                 <div className="input-group">
                                     <input
                                         type="email"
                                         placeholder="Enter your email"
-                                        {...register("email")}
+                                        {...register("email", {
+                                            required: {value: true, message: "Email is required"}
+                                        })}
                                     />
+
+                                    <div className="error">{errors?.email?.message}</div>
                                 </div>
 
                                 <div className="input-group">
                                     <input
                                         type="text"
                                         placeholder="Enter your phone number"
-                                        {...register("phone")}
+                                        {...register("phone", {
+                                            required: {value: true, message: "Phone is required"}
+                                        })}
                                     />
+
+                                    <div className="error">{errors?.phone?.message}</div>
                                 </div>
 
                                 <div className="input-group">
                                     <input
                                         type="password"
                                         placeholder="Enter your password"
-                                        {...register("password")}
+                                        {...register("password", {
+                                            required: {value: true, message: "Password is required"}
+                                        })}
                                     />
+
+                                    <div className="error">{errors?.password?.message}</div>
                                 </div>
 
                                 <div className="input-group">
                                     <input
                                         type="text"
-                                        placeholder="City"
-                                        {...register("city")}
+                                        placeholder="Pincode"
+                                        {...register("pincode", {
+                                            required: {value: true, message: "Pincode is required"}
+                                        })}
                                     />
+
+                                    <div className="error">{errors?.pincode?.message}</div>
                                 </div>
 
                                 <div className="input-group">
                                     <textarea
                                         placeholder="Delivery Address"
-                                        {...register("address")}
+                                        {...register("address", {
+                                            required: {value: true, message: "Delivery address is required"}
+                                        })}
                                     />
+
+                                    <div className="error">{errors?.address?.message}</div>
                                 </div>
 
                                 <button className="login-btn">

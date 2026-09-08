@@ -12,8 +12,6 @@ const NavBar = () => {
         localStorage.removeItem("login-user")
     }
 
-    console.log("menuCollpased : ", menuCollpased)
-
     return (
         <div>
             <nav className="navbar navbar-expand-lg">
@@ -43,9 +41,9 @@ const NavBar = () => {
                         </span>
 
                         <NavDropdown title={<FaRegUser />}>
-                            <NavDropdown.Item as={Link} to="/myprofile">
+                            {/* <NavDropdown.Item as={Link} to="/myprofile">
                                 My Profile
-                            </NavDropdown.Item>
+                            </NavDropdown.Item> */}
 
                             <NavDropdown.Item as={Link} to="/my-rental-items">
                                 My Orders
@@ -55,7 +53,7 @@ const NavBar = () => {
                                 Login
                             </NavDropdown.Item>
 
-                            <NavDropdown.Divider />
+                            {/* <NavDropdown.Divider /> */}
 
                             <NavDropdown.Item as={Link} to="/vendor-dashboard">
                                 Vendor Dashboard

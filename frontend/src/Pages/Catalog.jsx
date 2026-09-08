@@ -10,6 +10,11 @@ const Catalog = () => {
     const [products, setProducts] = useState([])
     const [itemMessage, setItemMessage] = useState("")
     const [showMessage, setShowMessage] = useState(false)
+    const [IP, setIP] = useState("")
+    const [loginUser, setLoginUser] = useState({})
+    const [paymentToken, setPaymentToken] = useState([])
+    const [paymentData, setPaymentData] = useState()
+    const [paymentStatus, setPaymentStatus] = useState()
     const navigate = useNavigate()
 
     const getProducts = async () => {
@@ -18,25 +23,65 @@ const Catalog = () => {
         setProducts(result)
     }
 
+    const getIP = async () => {
+        const response = await fetch("https://api.ipify.org?format=json");
+        const data = await response.json();
+        setIP(data.ip)
+    };
+
+    const getLoginUser = async () => {
+        const response = await fetch(`http://localhost:8000/get-login-user`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                IP: IP,
+            })
+        })
+        const data = await response.json()
+        setLoginUser(data)
+    }
+
     useEffect(() => {
         getProducts()
+        getIP()
+        getPaymentToken()
     }, [])
 
-    const token = localStorage.getItem("login-user") ? jwtDecode(localStorage.getItem("login-user")) : {};
+    useEffect(() => {
+        getLoginUser()
+    }, [IP])
+
+    useEffect(()=> {
+        if(paymentToken[0]?.payment_token){
+            paymentVerify()
+        }
+    }, [paymentToken])
+
+    useEffect(()=>{
+        paymentStatus?.link_status==="PAID" && addRental()
+    }, [paymentStatus])
 
     const rentNow = async (product) => {
-        const isLogin = JSON.parse(localStorage.getItem("isLogin"))
 
-        if (isLogin === true) {
+        if (loginUser !== null) {
             const payment = await fetch(`http://localhost:8000/create-test-payment-link`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ ...product, email: token?.email, userName: token?.name })
+                body: JSON.stringify({ ...product, email: loginUser?.user?.email, userName: loginUser?.name })
             })
             const paymentData = await payment.json()
-            localStorage.setItem("payment_id_token", paymentData?.payment_token)
+            setPaymentData(paymentData)
+            const savePaymentToken = await fetch(`http://localhost:8000/save-payment-token`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ payment_token: paymentData?.payment_token })
+            })
             window.location.href = paymentData?.link_url
         }
         else {
@@ -44,30 +89,32 @@ const Catalog = () => {
         }
     }
 
-    const paymentVerify = async () => {
-        const paymentData = localStorage.getItem("payment_id_token") ? jwtDecode(localStorage.getItem("payment_id_token")) : {};
-
-        const verifyPayment = await fetch("http://localhost:8000/verify-payment-link", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(paymentData)
-        })
-
-        const paymentStatus2 = await verifyPayment.json()
-
-        if (paymentStatus2?.link_status === "PAID" && localStorage.getItem("payment_id_token")) {
-            addRental();
-            localStorage.removeItem("payment_id_token");
-        };
+    const getPaymentToken = async (req, res) => {
+        const response = await fetch(`http://localhost:8000/get-payment-token`)
+        const data = await response.json()
+        setPaymentToken(data)
     }
 
-    localStorage.getItem("payment_id_token") && paymentVerify()
+    const paymentVerify = async () => {
+        const paymentData2 = jwtDecode(paymentToken[0].payment_token);
+        setPaymentData(paymentData2)
+
+        if (paymentData2 !== null) {
+            const verifyPayment = await fetch("http://localhost:8000/verify-payment-link", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(paymentData2)
+            })
+
+            const paymentStatus2 = await verifyPayment.json()
+            setPaymentStatus(paymentStatus2)
+        }
+    }
+
 
     const addRental = async () => {
-        const paymentData = localStorage.getItem("payment_id_token") ? jwtDecode(localStorage.getItem("payment_id_token")) : {};
-
         const rentNow = await fetch(`http://localhost:8000/add-rental-item`, {
             method: "POST",
             headers: {
@@ -79,6 +126,9 @@ const Catalog = () => {
         const result = await rentNow.json()
         setItemMessage(result.message)
         setShowMessage((prevValue) => !prevValue)
+
+        const deleteToken = await fetch("http://localhost:8000/delete-payment-token")
+        const result2 = await deleteToken.json()
     }
 
     const { register, handleSubmit } = useForm()

@@ -22,8 +22,6 @@ const upload = multer({
     limits: { fileSize: 200 * 1024 * 1024 }
 });
 router.post('/save-product-images', upload.array('image', 10), (req, res) => {
-    console.log("req.files = ", req.files)
-
     if (!req.files) {
         return res.send('No file uploaded.');
     }
@@ -52,5 +50,15 @@ router.post("/verify-payment-link", controller.verifyPaymentLink)
 router.post("/update-inventory", controller.updateInventory)
 
 router.get("/items-delivery-status", controller.itemsDeliveryStatus)
+
+router.post("/manage-logged-users", controller.manageLoggedUsers)
+
+router.post("/get-login-user", controller.getLoginUser)
+
+router.post("/save-payment-token", controller.savePaymentToken)
+
+router.get("/get-payment-token", controller.getPaymentToken)
+
+router.get("/delete-payment-token", controller.deletePaymentToken)
 
 module.exports = router

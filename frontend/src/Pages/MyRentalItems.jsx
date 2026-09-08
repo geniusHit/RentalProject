@@ -3,36 +3,61 @@ import React, { useEffect, useState } from 'react'
 import "../Style/MyRentalItems.css"
 import NavBar from '../Components/NavBar';
 import Footer from '../Components/Footer';
-import { jwtDecode } from "jwt-decode";
 
 const MyRentalItems = () => {
     const [products, setProducts] = useState([])
+    const [loginUser, setLoginUser] = useState()
+    const [IP, setIP] = useState("")
 
-    const token = localStorage.getItem("login-user")? jwtDecode(localStorage.getItem("login-user")) : {};
-
-    console.log("token : ", token)
-
-    const searchItems = async (req, res) => {
-        const rentalItems = await fetch("http://localhost:8000/my-rental-items", {
+    const getLoginUser = async () => {
+        const response = await fetch(`http://localhost:8000/get-login-user`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                email: token.email,
-                name: token.name
+                IP: IP,
             })
         })
+        const data = await response.json()
+        setLoginUser(data)
+    }
 
-        const result = await rentalItems.json()
-        console.log("result = ", result)
-        setProducts(result)
+    const getIP = async () => {
+        const response = await fetch("https://api.ipify.org?format=json");
+        const data = await response.json();
+        setIP(data.ip)
+    };
+
+    const searchItems = async (req, res) => {
+        if (loginUser !== undefined && loginUser?.loggedUser!==null) {
+            const rentalItems = await fetch("http://localhost:8000/my-rental-items", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: loginUser?.user?.email,
+                    name: loginUser?.user?.name 
+                })
+            })
+
+            const result = await rentalItems.json()
+            setProducts(result)
+        }
+        else{
+            setProducts([])
+        }
     }
     useEffect(() => {
-        searchItems()
+        getIP()
     }, [])
 
-    console.log("products = ", products)
+    !loginUser?.user?.email && getLoginUser()
+
+    useEffect(()=> {
+        searchItems()
+    }, [loginUser])
 
     return (
         <div>

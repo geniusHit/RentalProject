@@ -40,8 +40,6 @@ const VendorDashboard = () => {
     }
 
     const submit = async (data) => {
-        console.log("data : ", data)
-        
         let formData = new FormData();
         for (let img of browseInput.current.files) {
             formData.append("image", img)
@@ -112,19 +110,14 @@ const VendorDashboard = () => {
     const getDeliveryStatus = async () => {
         const items = await fetch("http://localhost:8000/items-delivery-status")
         const result = await items.json()
-        console.log("result : ", result)
         setDeliveryStatus(result)
     }
 
-    console.log("allRentals : ", allRentals)
-    console.log("allRentals.slice(0, 1) : ", allRentals.slice(0, 1))
-    console.log("products : ", products)
     useEffect(() => {
         products.length > 0 && products.map((prod) => {
             setAvailableProducts((prev) => Number(prev + prod.quantity))
         })
     }, [products])
-    console.log("availableProducts : ", availableProducts)
 
     return (
         <div className="vendor-dashboard">
@@ -277,7 +270,7 @@ const VendorDashboard = () => {
                                         <th>Stock Keeping Unit</th>
                                         <th>Notes</th>
                                         <th>Rent Days</th>
-                                        <th>User Name</th>
+                                        <th>Email</th>
                                     </tr>
                                 </thead>
 
@@ -313,7 +306,7 @@ const VendorDashboard = () => {
 
                                             <td>{item.rentDays}</td>
 
-                                            <td>{item.user.name}</td>
+                                            <td>{item.user.email}</td>
 
                                         </tr>
                                     ))}

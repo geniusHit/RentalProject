@@ -42,8 +42,6 @@ export default function MyProfile() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    console.log("name from handleInputChange : ", name)
-    console.log("value from handleInputChange : ", value)
     setUserData(prev => ({ ...prev, [name]: value }));
   };
 

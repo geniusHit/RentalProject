@@ -123,7 +123,7 @@ body {
     color: #777;
 }
 
-.input-box input{
+.input-box input {
     width: 100%;
     /* border: none; */
     outline: none;
@@ -142,14 +142,14 @@ body {
     font-weight: 600;
 }
 
-.login-options label{
+.login-options label {
     display: flex;
     font-size: 14px;
     align-items: center;
     gap: 4px;
 }
 
-.rememberCheck{
+.rememberCheck {
     width: 12px;
 }
 
@@ -268,6 +268,12 @@ body {
     color: white;
     text-align: center;
     padding: 18px;
+}
+
+.error {
+    color: gray;
+    font-size: 13px;
+    padding: 10px;
 }
 
 /* Responsive */
