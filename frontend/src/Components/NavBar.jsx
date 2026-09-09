@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState, useEffect } from 'react'
 import { NavLink, Link } from 'react-router-dom'
 import { NavDropdown } from 'react-bootstrap';
 import { FaRegUser } from "react-icons/fa";
@@ -6,21 +6,46 @@ import Logo from '../assets/Logo.png'
 
 const NavBar = () => {
     const [menuCollpased, setMenuCollapsed] = useState(true)
+    const [IP, setIP] = useState("")
 
-    const logout = ()=> {
-        localStorage.setItem("isLogin", "false")
-        localStorage.removeItem("login-user")
+    const logout = async () => {
+        try {
+            const logoutQuery = await fetch("http://localhost:8000/logout", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ IP: IP })
+            })
+
+            if(!logoutQuery.ok){
+                throw new Error("Password is incorrect")
+            }
+        }
+        catch(err){
+            console.log("Unable to logout")
+            return
+        }
     }
+
+    useEffect(() => {
+        getIP()
+    }, [])
+    const getIP = async () => {
+        const response = await fetch("https://api.ipify.org?format=json");
+        const data = await response.json();
+        setIP(data.ip)
+    };
 
     return (
         <div>
             <nav className="navbar navbar-expand-lg">
                 <div className="container-fluid">
                     <NavLink className="navbar-brand" to="/"><img src={Logo} className="" width="200px" /></NavLink>
-                    <button className={`navbar-toggler ${menuCollpased===true? 'collapsed': ''}`} onClick={() => setMenuCollapsed((prev) => !prev)} type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                    <button className={`navbar-toggler ${menuCollpased === true ? 'collapsed' : ''}`} onClick={() => setMenuCollapsed((prev) => !prev)} type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>
-                    <div className={`collapse navbar-collapse text-center ${menuCollpased===true? '': 'show'}`} id="navbarText">
+                    <div className={`collapse navbar-collapse text-center ${menuCollpased === true ? '' : 'show'}`} id="navbarText">
                         <span></span>
 
                         <span>

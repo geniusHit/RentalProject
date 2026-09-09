@@ -121,8 +121,8 @@ exports.loginUser = async (req, res) => {
 
         res.send({ ...user, jwtToken: token })
     }
-    catch(err){
-        return res.status(400).json({success: false, message: err.message})
+    catch (err) {
+        return res.status(400).json({ success: false, message: err.message })
     }
 }
 
@@ -130,7 +130,7 @@ const rentalItemsSchema = mongoose.Schema({
     user: {
         name: { type: String },
         email: { type: String },
-        city: { type: String },
+        pincode: { type: String },
         address: { type: String },
     },
 
@@ -249,7 +249,7 @@ exports.addRentalItems = async (req, res) => {
         ...data2, user: {
             name: userName,
             email: email,
-            city: user.city,
+            pincode: user.pincode,
             address: user.address
         }
     })
@@ -326,6 +326,7 @@ exports.createTestPaymentLink = async (req, res) => {
     const linkId = `link_${Date.now()}`;
     const { email, } = req.body;
     const user = await usersModel.findOne({ email: email })
+    console.log("user : ", user)
 
     const payload = {
         link_id: linkId,
@@ -428,6 +429,8 @@ const loggedUsers = mongoose.Schema({
 const loggedUsersModel = mongoose.model("loggedUsers", loggedUsers)
 exports.manageLoggedUsers = async (req, res) => {
     try {
+        console.log("req.body : ", req.body)
+        const deleteOldLogins = await loggedUsersModel.deleteMany({ IP: req.body.IP })
         const newLoggedUser = await new loggedUsersModel(req.body)
         await newLoggedUser.save()
 
@@ -440,7 +443,9 @@ exports.manageLoggedUsers = async (req, res) => {
 
 exports.getLoginUser = async (req, res) => {
     const loggedUser = await loggedUsersModel.findOne({ IP: req.body.IP })
+    console.log("loggedUser : ", loggedUser)
     const user = loggedUser !== null && await usersModel.findOne({ email: loggedUser.email })
+    console.log("user : ", user)
 
     res.send({ loggedUser: loggedUser, user: user })
 }
@@ -469,4 +474,14 @@ exports.deletePaymentToken = async (req, res) => {
     const deleteToken = await paymentTokenModel.deleteMany({})
 
     res.send(deleteToken)
+}
+
+exports.logout = async (req, res) => {
+    try {
+        const logout = await loggedUsersModel.deleteMany({ IP: req.body.IP })
+        res.send(logout)
+    }
+    catch(err){
+        return res.status(400).json({success: false, message: "Unable to logout"})
+    }
 }

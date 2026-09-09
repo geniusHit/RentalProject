@@ -64,14 +64,13 @@ const Catalog = () => {
     }, [paymentStatus])
 
     const rentNow = async (product) => {
-
-        if (loginUser !== null) {
+        if (loginUser) {
             const payment = await fetch(`http://localhost:8000/create-test-payment-link`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ ...product, email: loginUser?.user?.email, userName: loginUser?.name })
+                body: JSON.stringify({ ...product, email: loginUser?.user?.email, userName: loginUser?.user?.name })
             })
             const paymentData = await payment.json()
             setPaymentData(paymentData)
@@ -113,7 +112,6 @@ const Catalog = () => {
         }
     }
 
-
     const addRental = async () => {
         const rentNow = await fetch(`http://localhost:8000/add-rental-item`, {
             method: "POST",
@@ -129,6 +127,7 @@ const Catalog = () => {
 
         const deleteToken = await fetch("http://localhost:8000/delete-payment-token")
         const result2 = await deleteToken.json()
+        console.log("result2 : ", result2)
     }
 
     const { register, handleSubmit } = useForm()
@@ -152,6 +151,10 @@ const Catalog = () => {
     useEffect(() => {
         searchProds()
     }, [])
+
+    console.log("paymentData : ", paymentData)
+
+    console.log("loginUser : ", loginUser)
 
     return (
         <div>
