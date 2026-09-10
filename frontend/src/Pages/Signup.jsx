@@ -167,7 +167,7 @@ const Signup = () => {
                     </div>
                 </div>
 
-                <div className="features">
+                <div className="features-3">
 
                     <div className="feature">
                         <FaShieldAlt />

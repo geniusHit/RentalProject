@@ -2,6 +2,7 @@ const mongoose = require("mongoose")
 const jwt = require("jsonwebtoken")
 const SECRET = process.env.JWT_SECRET
 const nodemailer = require("nodemailer")
+const bcrypt = require("bcrypt")
 
 const users = mongoose.Schema({
     name: {
@@ -33,7 +34,10 @@ const users = mongoose.Schema({
 })
 const usersModel = mongoose.model("users", users)
 exports.addUser = async (req, res) => {
-    const user = await new usersModel(req.body)
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(req.body.password, saltRounds)
+    console.log("hashedPassword : ", hashedPassword)
+    const user = await new usersModel({ ...req.body, password: hashedPassword })
     const result = await user.save();
     res.send(result)
 }
@@ -106,16 +110,28 @@ exports.getProducts = async (req, res) => {
 
 exports.loginUser = async (req, res) => {
     try {
-        const user = await usersModel.findOne({ password: req.body.password, email: req.body.email })
+        console.log("req.body : ", req.body)
+        const user = await usersModel.findOne({ email: req.body.email })
+        console.log("user : ", user)
+        const match = await bcrypt.compare(req.body.password, user?.password)
+        console.log("match from loginUser : ", match)
         const userId = user._id.toString()
-        const loginInSystem = await usersModel.findByIdAndUpdate(userId, {
-            $push: {
-                loggedInIPS: {
-                    IP: req.body.IP,
-                    expireAt: req.body.expiry
-                }
-            }
-        })
+        const currentLogin = await usersModel.findOne({ _id: userId })
+        console.log("currentLogin : ", currentLogin)
+        const currentLoginIPS = currentLogin.loggedInIPS;
+        const newLoginIPS = currentLoginIPS.filter((el) => el.IP !== req.body.IP)
+        console.log("newLoginIPS : ", newLoginIPS)
+        const newIPS = [...newLoginIPS, {IP: req.body.IP, expireAt: req.body.expiry}]
+        // const deleteOldIpsLogin = await usersModel.deleteMany({});
+        // const loginInSystem = await usersModel.findByIdAndUpdate(userId, {
+        //     $push: {
+        //         loggedInIPS: {
+        //             IP: req.body.IP,
+        //             expireAt: req.body.expiry
+        //         }
+        //     }
+        // })
+        const loginInSystem = await usersModel.findByIdAndUpdate(userId, {loggedInIPS: newIPS})
         const token = jwt.sign({ name: user.name, email: user.email, phone: user.phone, password: user.password, city: user.city, address: user.address }, SECRET, { expiresIn: "1h" })
         const decodedToken = jwt.verify(token, SECRET)
 
@@ -481,7 +497,7 @@ exports.logout = async (req, res) => {
         const logout = await loggedUsersModel.deleteMany({ IP: req.body.IP })
         res.send(logout)
     }
-    catch(err){
-        return res.status(400).json({success: false, message: "Unable to logout"})
+    catch (err) {
+        return res.status(400).json({ success: false, message: "Unable to logout" })
     }
 }

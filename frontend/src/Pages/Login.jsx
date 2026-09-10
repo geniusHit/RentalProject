@@ -162,7 +162,7 @@ const Login = () => {
                 </div>
 
                 {/* Features */}
-                <div className="features">
+                <div className="features-2">
 
                     <div className="feature">
                         <FaShieldAlt />

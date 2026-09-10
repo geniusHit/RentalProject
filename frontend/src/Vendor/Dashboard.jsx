@@ -12,9 +12,9 @@ import {
     FaUserCircle,
     FaEye,
 } from "react-icons/fa";
-
 import "../Style/VendorDashboardStyle.css";
 import { Link } from "react-router-dom";
+import Logo from "../assets/Logo.png"
 
 const VendorDashboard = () => {
     const [activePage, setActivePage] = React.useState("dashboard");
@@ -122,7 +122,7 @@ const VendorDashboard = () => {
     return (
         <div className="vendor-dashboard">
             <aside className="sidebar">
-                <Link to="/" className="logoLink"> <h2 className="logo">FurniRent</h2> </Link>
+                <Link to="/" className="logoLink"> <h2 className="logo"><img src={Logo} className="" width="200px" /></h2> </Link>
 
                 <ul>
                     <li

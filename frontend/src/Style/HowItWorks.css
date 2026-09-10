@@ -166,12 +166,11 @@ body {
 .feature {
     background: white;
     border-radius: 20px;
-    padding: 35px;
+    padding: 20px;
     box-shadow: 0 8px 25px rgba(0, 0, 0, .08);
 }
 
 .feature-icon {
-
     width: 75px;
     height: 75px;
     border-radius: 50%;
@@ -185,7 +184,6 @@ body {
 }
 
 .feature h4 {
-
     margin-top: 20px;
     font-weight: 500;
 }
