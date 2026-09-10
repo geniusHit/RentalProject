@@ -5,8 +5,11 @@ import NavBar from '../Components/NavBar';
 import Footer from '../Components/Footer';
 import { useForm } from "react-hook-form"
 import { jwtDecode } from "jwt-decode";
+const API_URL = import.meta.env.VERCEL_API_URL;
 
 const Catalog = () => {
+    console.log("API_URL : ", API_URL)
+
     const [products, setProducts] = useState([])
     const [itemMessage, setItemMessage] = useState("")
     const [showMessage, setShowMessage] = useState(false)
@@ -18,7 +21,7 @@ const Catalog = () => {
     const navigate = useNavigate()
 
     const getProducts = async () => {
-        const response = await fetch(`http://localhost:8000/get-products`)
+        const response = await fetch(`https://rental-project-opal.vercel.app/get-products`)
         const result = await response.json()
         setProducts(result)
     }
