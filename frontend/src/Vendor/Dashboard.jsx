@@ -262,14 +262,14 @@ const VendorDashboard = () => {
                                         <th>Material</th>
                                         <th>Price</th>
                                         <th>Quantity</th>
-                                        <th>Return Policy</th>
-                                        <th>Assembly Required</th>
-                                        <th>Delivery Charge</th>
+                                        <th>Return <br/> Policy</th>
+                                        <th>Assembly <br/> Required</th>
+                                        <th>Delivery <br/> Charge</th>
                                         <th>Description</th>
-                                        <th>Security Deposit</th>
-                                        <th>Stock Keeping Unit</th>
+                                        <th>Security <br/> Deposit</th>
+                                        <th>Stock <br/> Keeping <br/> Unit</th>
                                         <th>Notes</th>
-                                        <th>Rent Days</th>
+                                        <th>Rent <br/> Days</th>
                                         <th>Email</th>
                                     </tr>
                                 </thead>
@@ -549,12 +549,12 @@ const VendorDashboard = () => {
                                         <th>Material</th>
                                         <th>Price</th>
                                         <th>Quantity</th>
-                                        <th>Return Policy</th>
-                                        <th>Assembly Required</th>
-                                        <th>Delivery Charge</th>
+                                        <th>Return <br/> Policy</th>
+                                        <th>Assembly <br/> Required</th>
+                                        <th>Delivery <br/> Charge</th>
                                         <th>Description</th>
-                                        <th>Security Deposit</th>
-                                        <th>Stock Keeping Unit</th>
+                                        <th>Security <br/> Deposit</th>
+                                        <th>Stock <br/> Keeping <br/> Unit</th>
                                         <th>Notes</th>
                                         {/* <th>View</th> */}
                                     </tr>
@@ -735,15 +735,15 @@ const VendorDashboard = () => {
                                         <th>Material</th>
                                         <th>Price</th>
                                         <th>Quantity</th>
-                                        <th>Return Policy</th>
-                                        <th>Assembly Required</th>
-                                        <th>Delivery Charge</th>
+                                        <th>Return <br/> Policy</th>
+                                        <th>Assembly <br/> Required</th>
+                                        <th>Delivery <br/> Charge</th>
                                         <th>Description</th>
-                                        <th>Security Deposit</th>
-                                        <th>Stock Keeping Unit</th>
+                                        <th>Security <br/> Deposit</th>
+                                        <th>Stock <br/> Keeping <br/> Unit</th>
                                         <th>Notes</th>
-                                        <th>Rent Days</th>
-                                        <th>User Name</th>
+                                        <th>Rent <br/> Days</th>
+                                        <th>User <br/> Name</th>
                                         <th>Action</th>
                                         {/* <th>View</th> */}
                                     </tr>
@@ -814,17 +814,17 @@ const VendorDashboard = () => {
                                         <th>Material</th>
                                         <th>Price</th>
                                         <th>Quantity</th>
-                                        <th>Return Policy</th>
-                                        <th>Assembly Required</th>
-                                        <th>Delivery Charge</th>
+                                        <th>Return <br/> Policy</th>
+                                        <th>Assembly <br/> Required</th>
+                                        <th>Delivery <br/> Charge</th>
                                         <th>Description</th>
-                                        <th>Security Deposit</th>
-                                        <th>Stock Keeping Unit</th>
+                                        <th>Security <br/> Deposit</th>
+                                        <th>Stock <br/> Keeping <br/> Unit</th>
                                         <th>Notes</th>
-                                        <th>Rent Days</th>
-                                        <th>User Name</th>
-                                        <th>Rented Date</th>
-                                        <th>Delivery Status</th>
+                                        <th>Rent<br/> Days</th>
+                                        <th>User<br/> Name</th>
+                                        <th>Rented <br/> Date</th>
+                                        <th>Delivery <br/> Status</th>
                                     </tr>
                                 </thead>
 

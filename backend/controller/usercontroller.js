@@ -33,12 +33,45 @@ const users = mongoose.Schema({
     }],
 })
 const usersModel = mongoose.model("users", users)
+exports.sendSignupOtp = async (req, res) => {
+    let a = Math.random()
+    a = Math.ceil(a * 999999)
+
+    const auth = nodemailer.createTransport({
+        service: "gmail",
+        secure: true,
+        port: 465,
+        auth: {
+            user: "rohitthakur792002@gmail.com",
+            pass: "pnsg ismb vdou ccax"
+        }
+    })
+
+    const receiver = {
+        from: "rohitthakur792002@gmail.com",
+        to: `${req.body?.email}`,
+        subject: `Team Rental Items. Signup otp.`,
+        html: `Your Otp is ${a}`
+    }
+
+    auth.sendMail(receiver, (error, emailResponse) => {
+        if (error)
+            throw error;
+        console.log("success!")
+        res.end()
+    })
+
+    res.send({signup_otp: a})
+}
+
 exports.addUser = async (req, res) => {
+    console.log("req.body from addUser : ", req.body)
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(req.body.password, saltRounds)
     console.log("hashedPassword : ", hashedPassword)
     const user = await new usersModel({ ...req.body, password: hashedPassword })
     const result = await user.save();
+
     res.send(result)
 }
 
@@ -121,7 +154,7 @@ exports.loginUser = async (req, res) => {
         const currentLoginIPS = currentLogin.loggedInIPS;
         const newLoginIPS = currentLoginIPS.filter((el) => el.IP !== req.body.IP)
         console.log("newLoginIPS : ", newLoginIPS)
-        const newIPS = [...newLoginIPS, {IP: req.body.IP, expireAt: req.body.expiry}]
+        const newIPS = [...newLoginIPS, { IP: req.body.IP, expireAt: req.body.expiry }]
         // const deleteOldIpsLogin = await usersModel.deleteMany({});
         // const loginInSystem = await usersModel.findByIdAndUpdate(userId, {
         //     $push: {
@@ -131,7 +164,7 @@ exports.loginUser = async (req, res) => {
         //         }
         //     }
         // })
-        const loginInSystem = await usersModel.findByIdAndUpdate(userId, {loggedInIPS: newIPS})
+        const loginInSystem = await usersModel.findByIdAndUpdate(userId, { loggedInIPS: newIPS })
         const token = jwt.sign({ name: user.name, email: user.email, phone: user.phone, password: user.password, city: user.city, address: user.address }, SECRET, { expiresIn: "1h" })
         const decodedToken = jwt.verify(token, SECRET)
 

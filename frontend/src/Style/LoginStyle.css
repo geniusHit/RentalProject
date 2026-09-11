@@ -305,3 +305,13 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+@media (max-width:750px){
+    .features-2{
+        grid-template-columns: none;
+    }
+
+    .login-box {
+        padding: 20px;
+    }
+}

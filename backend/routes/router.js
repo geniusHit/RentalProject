@@ -5,8 +5,6 @@ const controller = require("../controller/usercontroller.js")
 const multer = require("multer")
 const path = require("path");
 
-router.post("/add-user", controller.addUser)
-
 router.post("/add-product", controller.addProduct)
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -28,6 +26,10 @@ router.post('/save-product-images', upload.array('image', 10), (req, res) => {
     let filesName = req.files.map((file) => file.filename)
     res.json(filesName);
 });
+
+router.post("/add-user", controller.addUser)
+
+router.post("/send-signup-otp", controller.sendSignupOtp)
 
 router.get("/get-products", controller.getProducts)
 
