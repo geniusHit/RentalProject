@@ -6,6 +6,8 @@ import Footer from '../Components/Footer';
 import { useForm } from "react-hook-form"
 import { jwtDecode } from "jwt-decode";
 
+const VITE_API_URL = import.meta.env.VITE_API_URL;
+
 const Catalog = () => {
     const [products, setProducts] = useState([])
     const [itemMessage, setItemMessage] = useState("")
@@ -16,6 +18,8 @@ const Catalog = () => {
     const [paymentData, setPaymentData] = useState()
     const [paymentStatus, setPaymentStatus] = useState()
     const navigate = useNavigate()
+
+    console.log("VITE_API_URL : ", VITE_API_URL)
 
     const getProducts = async () => {
         const response = await fetch(`https://rental-project-opal.vercel.app/get-products`)
@@ -153,8 +157,9 @@ const Catalog = () => {
     }, [])
 
     console.log("paymentData : ", paymentData)
-
+    console.log("paymentStatus : ", paymentStatus)
     console.log("loginUser : ", loginUser)
+    console.log("paymentToken : ", paymentToken)
 
     return (
         <div>

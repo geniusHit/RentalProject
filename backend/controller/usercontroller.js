@@ -359,7 +359,7 @@ exports.createTestPaymentLink = async (req, res) => {
             send_email: false
         },
         link_meta: {
-            return_url: `https://rental-project.vercel.app/catalog`
+            return_url: `http://localhost:5173/catalog`
         }
     };
 
