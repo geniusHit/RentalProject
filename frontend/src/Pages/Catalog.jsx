@@ -18,7 +18,7 @@ const Catalog = () => {
     const navigate = useNavigate()
 
     const getProducts = async () => {
-        const response = await fetch(`https://rental-project.vercel.app/get-products`)
+        const response = await fetch(`https://rental-project-opal.vercel.app/get-products`)
         const result = await response.json()
         setProducts(result)
     }
