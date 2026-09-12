@@ -57,7 +57,6 @@ const Login = () => {
             const result = await login.json();
         }
         catch (err) {
-            console.log("Password is incorrect")
             setError("password", {
                 message: "Password is incorrect"
             })

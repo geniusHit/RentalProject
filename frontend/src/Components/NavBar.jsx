@@ -42,7 +42,6 @@ const NavBar = () => {
         }
     };
 
-    // Close menu when a navigation link is clicked
     const closeMenu = () => {
         setMenuCollapsed(true);
     };

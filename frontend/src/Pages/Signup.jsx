@@ -35,7 +35,6 @@ const Signup = () => {
     const [otp, setOtp] = useState()
 
     const submit = async (data) => {
-        console.log("data : ", data)
         setUserData(data)
 
         let expiry = new Date();
@@ -51,21 +50,12 @@ const Signup = () => {
 
         const otp2 = sendOtp !== "" ? await sendOtp.json() : "";
         otp2 !== "" && setOtp(otp2)
-        console.log("otp2 : ", otp2)
-        console.log(otp)
-
-        console.log(data?.otp)
-        console.log(userData?.otp)
-        console.log(`(data?.otp === userData?.otp) : `, (Number(data?.otp) === Number(userData?.otp)))
     }
 
     const submit2 = async (data) => {
-        console.log("data : ", data)
-
         if (Number(data?.otp) === Number(otp?.signup_otp)) {
             let expiry = new Date();
             expiry.setDate(expiry.getDate() + 1);
-            console.log("user adding-------------------------------------")
 
             const user = await fetch(`http://localhost:8000/add-user`, {
                 method: "POST",
@@ -81,12 +71,7 @@ const Signup = () => {
 
     useEffect(() => {
         userData !== undefined && (setDisableSignup(true), setShowOtp(true));
-        console.log("userData?.otp === otp : ", userData?.otp === otp?.signup_otp)
-        // userData?.otp === otp && addUser()
     }, [userData])
-
-    console.log("disableSignup : ", disableSignup)
-    console.log("showOtp : ", showOtp)
 
     useEffect(() => {
         getIP()
@@ -96,9 +81,6 @@ const Signup = () => {
         const data = await response.json();
         setIP(data.ip)
     };
-
-    console.log("userData : ", userData)
-    console.log(otp)
 
     return (
         <>

@@ -65,10 +65,8 @@ exports.sendSignupOtp = async (req, res) => {
 }
 
 exports.addUser = async (req, res) => {
-    console.log("req.body from addUser : ", req.body)
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(req.body.password, saltRounds)
-    console.log("hashedPassword : ", hashedPassword)
     const user = await new usersModel({ ...req.body, password: hashedPassword })
     const result = await user.save();
 
@@ -143,27 +141,13 @@ exports.getProducts = async (req, res) => {
 
 exports.loginUser = async (req, res) => {
     try {
-        console.log("req.body : ", req.body)
         const user = await usersModel.findOne({ email: req.body.email })
-        console.log("user : ", user)
         const match = await bcrypt.compare(req.body.password, user?.password)
-        console.log("match from loginUser : ", match)
         const userId = user._id.toString()
         const currentLogin = await usersModel.findOne({ _id: userId })
-        console.log("currentLogin : ", currentLogin)
         const currentLoginIPS = currentLogin.loggedInIPS;
         const newLoginIPS = currentLoginIPS.filter((el) => el.IP !== req.body.IP)
-        console.log("newLoginIPS : ", newLoginIPS)
         const newIPS = [...newLoginIPS, { IP: req.body.IP, expireAt: req.body.expiry }]
-        // const deleteOldIpsLogin = await usersModel.deleteMany({});
-        // const loginInSystem = await usersModel.findByIdAndUpdate(userId, {
-        //     $push: {
-        //         loggedInIPS: {
-        //             IP: req.body.IP,
-        //             expireAt: req.body.expiry
-        //         }
-        //     }
-        // })
         const loginInSystem = await usersModel.findByIdAndUpdate(userId, { loggedInIPS: newIPS })
         const token = jwt.sign({ name: user.name, email: user.email, phone: user.phone, password: user.password, city: user.city, address: user.address }, SECRET, { expiresIn: "1h" })
         const decodedToken = jwt.verify(token, SECRET)
@@ -263,12 +247,9 @@ const rentalItemsSchema = mongoose.Schema({
 })
 const rentalItems = mongoose.model("rentalItems", rentalItemsSchema)
 exports.addRentalItems = async (req, res) => {
-    console.log("req.body : ", req.body)
     const { email, name, userName, sku, quantity } = req.body;
     const user = await usersModel.findOne({ email: email })
-    console.log("user from addRentalItems : ", user)
     const existingProduct = await rentalItems.findOne({ "user.email": email, "user.name": userName, name: name });
-    console.log("existingProduct : ", existingProduct)
     if (existingProduct) {
         res.send({ message: "Product is already in Rental Items!" });
         return;
@@ -380,7 +361,6 @@ exports.createTestPaymentLink = async (req, res) => {
     const linkId = `link_${Date.now()}`;
     const { email, } = req.body;
     const user = await usersModel.findOne({ email: email })
-    console.log("user : ", user)
 
     const payload = {
         link_id: linkId,
@@ -483,7 +463,6 @@ const loggedUsers = mongoose.Schema({
 const loggedUsersModel = mongoose.model("loggedUsers", loggedUsers)
 exports.manageLoggedUsers = async (req, res) => {
     try {
-        console.log("req.body : ", req.body)
         const deleteOldLogins = await loggedUsersModel.deleteMany({ IP: req.body.IP })
         const newLoggedUser = await new loggedUsersModel(req.body)
         await newLoggedUser.save()
@@ -497,9 +476,7 @@ exports.manageLoggedUsers = async (req, res) => {
 
 exports.getLoginUser = async (req, res) => {
     const loggedUser = await loggedUsersModel.findOne({ IP: req.body.IP })
-    console.log("loggedUser : ", loggedUser)
     const user = loggedUser !== null && await usersModel.findOne({ email: loggedUser.email })
-    console.log("user : ", user)
 
     res.send({ loggedUser: loggedUser, user: user })
 }

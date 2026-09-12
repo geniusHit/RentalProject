@@ -19,8 +19,6 @@ const Catalog = () => {
     const [paymentStatus, setPaymentStatus] = useState()
     const navigate = useNavigate()
 
-    console.log("VITE_API_URL : ", VITE_API_URL)
-
     const getProducts = async () => {
         const response = await fetch(`https://rental-project-opal.vercel.app/get-products`)
         const result = await response.json()
@@ -131,7 +129,6 @@ const Catalog = () => {
 
         const deleteToken = await fetch("http://localhost:8000/delete-payment-token")
         const result2 = await deleteToken.json()
-        console.log("result2 : ", result2)
     }
 
     const { register, handleSubmit } = useForm()
@@ -155,11 +152,6 @@ const Catalog = () => {
     useEffect(() => {
         searchProds()
     }, [])
-
-    console.log("paymentData : ", paymentData)
-    console.log("paymentStatus : ", paymentStatus)
-    console.log("loginUser : ", loginUser)
-    console.log("paymentToken : ", paymentToken)
 
     return (
         <div>
