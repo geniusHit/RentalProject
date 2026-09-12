@@ -101,7 +101,7 @@ const Contact = () => {
 
                             <h3>Call Us</h3>
 
-                            <p>+91 98765 43210</p>
+                            <p>+91 88474 82208</p>
 
                             <span>Mon - Sat : 9 AM - 8 PM</span>
 
@@ -115,7 +115,7 @@ const Contact = () => {
 
                             <h3>Email Us</h3>
 
-                            <p>hello@furnirent.com</p>
+                            <p>rohitthakur792002@gmail.com</p>
 
                             <span>Reply within 24 hours</span>
 
@@ -129,7 +129,7 @@ const Contact = () => {
 
                             <h3>Visit Us</h3>
 
-                            <p>Bengaluru, Karnataka</p>
+                            <p>Mohali, Punjab</p>
 
                             <span>Mon - Sat : 10 AM - 7 PM</span>
 
@@ -157,7 +157,7 @@ const Contact = () => {
 
                 {/* Form */}
 
-                <section className="contact-wrapper">
+                {/* <section className="contact-wrapper">
                     <div className="contact-form">
                         <h2>Send Us a Message</h2>
 
@@ -205,7 +205,7 @@ const Contact = () => {
 
                     </div>
 
-                </section>
+                </section> */}
 
                 {/* FAQ */}
 

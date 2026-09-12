@@ -1,6 +1,6 @@
 .products {
     display: grid;
-    grid-template-columns: 22% 22% 22% 22%;
+    grid-template-columns: 18% 18% 18% 18% 18%;
     justify-content: space-between;
     padding: 0px 30px;
     row-gap: 30px;

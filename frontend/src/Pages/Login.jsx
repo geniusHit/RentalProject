@@ -140,14 +140,14 @@ const Login = () => {
                                     </div>
                                 </div>
 
-                                <div className="login-options">
+                                {/* <div className="login-options">
                                     <label>
                                         <input type="checkbox" />
                                         Remember me
                                     </label>
 
                                     <a href="/">Forgot Password?</a>
-                                </div>
+                                </div> */}
 
                                 <button className="login-btn">
                                     Login <FaArrowRight />

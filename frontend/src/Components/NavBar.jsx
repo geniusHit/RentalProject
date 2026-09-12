@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react'
-import { NavLink, Link } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import { NavLink, Link } from 'react-router-dom';
 import { NavDropdown } from 'react-bootstrap';
 import { FaRegUser } from "react-icons/fa";
-import Logo from '../assets/Logo.png'
+import Logo from '../assets/Logo.png';
+import "../Style/NavBarStyle.css"
 
 const NavBar = () => {
-    const [menuCollpased, setMenuCollapsed] = useState(true)
-    const [IP, setIP] = useState("")
+    const [menuCollapsed, setMenuCollapsed] = useState(true);
+    const [IP, setIP] = useState("");
 
     const logout = async () => {
         try {
@@ -16,83 +17,167 @@ const NavBar = () => {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({ IP: IP })
-            })
+            });
 
-            if(!logoutQuery.ok){
-                throw new Error("Password is incorrect")
+            if (!logoutQuery.ok) {
+                throw new Error("Unable to logout");
             }
         }
-        catch(err){
-            console.log("Unable to logout")
-            return
+        catch (err) {
+            console.log("Unable to logout");
         }
-    }
+    };
 
     useEffect(() => {
-        getIP()
-    }, [])
+        getIP();
+    }, []);
+
     const getIP = async () => {
-        const response = await fetch("https://api.ipify.org?format=json");
-        const data = await response.json();
-        setIP(data.ip)
+        try {
+            const response = await fetch("https://api.ipify.org?format=json");
+            const data = await response.json();
+            setIP(data.ip);
+        } catch (err) {
+            console.log("Unable to get IP");
+        }
+    };
+
+    // Close menu when a navigation link is clicked
+    const closeMenu = () => {
+        setMenuCollapsed(true);
     };
 
     return (
-        <div>
-            <nav className="navbar navbar-expand-lg">
-                <div className="container-fluid">
-                    <NavLink className="navbar-brand" to="/"><img src={Logo} className="" width="200px" /></NavLink>
-                    <button className={`navbar-toggler ${menuCollpased === true ? 'collapsed' : ''}`} onClick={() => setMenuCollapsed((prev) => !prev)} type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-                    <div className={`collapse navbar-collapse text-center ${menuCollpased === true ? '' : 'show'}`} id="navbarText">
-                        <span></span>
+        <nav className="navbar navbar-expand-lg">
+            <div className="container-fluid">
 
-                        <span>
-                            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                                <li className="nav-item">
-                                    <NavLink to="/" className="nav-link active">Home</NavLink>
-                                </li>
-                                <li className="nav-item">
-                                    <NavLink className="nav-link" to="/catalog" onClick={() => localStorage.setItem("search", "")}>Catalog</NavLink>
-                                </li>
-                                <li className="nav-item">
-                                    <NavLink className="nav-link" to="/how-it-works">How It Works</NavLink>
-                                </li>
-                                <li className="nav-item">
-                                    <NavLink className="nav-link" to="/contact">Contact</NavLink>
-                                </li>
-                            </ul>
-                        </span>
+                {/* Logo */}
+                <NavLink
+                    className="navbar-brand"
+                    to="/"
+                    onClick={closeMenu}
+                >
+                    <img
+                        src={Logo}
+                        className="navbar-logo"
+                        alt="Logo"
+                    />
+                </NavLink>
 
+                {/* Hamburger */}
+                <button
+                    className={`navbar-toggler ${menuCollapsed ? 'collapsed' : ''}`}
+                    type="button"
+                    onClick={() => setMenuCollapsed(prev => !prev)}
+                    aria-controls="navbarText"
+                    aria-expanded={!menuCollapsed}
+                    aria-label="Toggle navigation"
+                >
+                    <span className="navbar-toggler-icon"></span>
+                </button>
+
+                {/* Menu */}
+                <div
+                    className={`collapse navbar-collapse ${
+                        !menuCollapsed ? 'show' : ''
+                    }`}
+                    id="navbarText"
+                >
+                    <div></div>
+
+                    <ul className="navbar-nav mb-2 mb-lg-0 text-center">
+
+                        <li className="nav-item">
+                            <NavLink
+                                to="/"
+                                className="nav-link"
+                                onClick={closeMenu}
+                            >
+                                Home
+                            </NavLink>
+                        </li>
+
+                        <li className="nav-item">
+                            <NavLink
+                                className="nav-link"
+                                to="/catalog"
+                                onClick={() => {
+                                    localStorage.setItem("search", "");
+                                    closeMenu();
+                                }}
+                            >
+                                Catalog
+                            </NavLink>
+                        </li>
+
+                        <li className="nav-item">
+                            <NavLink
+                                className="nav-link"
+                                to="/how-it-works"
+                                onClick={closeMenu}
+                            >
+                                How It Works
+                            </NavLink>
+                        </li>
+
+                        <li className="nav-item">
+                            <NavLink
+                                className="nav-link"
+                                to="/contact"
+                                onClick={closeMenu}
+                            >
+                                Contact
+                            </NavLink>
+                        </li>
+
+                    </ul>
+
+                    {/* User Dropdown */}
+                    <div className="user-dropdown">
                         <NavDropdown title={<FaRegUser />}>
-                            {/* <NavDropdown.Item as={Link} to="/myprofile">
-                                My Profile
-                            </NavDropdown.Item> */}
 
-                            <NavDropdown.Item as={Link} to="/my-rental-items">
+                            <NavDropdown.Item
+                                as={Link}
+                                to="/my-rental-items"
+                                onClick={closeMenu}
+                            >
                                 My Orders
                             </NavDropdown.Item>
 
-                            <NavDropdown.Item as={Link} to="/login">
+                            <NavDropdown.Item
+                                as={Link}
+                                to="/login"
+                                onClick={closeMenu}
+                            >
                                 Login
                             </NavDropdown.Item>
 
-                            {/* <NavDropdown.Divider /> */}
-
-                            <NavDropdown.Item as={Link} to="/vendor-dashboard">
+                            <NavDropdown.Item
+                                as={Link}
+                                to="/vendor-dashboard"
+                                onClick={closeMenu}
+                            >
                                 Vendor Dashboard
                             </NavDropdown.Item>
 
-                            <NavDropdown.Item as={Link} to="/" onClick={logout}>
+                            <NavDropdown.Item
+                                as={Link}
+                                to="/"
+                                onClick={() => {
+                                    logout();
+                                    closeMenu();
+                                }}
+                            >
                                 Logout
                             </NavDropdown.Item>
+
                         </NavDropdown>
                     </div>
-                </div>
-            </nav>
-        </div>
-    )
-}
 
-export default NavBar
+                </div>
+            </div>
+        </nav>
+    );
+};
+
+export default NavBar;

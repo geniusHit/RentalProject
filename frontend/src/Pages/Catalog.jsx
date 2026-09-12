@@ -189,7 +189,6 @@ const Catalog = () => {
 
                                     <input
                                         type="number"
-                                        placeholder="10"
                                         max="365"
                                         min="5"
                                         onChange={(e) => {
