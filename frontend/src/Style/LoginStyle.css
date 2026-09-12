@@ -20,7 +20,7 @@ body {
     padding: 20px 60px;
 }
 
-/* Hero Section */
+
 
 .login-container {
     display: flex;
@@ -30,7 +30,7 @@ body {
     background: #fff;
 }
 
-/* Left Side */
+
 
 .login-left {
     flex: 1;
@@ -76,7 +76,7 @@ body {
     max-width: 450px;
 }
 
-/* Login Card */
+
 
 .login-card {
     width: 400px;
@@ -125,7 +125,7 @@ body {
 
 .input-box input {
     width: 100%;
-    /* border: none; */
+    
     outline: none;
     font-size: 15px;
 }
@@ -227,10 +227,10 @@ body {
     font-weight: 600;
 }
 
-/* Features */
+
 
 .features {
-    /* display: grid; */
+    
     grid-template-columns: repeat(3, 1fr);
     gap: 25px;
     margin-top: 30px;
@@ -264,7 +264,7 @@ body {
     margin-bottom: 5px;
 }
 
-/* Footer */
+
 
 .social-icons {
     display: flex;
@@ -286,7 +286,7 @@ body {
     padding: 10px;
 }
 
-/* Responsive */
+
 
 @media (max-width: 992px) {
     .login-container {

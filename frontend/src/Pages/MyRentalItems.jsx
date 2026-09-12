@@ -75,7 +75,6 @@ const MyRentalItems = () => {
                             <div className='details'>
                                 <div className='prodName'>{prod.name}</div>
                                 <div className='price'>₹{prod.price} / month</div>
-                                {/* <button className='rentNowButton' onClick={() => { rentNow(prod) }}>Rent Now</button> */}
                             </div>
                         </div>
                     })

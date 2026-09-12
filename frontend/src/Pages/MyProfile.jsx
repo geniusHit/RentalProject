@@ -53,14 +53,11 @@ export default function MyProfile() {
   return (
     <div style={{ backgroundColor: colors.bgLight, minHeight: '100vh', display: 'flex', flexDirection: 'column', color: colors.textDark }}>
 
-      {/* Navbar / Brand Header */}
       <NavBar />
 
-      {/* Main Content Area */}
       <main className="container py-5 flex-grow-1">
         <div className="row g-5 align-items-start">
 
-          {/* Left Column: Welcome & Status Overview */}
           <div className="col-12 col-lg-4">
             <div className="mb-4">
               <span className="badge px-3 py-2 rounded-pill text-uppercase mb-2" style={{ backgroundColor: colors.accentLight, color: colors.primaryGreen }}>
@@ -74,7 +71,6 @@ export default function MyProfile() {
               </p>
             </div>
 
-            {/* Quick Navigation Tabs */}
             <div className="list-group shadow-sm rounded-4 overflow-hidden border-0 mb-4">
               <button
                 onClick={() => setActiveTab('profile')}
@@ -99,13 +95,11 @@ export default function MyProfile() {
             </div>
           </div>
 
-          {/* Right Column: Floating Profile / Rentals Card */}
           <div className="col-12 col-lg-8">
             <div className="card border-0 rounded-4 shadow-sm p-4 p-md-5 bg-white" style={{ borderColor: colors.borderLight }}>
 
               {activeTab === 'profile' ? (
                 <>
-                  {/* Profile Header */}
                   <div className="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center pb-4 mb-4 border-bottom">
                     <div className="d-flex align-items-center gap-3 mb-3 mb-sm-0">
                       <div
@@ -130,11 +124,9 @@ export default function MyProfile() {
                       }}
                     >
                       Edit Details
-                      {/* {isEditing ? 'Save Changes' : 'Edit Details'} */}
                     </button>
                   </div>
 
-                  {/* Profile Fields */}
                   <div className="row g-4 mb-4">
                     <div className="col-12 col-md-6">
                       <label className="form-label small fw-bold text-muted text-uppercase">Full Name</label>
@@ -190,7 +182,6 @@ export default function MyProfile() {
                   )}
                 </>
               ) : (
-                /* Active Rentals Tab */
                 <div>
                   <div className="d-flex justify-content-between align-items-center pb-3 mb-4 border-bottom">
                     <h5 className="fw-bold mb-0" style={{ color: colors.textDark }}>Active Subscriptions</h5>
@@ -232,7 +223,6 @@ export default function MyProfile() {
         </div>
       </main>
 
-      {/* Feature Strip */}
       <div className="py-4 border-top" style={{ backgroundColor: '#F5F2EC', borderColor: colors.borderLight }}>
         <div className="container">
           <div className="row g-4 text-start">
@@ -269,7 +259,6 @@ export default function MyProfile() {
         </div>
       </div>
 
-      {/* Footer */}
       <Footer />
 
     </div>

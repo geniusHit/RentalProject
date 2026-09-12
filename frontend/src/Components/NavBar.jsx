@@ -49,8 +49,6 @@ const NavBar = () => {
     return (
         <nav className="navbar navbar-expand-lg">
             <div className="container-fluid">
-
-                {/* Logo */}
                 <NavLink
                     className="navbar-brand"
                     to="/"
@@ -63,7 +61,6 @@ const NavBar = () => {
                     />
                 </NavLink>
 
-                {/* Hamburger */}
                 <button
                     className={`navbar-toggler ${menuCollapsed ? 'collapsed' : ''}`}
                     type="button"
@@ -75,7 +72,6 @@ const NavBar = () => {
                     <span className="navbar-toggler-icon"></span>
                 </button>
 
-                {/* Menu */}
                 <div
                     className={`collapse navbar-collapse ${
                         !menuCollapsed ? 'show' : ''
@@ -131,7 +127,6 @@ const NavBar = () => {
 
                     </ul>
 
-                    {/* User Dropdown */}
                     <div className="user-dropdown">
                         <NavDropdown title={<FaRegUser />}>
 

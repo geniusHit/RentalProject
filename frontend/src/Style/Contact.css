@@ -15,8 +15,6 @@ body {
     padding: 30px 0 80px;
 }
 
-/* HERO */
-
 .contact-hero {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -55,8 +53,6 @@ body {
     height: 100%;
     object-fit: cover;
 }
-
-/* CONTACT CARDS */
 
 .contact-info {
     text-align: center;
@@ -117,8 +113,6 @@ body {
     color: #2d5b35;
     font-weight: 600;
 }
-
-/* FORM */
 
 .contact-wrapper {
     display: grid;
@@ -200,8 +194,6 @@ iframe {
     color: #2d5b35;
 }
 
-/* FAQ */
-
 .faq {
     max-width: 900px;
     margin: auto;
@@ -236,8 +228,6 @@ iframe {
     color: #666;
     line-height: 28px;
 }
-
-/* Responsive */
 
 @media(max-width:992px) {
 

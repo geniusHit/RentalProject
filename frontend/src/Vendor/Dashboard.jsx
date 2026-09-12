@@ -556,7 +556,7 @@ const VendorDashboard = () => {
                                         <th>Security <br/> Deposit</th>
                                         <th>Stock <br/> Keeping <br/> Unit</th>
                                         <th>Notes</th>
-                                        {/* <th>View</th> */}
+                                        {}
                                     </tr>
                                 </thead>
 
@@ -705,7 +705,7 @@ const VendorDashboard = () => {
                                                 }
                                             } /></td>
 
-                                            {/* <td><FaEye /></td> */}
+                                            {}
                                         </tr>
                                     ))}
                                 </tbody>
@@ -745,7 +745,7 @@ const VendorDashboard = () => {
                                         <th>Rent <br/> Days</th>
                                         <th>User <br/> Name</th>
                                         <th>Action</th>
-                                        {/* <th>View</th> */}
+                                        {}
                                     </tr>
                                 </thead>
 
@@ -789,7 +789,7 @@ const VendorDashboard = () => {
                                                     <button className="deliverBtn" onClick={() => deliverItem(item)}>Deliver Item</button> : `Delivered`}
                                             </td>
 
-                                            {/* <td><FaEye /></td> */}
+                                            {}
                                         </tr>
                                     ))}
                                 </tbody>

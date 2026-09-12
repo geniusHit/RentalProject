@@ -70,9 +70,6 @@ const HowItWorks = () => {
             <NavBar />
 
             <div className="how-container">
-
-                {/* Hero */}
-
                 <section className="hero">
 
                     <div className="hero-left">
@@ -101,8 +98,6 @@ const HowItWorks = () => {
                     </div>
 
                 </section>
-
-                {/* Steps */}
 
                 <section className="steps-section">
 
@@ -139,8 +134,6 @@ const HowItWorks = () => {
 
                 </section>
 
-                {/* Features */}
-
                 <section className="features">  
 
                     <h2>Why Choose FurniRent?</h2> <br />
@@ -167,8 +160,6 @@ const HowItWorks = () => {
                     </div>
 
                 </section>
-
-                {/* CTA */}
 
                 <section className="cta">
 

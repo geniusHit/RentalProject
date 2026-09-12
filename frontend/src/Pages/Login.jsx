@@ -78,11 +78,7 @@ const Login = () => {
     return (
         <>
             <div className="login-page">
-
-                {/* Hero Section */}
                 <div className="login-container" style={{ backgroundImage: `url(${livingRoom})` }}>
-
-                    {/* Left Side */}
                     <div
                         className="login-left"
                     >
@@ -103,7 +99,6 @@ const Login = () => {
                         </div>
                     </div>
 
-                    {/* Right Side */}
                     <div className="login-box">
                         <div className="login-card">
 
@@ -139,15 +134,6 @@ const Login = () => {
                                     </div>
                                 </div>
 
-                                {/* <div className="login-options">
-                                    <label>
-                                        <input type="checkbox" />
-                                        Remember me
-                                    </label>
-
-                                    <a href="/">Forgot Password?</a>
-                                </div> */}
-
                                 <button className="login-btn">
                                     Login <FaArrowRight />
                                 </button>
@@ -160,7 +146,6 @@ const Login = () => {
                     </div>
                 </div>
 
-                {/* Features */}
                 <div className="features-2">
 
                     <div className="feature">
@@ -189,7 +174,6 @@ const Login = () => {
                 </div>
             </div>
 
-            {/* Footer */}
             <Footer />
 
             <div className="copyright">
