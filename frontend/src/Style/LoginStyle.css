@@ -20,7 +20,7 @@ body {
     padding: 20px 60px;
 }
 
-/* Hero Section */
+
 
 .login-container {
     display: flex;
@@ -30,7 +30,7 @@ body {
     background: #fff;
 }
 
-/* Left Side */
+
 
 .login-left {
     flex: 1;
@@ -76,14 +76,14 @@ body {
     max-width: 450px;
 }
 
-/* Login Card */
+
 
 .login-card {
     width: 400px;
     height: 92%;
     border-radius: 15px;
     background: #fff;
-    padding: 60px;
+    padding: 80px 40px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -100,22 +100,22 @@ body {
 }
 
 .input-group {
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 }
 
 .input-group label {
-    display: block;
+    /* display: block;
     margin-bottom: 10px;
-    font-weight: 500;
+    font-weight: 500; */
 }
 
 .input-box {
-    display: flex;
+    /* display: flex;
     align-items: center;
     gap: 12px;
     border: 1px solid #ddd;
     border-radius: 12px !important;
-    padding: 16px;
+    padding: 16px; */
     width: 100%;
 }
 
@@ -125,7 +125,7 @@ body {
 
 .input-box input {
     width: 100%;
-    border: none;
+    
     outline: none;
     font-size: 15px;
 }
@@ -140,6 +140,17 @@ body {
     text-decoration: none;
     color: #4d7c44;
     font-weight: 600;
+}
+
+.login-options label {
+    display: flex;
+    font-size: 14px;
+    align-items: center;
+    gap: 4px;
+}
+
+.rememberCheck {
+    width: 12px;
 }
 
 .login-btn {
@@ -216,9 +227,19 @@ body {
     font-weight: 600;
 }
 
-/* Features */
+
 
 .features {
+    
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    margin-top: 30px;
+    background: #fff;
+    padding: 35px;
+    border-radius: 20px;
+}
+
+.features-2, .features-3 {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 25px;
@@ -243,7 +264,7 @@ body {
     margin-bottom: 5px;
 }
 
-/* Footer */
+
 
 .social-icons {
     display: flex;
@@ -259,7 +280,13 @@ body {
     padding: 18px;
 }
 
-/* Responsive */
+.error {
+    color: gray;
+    font-size: 13px;
+    padding: 10px;
+}
+
+
 
 @media (max-width: 992px) {
     .login-container {
@@ -276,5 +303,15 @@ body {
 
     .footer {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width:750px){
+    .features-2{
+        grid-template-columns: none;
+    }
+
+    .login-box {
+        padding: 20px;
     }
 }

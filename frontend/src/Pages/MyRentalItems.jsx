@@ -1,50 +1,63 @@
+'use client';
 import React, { useEffect, useState } from 'react'
-import Logo from '../assets/Logo.png'
-import { NavLink, Link } from 'react-router-dom'
-import { NavDropdown } from 'react-bootstrap';
-import { FaRegUser } from "react-icons/fa";
-import {
-    FaGoogle,
-    FaApple,
-    FaEnvelope,
-    FaLock,
-    FaArrowRight,
-    FaTruck,
-    FaHeadset,
-    FaShieldAlt,
-    FaFacebookF,
-    FaInstagram,
-    FaYoutube,
-    FaTwitter,
-} from "react-icons/fa";
 import "../Style/MyRentalItems.css"
 import NavBar from '../Components/NavBar';
 import Footer from '../Components/Footer';
 
 const MyRentalItems = () => {
     const [products, setProducts] = useState([])
+    const [loginUser, setLoginUser] = useState()
+    const [IP, setIP] = useState("")
 
-    const searchItems = async (req, res) => {
-        const rentalItems = await fetch("http://localhost:5000/my-rental-items", {
+    const getLoginUser = async () => {
+        const response = await fetch(`http://localhost:8000/get-login-user`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                email: localStorage.getItem("email"),
-                name: localStorage.getItem("name")
+                IP: IP,
             })
         })
+        const data = await response.json()
+        setLoginUser(data)
+    }
 
-        const result = await rentalItems.json()
-        console.log("result = ", result)
-        setProducts(result)
+    const getIP = async () => {
+        const response = await fetch("https://api.ipify.org?format=json");
+        const data = await response.json();
+        setIP(data.ip)
+    };
+
+    const searchItems = async (req, res) => {
+        if (loginUser !== undefined && loginUser?.loggedUser!==null) {
+            const rentalItems = await fetch("http://localhost:8000/my-rental-items", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: loginUser?.user?.email,
+                    name: loginUser?.user?.name 
+                })
+            })
+
+            const result = await rentalItems.json()
+            setProducts(result)
+        }
+        else{
+            setProducts([])
+        }
     }
     useEffect(() => {
-        searchItems()
+        getIP()
     }, [])
 
-    console.log("products = ", products)
+    !loginUser?.user?.email && getLoginUser()
+
+    useEffect(()=> {
+        searchItems()
+    }, [loginUser])
 
     return (
         <div>
@@ -57,12 +70,11 @@ const MyRentalItems = () => {
                     products.map((prod, index) => {
                         return <div className='product' key={index}>
                             <div className='img' style={{
-                                backgroundImage: `url(http://localhost:5000/uploads/${prod.imageNames[0]})`
+                                backgroundImage: `url(http://localhost:8000/uploads/${prod.imageNames[0]})`
                             }}></div>
                             <div className='details'>
                                 <div className='prodName'>{prod.name}</div>
                                 <div className='price'>₹{prod.price} / month</div>
-                                {/* <button className='rentNowButton' onClick={() => { rentNow(prod) }}>Rent Now</button> */}
                             </div>
                         </div>
                     })

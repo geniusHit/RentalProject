@@ -1,3 +1,4 @@
+'use client';
 import React, { useState } from 'react'
 import '../Style/Contact.css'
 import NavBar from '../Components/NavBar'
@@ -49,9 +50,6 @@ const Contact = () => {
             <NavBar />
 
             <div className="contact-page">
-
-                {/* Hero */}
-
                 <section className="contact-hero">
 
                     <div className="hero-content">
@@ -80,8 +78,6 @@ const Contact = () => {
 
                 </section>
 
-                {/* Contact Cards */}
-
                 <section className="contact-info">
 
                     <h2>Get in Touch</h2>
@@ -100,7 +96,7 @@ const Contact = () => {
 
                             <h3>Call Us</h3>
 
-                            <p>+91 98765 43210</p>
+                            <p>+91 88474 82208</p>
 
                             <span>Mon - Sat : 9 AM - 8 PM</span>
 
@@ -114,7 +110,7 @@ const Contact = () => {
 
                             <h3>Email Us</h3>
 
-                            <p>hello@furnirent.com</p>
+                            <p>rohitthakur792002@gmail.com</p>
 
                             <span>Reply within 24 hours</span>
 
@@ -128,111 +124,14 @@ const Contact = () => {
 
                             <h3>Visit Us</h3>
 
-                            <p>Bengaluru, Karnataka</p>
+                            <p>Mohali, Punjab</p>
 
                             <span>Mon - Sat : 10 AM - 7 PM</span>
 
                         </div>
-
-                        <div className="info-card">
-
-                            <div className="icon">
-                                <FaComments />
-                            </div>
-
-                            <h3>Live Chat</h3>
-
-                            <p>Talk to our support team</p>
-
-                            <span className="green">
-                                Start Chat →
-                            </span>
-
-                        </div>
-
                     </div>
 
                 </section>
-
-                {/* Form */}
-
-                <section className="contact-wrapper">
-
-                    <div className="contact-form">
-
-                        <h2>Send Us a Message</h2>
-
-                        <p>
-                            Fill the form below and we'll get back to you.
-                        </p>
-
-                        <div className="row">
-
-                            <input
-                                placeholder="Full Name"
-                            />
-
-                            <input
-                                placeholder="Email Address"
-                            />
-
-                        </div>
-
-                        <input
-                            placeholder="Phone Number"
-                        />
-
-                        <input
-                            placeholder="Subject"
-                        />
-
-                        <textarea
-                            rows="6"
-                            placeholder="Your Message"
-                        ></textarea>
-
-                        <button>
-
-                            Send Message
-
-                            <FaPaperPlane />
-
-                        </button>
-
-                    </div>
-
-                    <div className="location">
-
-                        <h2>Our Location</h2>
-
-                        <iframe
-                            title="map"
-                            src="https://maps.google.com/maps?q=Bengaluru&t=&z=13&ie=UTF8&iwloc=&output=embed"
-                        ></iframe>
-
-                        <div className="office">
-
-                            <FaBuilding />
-
-                            <div>
-
-                                <h4>FurniRent Head Office</h4>
-
-                                <p>
-                                    123, Koramangala, Bengaluru,
-                                    Karnataka, India
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </section>
-
-                {/* FAQ */}
-
                 <section className="faq">
 
                     <h2>Frequently Asked Questions</h2>

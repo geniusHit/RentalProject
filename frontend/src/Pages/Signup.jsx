@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
     FaGoogle,
     FaApple,
@@ -13,7 +13,7 @@ import {
     FaYoutube,
     FaTwitter,
 } from "react-icons/fa";
-import { Link } from "react-router-dom"
+import { Link, NavLink, useNavigate } from "react-router-dom"
 import "../Style/LoginStyle.css";
 import Logo from '../assets/Logo.png'
 import livingRoom from '../assets/ChatGPT Image Jun 11, 2026, 05_03_13 PM.png'
@@ -21,39 +21,81 @@ import { useForm } from "react-hook-form"
 import Footer from "../Components/Footer";
 
 const Signup = () => {
-    const { watch, register, handleSubmit } = useForm()
+    const { watch, register, handleSubmit, formState: { errors } } = useForm({
+        defaultValues: {
+            otp: ""
+        }
+    })
     const port = import.meta.env.PORT;
-    const submit = async (data) => {
-        console.log("data = ", data)
+    const [IP, setIP] = useState()
+    const navigate = useNavigate()
+    const [disableSignup, setDisableSignup] = useState(false)
+    const [showOtp, setShowOtp] = useState(false)
+    const [userData, setUserData] = useState()
+    const [otp, setOtp] = useState()
 
-        const addUser = await fetch(`http://localhost:8000/add-user`, {
+    const submit = async (data) => {
+        setUserData(data)
+
+        let expiry = new Date();
+        expiry.setDate(expiry.getDate() + 1);
+
+        const sendOtp = userData?.otp === "" || userData === undefined ? await fetch(`http://localhost:8000/send-signup-otp`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(data)
-        })
+            body: JSON.stringify({ ...data, IP: IP, expiry: expiry })
+        }) : "";
+
+        const otp2 = sendOtp !== "" ? await sendOtp.json() : "";
+        otp2 !== "" && setOtp(otp2)
     }
+
+    const submit2 = async (data) => {
+        if (Number(data?.otp) === Number(otp?.signup_otp)) {
+            let expiry = new Date();
+            expiry.setDate(expiry.getDate() + 1);
+
+            const user = await fetch(`http://localhost:8000/add-user`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ ...userData, IP: IP, expiry: expiry })
+            })
+
+            navigate("/login")
+        }
+    }
+
+    useEffect(() => {
+        userData !== undefined && (setDisableSignup(true), setShowOtp(true));
+    }, [userData])
+
+    useEffect(() => {
+        getIP()
+    }, [])
+    const getIP = async () => {
+        const response = await fetch("https://api.ipify.org?format=json");
+        const data = await response.json();
+        setIP(data.ip)
+    };
 
     return (
         <>
             <div className="login-page">
-
-                {/* Hero Section */}
                 <div className="login-container" style={{ backgroundImage: `url(${livingRoom})` }}>
 
-                    {/* Left Side */}
                     <div
                         className="login-left"
                     >
                         <div className="overlay-content">
-                            <div className="logo">
-                                {/* <h1>
-                Furni<span>Rent</span>
-              </h1>
-              <p>Live Better. Rent Smarter.</p> */}
-                                <img src={Logo} width="200" />
-                            </div>
+                            <Link to="/">
+                                <div className="logo">
+                                    <img src={Logo} width="200" />
+                                </div>
+                            </Link>
 
                             <div className="welcome-text">
                                 <h2>Welcome Back!</h2>
@@ -65,7 +107,6 @@ const Signup = () => {
                         </div>
                     </div>
 
-                    {/* Right Side */}
                     <div className="login-box">
                         <div className="login-card">
 
@@ -76,93 +117,118 @@ const Signup = () => {
 
                             <form onSubmit={handleSubmit(submit)}>
                                 <div className="input-group">
-                                    <label>Full Name</label>
-                                    <div className="input-box">
-                                        <i className="fa fa-user"></i>
-                                        <input
-                                            type="text"
-                                            placeholder="Enter your full name"
-                                            {...register("name")}
-                                        />
-                                    </div>
+                                    <input
+                                        type="text"
+                                        placeholder="Enter your full name"
+                                        {...register("name", {
+                                            required: { value: true, message: "Full Name is required" }
+                                        })}
+                                        readOnly={disableSignup}
+                                    />
+
+                                    <div className="error">{errors?.name?.message}</div>
                                 </div>
 
                                 <div className="input-group">
-                                    <label>Email Address</label>
-                                    <div className="input-box">
-                                        <FaEnvelope />
-                                        <input
-                                            type="email"
-                                            placeholder="Enter your email"
-                                            {...register("email")}
-                                        />
-                                    </div>
+                                    <input
+                                        type="email"
+                                        placeholder="Enter your email"
+                                        {...register("email", {
+                                            required: { value: true, message: "Email is required" }
+                                        })}
+                                        readOnly={disableSignup}
+                                    />
+
+                                    <div className="error">{errors?.email?.message}</div>
                                 </div>
 
                                 <div className="input-group">
-                                    <label>Phone Number</label>
-                                    <div className="input-box">
-                                        <i className="fa fa-phone"></i>
-                                        <input
-                                            type="tel"
-                                            placeholder="Enter your phone number"
-                                            {...register("phone")}
-                                        />
-                                    </div>
+                                    <input
+                                        type="text"
+                                        placeholder="Enter your phone number"
+                                        {...register("phone", {
+                                            required: { value: true, message: "Phone is required" }
+                                        })}
+                                        readOnly={disableSignup}
+                                    />
+
+                                    <div className="error">{errors?.phone?.message}</div>
                                 </div>
 
                                 <div className="input-group">
-                                    <label>Password</label>
-                                    <div className="input-box">
-                                        <FaLock />
-                                        <input
-                                            type="password"
-                                            placeholder="Enter your password"
-                                            {...register("password")}
-                                        />
-                                    </div>
+                                    <input
+                                        type="password"
+                                        placeholder="Enter your password"
+                                        {...register("password", {
+                                            required: { value: true, message: "Password is required" }
+                                        })}
+                                        readOnly={disableSignup}
+                                    />
+
+                                    <div className="error">{errors?.password?.message}</div>
                                 </div>
 
-                                <div className="login-options">
-                                    <label>
-                                        <input type="checkbox" />
-                                        Remember me
-                                    </label>
+                                <div className="input-group">
+                                    <input
+                                        type="text"
+                                        placeholder="Pincode"
+                                        {...register("pincode", {
+                                            required: { value: true, message: "Pincode is required" }
+                                        })}
+                                        readOnly={disableSignup}
+                                    />
 
-                                    <a href="/">Forgot Password?</a>
+                                    <div className="error">{errors?.pincode?.message}</div>
                                 </div>
 
-                                <button className="login-btn">
-                                    Signup <FaArrowRight />
-                                </button>
+                                <div className="input-group">
+                                    <textarea
+                                        placeholder="Delivery Address"
+                                        {...register("address", {
+                                            required: { value: true, message: "Delivery address is required" }
+                                        })}
+                                        readOnly={disableSignup}
+                                    />
 
-                                <div className="divider">
-                                    <span>OR</span>
+                                    <div className="error">{errors?.address?.message}</div>
                                 </div>
 
-                                <button type="button" className="social-btn">
-                                    <FaGoogle />
-                                    Continue with Google
-                                </button>
-
-                                <button type="button" className="social-btn">
-                                    <FaApple />
-                                    Continue with Apple
-                                </button>
+                                {userData === undefined && <button type="submit" className="login-btn">
+                                    Send Otp <FaArrowRight />
+                                </button>}
 
                                 <p className="signup-text">
-                                    Don't have an account? <Link to="/signup">Sign Up</Link>
+                                    Already have an account? <Link to="/login">Login</Link>
                                 </p>
-
                             </form>
 
+                            <form onSubmit={handleSubmit(submit2)}>
+                                {
+                                    showOtp === true &&
+                                    <>
+                                        <div className="input-group">
+                                            <input
+                                                type="text"
+                                                placeholder="OTP"
+                                                {...register("otp", {
+                                                    required: { value: true, message: "OTP is required" }
+                                                })}
+                                            />
+
+                                            <div className="error">{errors?.otp?.message}</div>
+                                        </div>
+
+                                        <button type="submit" className="login-btn">
+                                            Signup <FaArrowRight />
+                                        </button>
+                                    </>
+                                }
+                            </form>
                         </div>
                     </div>
                 </div>
 
-                {/* Features */}
-                <div className="features">
-
+                <div className="features-3">
                     <div className="feature">
                         <FaShieldAlt />
                         <div>
@@ -189,7 +255,6 @@ const Signup = () => {
                 </div>
             </div>
 
-            {/* Footer */}
             <Footer />
             <div className="copyright">
                 © 2024 FurniRent. All rights reserved.

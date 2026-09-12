@@ -1,8 +1,8 @@
 const mongoose = require("mongoose")
-const formidable = require("formidable")
-const fs = require("fs")
-const path = require("path");
-const { type } = require("os");
+const jwt = require("jsonwebtoken")
+const SECRET = process.env.JWT_SECRET
+const nodemailer = require("nodemailer")
+const bcrypt = require("bcrypt")
 
 const users = mongoose.Schema({
     name: {
@@ -17,11 +17,57 @@ const users = mongoose.Schema({
     password: {
         type: String
     },
+    pincode: {
+        type: Number
+    },
+    address: {
+        type: String
+    },
+    loggedInIPS: [{
+        IP: {
+            type: String,
+        },
+        expireAt: {
+            type: Date,
+        }
+    }],
 })
 const usersModel = mongoose.model("users", users)
+exports.sendSignupOtp = async (req, res) => {
+    let a = Math.random()
+    a = Math.ceil(a * 999999)
+
+    const auth = nodemailer.createTransport({
+        service: "gmail",
+        secure: true,
+        port: 465,
+        auth: {
+            user: "rohitthakur792002@gmail.com",
+            pass: "pnsg ismb vdou ccax"
+        }
+    })
+
+    const receiver = {
+        from: "rohitthakur792002@gmail.com",
+        to: `${req.body?.email}`,
+        subject: `Team Rental Items. Signup otp.`,
+        html: `Your Otp is ${a}`
+    }
+
+    auth.sendMail(receiver, (error, emailResponse) => {
+        if (error)
+            throw error;
+        console.log("success!")
+        res.end()
+    })
+
+    res.send({signup_otp: a})
+}
+
 exports.addUser = async (req, res) => {
-    console.log("req.body from addUser = ", req.body)
-    const user = await new usersModel(req.body)
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(req.body.password, saltRounds)
+    const user = await new usersModel({ ...req.body, password: hashedPassword })
     const result = await user.save();
 
     res.send(result)
@@ -79,9 +125,8 @@ const products = mongoose.Schema({
 })
 const productsModel = mongoose.model("product", products)
 exports.addProduct = async (req, res) => {
-    console.log("req.body = ", req.body)
     const product = await new productsModel(req.body)
-    const result = await result.save()
+    const result = await product.save()
 
     res.status(200).json({
         success: true
@@ -95,19 +140,31 @@ exports.getProducts = async (req, res) => {
 }
 
 exports.loginUser = async (req, res) => {
-    console.log("req.body = ", req.body)
-    const user = await usersModel.find({password: req.body.password, email: req.body.email})
-    
-    res.send(user)
+    try {
+        const user = await usersModel.findOne({ email: req.body.email })
+        const match = await bcrypt.compare(req.body.password, user?.password)
+        const userId = user._id.toString()
+        const currentLogin = await usersModel.findOne({ _id: userId })
+        const currentLoginIPS = currentLogin.loggedInIPS;
+        const newLoginIPS = currentLoginIPS.filter((el) => el.IP !== req.body.IP)
+        const newIPS = [...newLoginIPS, { IP: req.body.IP, expireAt: req.body.expiry }]
+        const loginInSystem = await usersModel.findByIdAndUpdate(userId, { loggedInIPS: newIPS })
+        const token = jwt.sign({ name: user.name, email: user.email, phone: user.phone, password: user.password, city: user.city, address: user.address }, SECRET, { expiresIn: "1h" })
+        const decodedToken = jwt.verify(token, SECRET)
+
+        res.send({ ...user, jwtToken: token })
+    }
+    catch (err) {
+        return res.status(400).json({ success: false, message: err.message })
+    }
 }
 
 const rentalItemsSchema = mongoose.Schema({
-    userName: {
-        type: String
-    },
-
-    email: {
-        type: String
+    user: {
+        name: { type: String },
+        email: { type: String },
+        pincode: { type: String },
+        address: { type: String },
     },
 
     name: {
@@ -173,25 +230,289 @@ const rentalItemsSchema = mongoose.Schema({
     notes: {
         type: String
     },
+
+    rentDays: {
+        type: Number,
+        default: 5,
+    },
+
+    rentedDate: {
+        type: String
+    },
+
+    deliveryStatus: {
+        type: String,
+        default: "PENDING"
+    }
 })
 const rentalItems = mongoose.model("rentalItems", rentalItemsSchema)
 exports.addRentalItems = async (req, res) => {
-    console.log("req.body = ", req.body)
+    const { email, name, userName, sku, quantity } = req.body;
+    const user = await usersModel.findOne({ email: email })
+    const existingProduct = await rentalItems.findOne({ "user.email": email, "user.name": userName, name: name });
+    if (existingProduct) {
+        res.send({ message: "Product is already in Rental Items!" });
+        return;
+    }
 
-    const item = await new rentalItems(req.body)
+    let expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + 1);
+    const data = req.body;
+    const data2 = {
+        name: data.name,
+        imageNames: data.imageNames,
+        sku: data.sku,
+        condition: data.condition,
+        brand: data.brand,
+        material: data.material,
+        description: data.description,
+        price: data.price,
+        quantity: data.quantity,
+        securityDeposit: data.securityDeposit,
+        stockKeepingUnit: data.stockKeepingUnit,
+        deliveryCharge: data.deliveryCharge,
+        returnPolicy: data.returnPolicy,
+        assemblyRequired: data.assemblyRequired,
+        notes: data.notes,
+        rentDays: data.rentDays,
+        rentedDate: new Date(),
+        deliveryStatus: "PENDING",
+    }
+    const item = new rentalItems({
+        ...data2, user: {
+            name: userName,
+            email: email,
+            pincode: user.pincode,
+            address: user.address
+        }
+    })
     const result = await item.save()
 
-    res.send(result)
+    const updateQuantity = await productsModel.findOneAndUpdate({sku: sku}, {quantity: (quantity-1)})
+
+    res.send({ message: "Product added to Rental Items" })
 }
 
 exports.myRentalItems = async (req, res) => {
-    console.log("req.body = ", req.body)
+    const { name, email } = req.body;
+    const items = await rentalItems.find({ "user.email": email })
 
-    const items = await rentalItems.find({userName: req.body.name, email: req.body.email})
     res.send(items)
 }
 
-exports.check = async (req, res) => {
-    const items = await usersModel.find({name: {$regex: "Thakur", $options: "i"}})
-    res.send(items)
+exports.allRentals = async (req, res) => {
+    const allR = await rentalItems.find({})
+    res.send(allR)
+}
+
+exports.searchProducts = async (req, res) => {
+    const searchKey = req.body.search;
+    const products = await productsModel.find({
+        $or: [
+            { name: { $regex: `${searchKey}`, $options: 'i' } },
+            { brand: { $regex: `${searchKey}`, $options: 'i' } },
+            { condition: { $regex: `${searchKey}`, $options: 'i' } },
+            { description: { $regex: `${searchKey}`, $options: 'i' } },
+            { notes: { $regex: `${searchKey}`, $options: 'i' } },
+            { category: { $regex: `${searchKey}`, $options: 'i' } },
+        ]
+    });
+
+    res.send(products)
+}
+
+exports.deliverItem = async (req, res) => {
+    const { name, email, city, address } = req.body.user;
+    const data = req.body
+    const updatedData = { ...data, deliveryStatus: "DELIVERED" }
+
+    const updateRentalItems = await rentalItems.findByIdAndUpdate(data._id,
+        { $set: updatedData }
+    )
+
+    const auth = nodemailer.createTransport({
+        service: "gmail",
+        secure: true,
+        port: 465,
+        auth: {
+            user: "rohitthakur792002@gmail.com",
+            pass: "pnsg ismb vdou ccax"
+        }
+    })
+    const receiver = {
+        from: "rohitthakur792002@gmail.com",
+        to: `${email}`,
+        subject: `Team Rental Items. Item ${req.body.name} has been shipped to your provided address.`,
+        html: `<b>Hello</b> ${name}. Your ordered item ${req.body.name} has been shipped to your provided address ${address}. It will be delived in 5 days.`
+    }
+
+    auth.sendMail(receiver, (error, emailResponse) => {
+        if (error)
+            throw error;
+        console.log("success!")
+        res.end()
+    })
+
+    res.end()
+}
+
+exports.createTestPaymentLink = async (req, res) => {
+    const url = "https://sandbox.cashfree.com/pg/links";
+    const linkId = `link_${Date.now()}`;
+    const { email, } = req.body;
+    const user = await usersModel.findOne({ email: email })
+
+    const payload = {
+        link_id: linkId,
+        link_amount: Number(req.body.price),
+        link_currency: "INR",
+        link_purpose: "Test payment for project",
+        customer_details: {
+            customer_phone: "9999999999",
+            customer_email: `${user.email}`,
+            customer_name: `${user.name}`
+        },
+        link_notify: {
+            send_sms: false,
+            send_email: false
+        },
+        link_meta: {
+            return_url: `http://localhost:5173/catalog`
+        }
+    };
+
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "x-api-version": "2023-08-01",
+            "x-client-id": process.env.CASHFREE_CLIENT_ID,
+            "x-client-secret": process.env.CASHFREE_SECRET_KEY
+        },
+        body: JSON.stringify(payload)
+    });
+
+    const data = await response.json();
+    const token = jwt.sign({ ...req.body, link_id: data.link_id }, process.env.JWT_SECRET, { expiresIn: "1h" })
+
+    res.send({ ...data, payment_token: token })
+}
+
+exports.verifyPaymentLink = async (req, res) => {
+    try {
+        const { link_id } = req.body;
+        const url = `https://sandbox.cashfree.com/pg/links/${link_id}`;
+
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                "x-api-version": "2023-08-01",
+                "x-client-id": process.env.CASHFREE_CLIENT_ID,
+                "x-client-secret": process.env.CASHFREE_SECRET_KEY,
+            },
+        });
+
+        const data = await response.json();
+
+        res.send(data)
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+exports.updateInventory = async (req, res) => {
+    try {
+        const data = req.body;
+        data.map(async (product, index) => {
+            const { _id, ...updateData } = product;
+            const updatedProduct = await productsModel.findByIdAndUpdate(
+                _id,
+                { $set: updateData },
+            );
+        })
+
+        res.send({ message: "Inventory has been updated." })
+    }
+    catch (err) {
+        return res.status(400).json({ success: false, message: err.message })
+    }
+}
+
+exports.itemsDeliveryStatus = async (req, res) => {
+    try {
+        const pending = await rentalItems.find({ deliveryStatus: "PENDING" })
+        const delivered = await rentalItems.find({ deliveryStatus: "DELIVERED" });
+        res.json({ pending: pending, delivered: delivered })
+    }
+    catch (err) {
+        return res.status(400).json({ success: false, message: err.message })
+    }
+}
+
+const loggedUsers = mongoose.Schema({
+    email: {
+        type: String,
+    },
+    IP: {
+        type: String,
+    },
+    expiry: {
+        type: Date
+    }
+})
+const loggedUsersModel = mongoose.model("loggedUsers", loggedUsers)
+exports.manageLoggedUsers = async (req, res) => {
+    try {
+        const deleteOldLogins = await loggedUsersModel.deleteMany({ IP: req.body.IP })
+        const newLoggedUser = await new loggedUsersModel(req.body)
+        await newLoggedUser.save()
+
+        res.send(newLoggedUser)
+    }
+    catch (err) {
+        return res.status(400).json({ success: false, message: err.message })
+    }
+}
+
+exports.getLoginUser = async (req, res) => {
+    const loggedUser = await loggedUsersModel.findOne({ IP: req.body.IP })
+    const user = loggedUser !== null && await usersModel.findOne({ email: loggedUser.email })
+
+    res.send({ loggedUser: loggedUser, user: user })
+}
+
+
+const paymentToken = mongoose.Schema({
+    payment_token: {
+        type: String,
+    }
+})
+const paymentTokenModel = mongoose.model("paymentToken", paymentToken)
+exports.savePaymentToken = async (req, res) => {
+    const token = await new paymentTokenModel(req.body)
+    await token.save()
+
+    res.send("Payment token saved successfully.")
+}
+
+exports.getPaymentToken = async (req, res) => {
+    const token = await paymentTokenModel.find({})
+
+    res.send(token)
+}
+
+exports.deletePaymentToken = async (req, res) => {
+    const deleteToken = await paymentTokenModel.deleteMany({})
+
+    res.send(deleteToken)
+}
+
+exports.logout = async (req, res) => {
+    try {
+        const logout = await loggedUsersModel.deleteMany({ IP: req.body.IP })
+        res.send(logout)
+    }
+    catch (err) {
+        return res.status(400).json({ success: false, message: "Unable to logout" })
+    }
 }

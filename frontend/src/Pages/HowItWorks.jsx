@@ -1,3 +1,4 @@
+'use client';
 import React from 'react'
 import NavBar from '../Components/NavBar';
 import "../Style/HowItWorks.css";
@@ -69,9 +70,6 @@ const HowItWorks = () => {
             <NavBar />
 
             <div className="how-container">
-
-                {/* Hero */}
-
                 <section className="hero">
 
                     <div className="hero-left">
@@ -100,8 +98,6 @@ const HowItWorks = () => {
                     </div>
 
                 </section>
-
-                {/* Steps */}
 
                 <section className="steps-section">
 
@@ -138,11 +134,9 @@ const HowItWorks = () => {
 
                 </section>
 
-                {/* Features */}
+                <section className="features">  
 
-                <section className="features">
-
-                    <h2>Why Choose FurniRent?</h2>
+                    <h2>Why Choose FurniRent?</h2> <br />
 
                     <div className="feature-grid">
 
@@ -166,8 +160,6 @@ const HowItWorks = () => {
                     </div>
 
                 </section>
-
-                {/* CTA */}
 
                 <section className="cta">
 

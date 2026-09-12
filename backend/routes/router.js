@@ -5,8 +5,6 @@ const controller = require("../controller/usercontroller.js")
 const multer = require("multer")
 const path = require("path");
 
-router.post("/add-user", controller.addUser)
-
 router.post("/add-product", controller.addProduct)
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -22,14 +20,16 @@ const upload = multer({
     limits: { fileSize: 200 * 1024 * 1024 }
 });
 router.post('/save-product-images', upload.array('image', 10), (req, res) => {
-    console.log("req.files = ", req.files)
-
     if (!req.files) {
         return res.send('No file uploaded.');
     }
     let filesName = req.files.map((file) => file.filename)
     res.json(filesName);
 });
+
+router.post("/add-user", controller.addUser)
+
+router.post("/send-signup-otp", controller.sendSignupOtp)
 
 router.get("/get-products", controller.getProducts)
 
@@ -39,6 +39,30 @@ router.post("/add-rental-item", controller.addRentalItems)
 
 router.post("/my-rental-items", controller.myRentalItems)
 
-router.get("/check", controller.check)
+router.post("/search-products", controller.searchProducts)
+
+router.get("/all-rentals", controller.allRentals)
+
+router.post("/deliver-item", controller.deliverItem)
+
+router.post("/create-test-payment-link", controller.createTestPaymentLink)
+
+router.post("/verify-payment-link", controller.verifyPaymentLink)
+
+router.post("/update-inventory", controller.updateInventory)
+
+router.get("/items-delivery-status", controller.itemsDeliveryStatus)
+
+router.post("/manage-logged-users", controller.manageLoggedUsers)
+
+router.post("/get-login-user", controller.getLoginUser)
+
+router.post("/save-payment-token", controller.savePaymentToken)
+
+router.get("/get-payment-token", controller.getPaymentToken)
+
+router.get("/delete-payment-token", controller.deletePaymentToken)
+
+router.post("/logout", controller.logout)
 
 module.exports = router
