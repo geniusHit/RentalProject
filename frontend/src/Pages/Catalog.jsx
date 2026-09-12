@@ -57,14 +57,14 @@ const Catalog = () => {
         getLoginUser()
     }, [IP])
 
-    useEffect(()=> {
-        if(paymentToken[0]?.payment_token){
+    useEffect(() => {
+        if (paymentToken[0]?.payment_token) {
             paymentVerify()
         }
     }, [paymentToken])
 
-    useEffect(()=>{
-        paymentStatus?.link_status==="PAID" && addRental()
+    useEffect(() => {
+        paymentStatus?.link_status === "PAID" && addRental()
     }, [paymentStatus])
 
     const rentNow = async (product) => {
@@ -183,6 +183,7 @@ const Catalog = () => {
                             <div className='details'>
                                 <div className='prodName'>{prod.name}</div>
                                 <div className='price'>₹{prod.price} / month</div>
+                                <div className='available'>Available <b>{prod?.quantity}</b></div>
                                 <div>
                                     <label>Days for Rent</label>
 
@@ -194,9 +195,13 @@ const Catalog = () => {
                                         onChange={(e) => {
                                             prod = { ...prod, rentDays: e.target.value }
                                         }}
+                                        readOnly={prod?.quantity < 1 ? true : false}
                                     />
                                 </div>
-                                <button className='rentNowButton' onClick={() => { rentNow(prod) }}>Rent Now</button>
+                                <button className='rentNowButton'
+                                    onClick={() => { rentNow(prod) }}
+                                    disabled={prod?.quantity < 1 ? true : false}
+                                >Rent Now</button>
                             </div>
                         </div>
                     })

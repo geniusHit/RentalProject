@@ -263,9 +263,12 @@ const rentalItemsSchema = mongoose.Schema({
 })
 const rentalItems = mongoose.model("rentalItems", rentalItemsSchema)
 exports.addRentalItems = async (req, res) => {
-    const { email, name, userName } = req.body;
+    console.log("req.body : ", req.body)
+    const { email, name, userName, sku, quantity } = req.body;
     const user = await usersModel.findOne({ email: email })
-    const existingProduct = await rentalItems.findOne({ email: email, userName: userName, name: name });
+    console.log("user from addRentalItems : ", user)
+    const existingProduct = await rentalItems.findOne({ "user.email": email, "user.name": userName, name: name });
+    console.log("existingProduct : ", existingProduct)
     if (existingProduct) {
         res.send({ message: "Product is already in Rental Items!" });
         return;
@@ -303,6 +306,8 @@ exports.addRentalItems = async (req, res) => {
         }
     })
     const result = await item.save()
+
+    const updateQuantity = await productsModel.findOneAndUpdate({sku: sku}, {quantity: (quantity-1)})
 
     res.send({ message: "Product added to Rental Items" })
 }
