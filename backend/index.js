@@ -27,7 +27,7 @@ app.use(express.json());
 app.use(cookieParser())
 
 const router = require("./routes/router.js");
-app.use("/", router);
+app.use(router);
 
 app.use("/uploads", express.static("uploads"));
 
