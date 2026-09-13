@@ -8,7 +8,7 @@ const MyRentalItems = () => {
     const API_URL =
         window.location.hostname === "localhost"
             ? "http://localhost:8000"
-            : "https://rental-project-opal.vercel.app";
+            : "https://rental-project-backend.vercel.app";
 
     console.log("API_URL : ", API_URL)
 
@@ -17,7 +17,7 @@ const MyRentalItems = () => {
     const [IP, setIP] = useState("")
 
     const getLoginUser = async () => {
-        const response = await fetch(`/get-login-user`, {
+        const response = await fetch(`${API_URL}/get-login-user`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -38,7 +38,7 @@ const MyRentalItems = () => {
 
     const searchItems = async (req, res) => {
         if (loginUser !== undefined && loginUser?.loggedUser !== null) {
-            const rentalItems = await fetch(`/my-rental-items`, {
+            const rentalItems = await fetch(`${API_URL}/my-rental-items`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

@@ -18,7 +18,7 @@ const Login = () => {
     const API_URL =
         window.location.hostname === "localhost"
             ? "http://localhost:8000"
-            : "https://rental-project-opal.vercel.app";
+            : "https://rental-project-backend.vercel.app";
 
     console.log("API_URL : ", API_URL)
 
@@ -41,7 +41,7 @@ const Login = () => {
         expiry.setDate(expiry.getDate() + 1);
 
         try {
-            var login = await fetch(`/login-user`, {
+            var login = await fetch(`${API_URL}/login-user`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

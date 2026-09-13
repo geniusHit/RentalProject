@@ -12,7 +12,7 @@ const corsOptions = {
     origin: [
         "http://localhost:5173",
         "https://rental-project-94ezx9uff-geniushits-projects.vercel.app",
-        "https://rental-project-opal.vercel.app",
+        "https://rental-project-backend.vercel.app",
         "https://rental-project.vercel.app"
     ],
     credentials: true,

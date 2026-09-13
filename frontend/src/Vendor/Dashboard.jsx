@@ -16,7 +16,7 @@ const VendorDashboard = () => {
     const API_URL =
         window.location.hostname === "localhost"
             ? "http://localhost:8000"
-            : "https://rental-project-opal.vercel.app";
+            : "https://rental-project-backend.vercel.app";
 
     console.log("API_URL : ", API_URL)
 
@@ -48,7 +48,7 @@ const VendorDashboard = () => {
         for (let img of browseInput.current.files) {
             formData.append("image", img)
         }
-        const saveImages = await fetch(`/save-product-images`, {
+        const saveImages = await fetch(`${API_URL}/save-product-images`, {
             method: "POST",
             body: formData,
         })
@@ -74,13 +74,13 @@ const VendorDashboard = () => {
     }
 
     const getProducts = async () => {
-        const response = await fetch(`/get-products`)
+        const response = await fetch(`${API_URL}/get-products`)
         const result = await response.json()
         setProducts(result)
     }
 
     const getAllRentals = async () => {
-        const response = await fetch(`/all-rentals`)
+        const response = await fetch(`${API_URL}/all-rentals`)
         const result = await response.json()
         setAllRentals(result)
     }
@@ -93,7 +93,7 @@ const VendorDashboard = () => {
     }, [])
 
     const deliverItem = async (item) => {
-        const response = await fetch(`/deliver-item`, {
+        const response = await fetch(`${API_URL}/deliver-item`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -106,7 +106,7 @@ const VendorDashboard = () => {
     }
 
     const saveInventory = async () => {
-        const saveApi = await fetch(`/update-inventory`, {
+        const saveApi = await fetch(`${API_URL}/update-inventory`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -119,7 +119,7 @@ const VendorDashboard = () => {
     }
 
     const getDeliveryStatus = async () => {
-        const items = await fetch(`/items-delivery-status`)
+        const items = await fetch(`${API_URL}/items-delivery-status`)
         const result = await items.json()
         setDeliveryStatus(result)
     }
@@ -132,7 +132,7 @@ const VendorDashboard = () => {
 
     const deleteProduct = async (id) => {
         try {
-            const deleteProd = await fetch(`/delete-product`, {
+            const deleteProd = await fetch(`${API_URL}/delete-product`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
