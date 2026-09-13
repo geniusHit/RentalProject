@@ -8,7 +8,7 @@ const MyRentalItems = () => {
     const API_URL =
         window.location.hostname === "localhost"
             ? "http://localhost:8000"
-            : "https://rental-project-backend.vercel.app";
+            : "https://rental-project-opal.vercel.app";
 
     console.log("API_URL : ", API_URL)
 

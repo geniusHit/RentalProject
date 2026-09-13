@@ -11,7 +11,7 @@ const NavBar = () => {
 
     const logout = async () => {
         try {
-            const logoutQuery = await fetch("https://rental-project-backend.vercel.app/logout", {
+            const logoutQuery = await fetch("https://rental-project-opal.vercel.app/logout", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
