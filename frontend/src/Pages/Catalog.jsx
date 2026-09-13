@@ -18,7 +18,7 @@ const Catalog = () => {
     const navigate = useNavigate()
 
     const getProducts = async () => {
-        const response = await fetch(`https://rental-project-opal.vercel.app/get-products`)
+        const response = await fetch(`https://rental-project-backend.vercel.app/get-products`)
         const result = await response.json()
         setProducts(result)
     }
@@ -30,7 +30,7 @@ const Catalog = () => {
     };
 
     const getLoginUser = async () => {
-        const response = await fetch(`https://rental-project-opal.vercel.app/get-login-user`, {
+        const response = await fetch(`https://rental-project-backend.vercel.app/get-login-user`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -65,7 +65,7 @@ const Catalog = () => {
 
     const rentNow = async (product) => {
         if (loginUser) {
-            const payment = await fetch(`https://rental-project-opal.vercel.app/create-test-payment-link`, {
+            const payment = await fetch(`https://rental-project-backend.vercel.app/create-test-payment-link`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -74,7 +74,7 @@ const Catalog = () => {
             })
             const paymentData = await payment.json()
             setPaymentData(paymentData)
-            const savePaymentToken = await fetch(`https://rental-project-opal.vercel.app/save-payment-token`, {
+            const savePaymentToken = await fetch(`https://rental-project-backend.vercel.app/save-payment-token`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -89,7 +89,7 @@ const Catalog = () => {
     }
 
     const getPaymentToken = async (req, res) => {
-        const response = await fetch(`https://rental-project-opal.vercel.app/get-payment-token`)
+        const response = await fetch(`https://rental-project-backend.vercel.app/get-payment-token`)
         const data = await response.json()
         setPaymentToken(data)
     }
@@ -99,7 +99,7 @@ const Catalog = () => {
         setPaymentData(paymentData2)
 
         if (paymentData2 !== null) {
-            const verifyPayment = await fetch("https://rental-project-opal.vercel.app/verify-payment-link", {
+            const verifyPayment = await fetch("https://rental-project-backend.vercel.app/verify-payment-link", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -113,7 +113,7 @@ const Catalog = () => {
     }
 
     const addRental = async () => {
-        const rentNow = await fetch(`https://rental-project-opal.vercel.app/add-rental-item`, {
+        const rentNow = await fetch(`https://rental-project-backend.vercel.app/add-rental-item`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -125,7 +125,7 @@ const Catalog = () => {
         setItemMessage(result.message)
         setShowMessage((prevValue) => !prevValue)
 
-        const deleteToken = await fetch("https://rental-project-opal.vercel.app/delete-payment-token")
+        const deleteToken = await fetch("https://rental-project-backend.vercel.app/delete-payment-token")
         const result2 = await deleteToken.json()
     }
 
@@ -136,7 +136,7 @@ const Catalog = () => {
             localStorage.setItem("search", data?.search)
         }
 
-        const prods = await fetch("https://rental-project-opal.vercel.app/search-products", {
+        const prods = await fetch("https://rental-project-backend.vercel.app/search-products", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -173,7 +173,7 @@ const Catalog = () => {
                     products.map((prod, index) => {
                         return <div className='product' key={index}>
                             <div className='img' style={{
-                                backgroundImage: `url(https://rental-project-opal.vercel.app/uploads/${prod.imageNames[0]})`
+                                backgroundImage: `url(https://rental-project-backend.vercel.app/uploads/${prod.imageNames[0]})`
                             }}></div>
                             <div className='details'>
                                 <div className='prodName'>{prod.name}</div>

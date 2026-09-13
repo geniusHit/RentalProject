@@ -32,7 +32,7 @@ const Signup = () => {
         let expiry = new Date();
         expiry.setDate(expiry.getDate() + 1);
 
-        const sendOtp = userData?.otp === "" || userData === undefined ? await fetch(`https://rental-project-opal.vercel.app/send-signup-otp`, {
+        const sendOtp = userData?.otp === "" || userData === undefined ? await fetch(`https://rental-project-backend.vercel.app/send-signup-otp`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -49,7 +49,7 @@ const Signup = () => {
             let expiry = new Date();
             expiry.setDate(expiry.getDate() + 1);
 
-            const user = await fetch(`https://rental-project-opal.vercel.app/add-user`, {
+            const user = await fetch(`https://rental-project-backend.vercel.app/add-user`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

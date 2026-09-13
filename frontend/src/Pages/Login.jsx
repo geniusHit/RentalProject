@@ -34,7 +34,7 @@ const Login = () => {
         expiry.setDate(expiry.getDate() + 1);
 
         try {
-            var login = await fetch("https://rental-project-opal.vercel.app/login-user", {
+            var login = await fetch("https://rental-project-backend.vercel.app/login-user", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -55,7 +55,7 @@ const Login = () => {
             return
         }
 
-        const currentLogin = await fetch("https://rental-project-opal.vercel.app/manage-logged-users", {
+        const currentLogin = await fetch("https://rental-project-backend.vercel.app/manage-logged-users", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
