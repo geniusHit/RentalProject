@@ -103,19 +103,7 @@ body {
     margin-bottom: 24px;
 }
 
-.input-group label {
-    /* display: block;
-    margin-bottom: 10px;
-    font-weight: 500; */
-}
-
 .input-box {
-    /* display: flex;
-    align-items: center;
-    gap: 12px;
-    border: 1px solid #ddd;
-    border-radius: 12px !important;
-    padding: 16px; */
     width: 100%;
 }
 

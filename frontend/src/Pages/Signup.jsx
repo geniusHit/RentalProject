@@ -1,19 +1,11 @@
 import React, { useState, useEffect } from "react";
 import {
-    FaGoogle,
-    FaApple,
-    FaEnvelope,
-    FaLock,
     FaArrowRight,
     FaTruck,
     FaHeadset,
     FaShieldAlt,
-    FaFacebookF,
-    FaInstagram,
-    FaYoutube,
-    FaTwitter,
 } from "react-icons/fa";
-import { Link, NavLink, useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import "../Style/LoginStyle.css";
 import Logo from '../assets/Logo.png'
 import livingRoom from '../assets/ChatGPT Image Jun 11, 2026, 05_03_13 PM.png'
@@ -21,7 +13,7 @@ import { useForm } from "react-hook-form"
 import Footer from "../Components/Footer";
 
 const Signup = () => {
-    const { watch, register, handleSubmit, formState: { errors } } = useForm({
+    const { register, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
             otp: ""
         }

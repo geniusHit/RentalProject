@@ -3,14 +3,9 @@ import React, { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form"
 import {
     FaCouch,
-    FaBoxOpen,
     FaClipboardList,
     FaTruck,
-    FaTools,
     FaPlus,
-    FaCalendarAlt,
-    FaUserCircle,
-    FaEye,
 } from "react-icons/fa";
 import "../Style/VendorDashboardStyle.css";
 import { Link } from "react-router-dom";
@@ -203,55 +198,6 @@ const VendorDashboard = () => {
                             <div className="card-header">
                                 <h2>Recent Rentals</h2>
                             </div>
-
-                            {/* <table>
-                                <thead>
-                                    <tr>
-                                        <th>Order ID</th>
-                                        <th>Customer</th>
-                                        <th>Product</th>
-                                        <th>Duration</th>
-                                        <th>Delivery</th>
-                                        <th>Status</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    {(allRentals.slice(0, 3)).map((item, index) => (
-                                        <tr key={item._id}>
-                                            <td>{item.id}</td>
-
-                                            <td>
-                                                <div className="user">
-                                                    <FaUserCircle size={28} />
-                                                    {item.customer}
-                                                </div>
-                                            </td>
-
-                                            <td>
-                                                <div className="product">
-                                                    <FaBoxOpen />
-                                                    {item.product}
-                                                </div>
-                                            </td>
-
-                                            <td>{item.duration}</td>
-                                            <td>{item.delivery}</td>
-
-                                            <td>
-                                                <span className={`status ${item.status.toLowerCase()}`}>
-                                                    {item.status}
-                                                </span>
-                                            </td>
-
-                                            <td>
-                                                <FaEye />
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table> */}
 
                             <table>
                                 <thead>

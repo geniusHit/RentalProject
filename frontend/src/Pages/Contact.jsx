@@ -7,9 +7,6 @@ import {
     FaPhoneAlt,
     FaEnvelope,
     FaMapMarkerAlt,
-    FaComments,
-    FaPaperPlane,
-    FaBuilding,
     FaChevronDown,
     FaChevronUp,
 } from "react-icons/fa";

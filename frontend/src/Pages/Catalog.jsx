@@ -6,8 +6,6 @@ import Footer from '../Components/Footer';
 import { useForm } from "react-hook-form"
 import { jwtDecode } from "jwt-decode";
 
-const VITE_API_URL = import.meta.env.VITE_API_URL;
-
 const Catalog = () => {
     const [products, setProducts] = useState([])
     const [itemMessage, setItemMessage] = useState("")

@@ -1,17 +1,9 @@
 import React, { useState } from "react";
 import {
-    FaGoogle,
-    FaApple,
-    FaEnvelope,
-    FaLock,
     FaArrowRight,
     FaTruck,
     FaHeadset,
     FaShieldAlt,
-    FaFacebookF,
-    FaInstagram,
-    FaYoutube,
-    FaTwitter,
 } from "react-icons/fa";
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
