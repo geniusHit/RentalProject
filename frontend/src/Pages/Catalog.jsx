@@ -12,8 +12,6 @@ const Catalog = () => {
             ? "http://localhost:8000"
             : "https://rental-project-backend.vercel.app";
 
-    console.log("API_URL : ", API_URL)
-
     const [products, setProducts] = useState([])
     const [itemMessage, setItemMessage] = useState("")
     const [showMessage, setShowMessage] = useState(false)
@@ -25,7 +23,7 @@ const Catalog = () => {
     const navigate = useNavigate()
 
     const getProducts = async () => {
-        const response = await fetch(`/get-products`)
+        const response = await fetch(`${API_URL}/get-products`)
         const result = await response.json()
         setProducts(result)
     }
@@ -81,7 +79,7 @@ const Catalog = () => {
             })
             const paymentData = await payment.json()
             setPaymentData(paymentData)
-            const savePaymentToken = await fetch(`/save-payment-token`, {
+            const savePaymentToken = await fetch(`${API_URL}/save-payment-token`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -173,9 +171,10 @@ const Catalog = () => {
             <div className='products'>
                 {
                     products.map((prod, index) => {
+                        console.log("prod : ", prod)
                         return <div className='product' key={index}>
                             <div className='img' style={{
-                                backgroundImage: `url(/uploads/${prod.imageNames[0]})`
+                                backgroundImage: `url(http://localhost:8000/uploads/${prod.imageNames[0]})`
                             }}></div>
                             <div className='details'>
                                 <div className='prodName'>{prod.name}</div>
