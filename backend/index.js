@@ -3,38 +3,50 @@ require("dotenv").config();
 const connection = require("./connection/database.js");
 const express = require("express");
 const cors = require("cors");
-const router = require("./routes/router.js");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 
 const app = express();
 
-const allowedOrigins = [
-    "http://localhost:5173",
-    "https://rental-project-opal.vercel.app",
-    "https://rental-project-db6r1dhxd-geniushits-projects.vercel.app"
-];
+// const allowedOrigins = [
+//     "http://localhost:5173",
+//     "https://rental-project-opal.vercel.app",
+//     "https://rental-project-db6r1dhxd-geniushits-projects.vercel.app"
+// ];
 
-app.use(cors({
-    origin: function (origin, callback) {
+// app.use(cors({
+//     origin: function (origin, callback) {
 
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error("Not allowed by CORS"));
-        }
+//         if (!origin || allowedOrigins.includes(origin)) {
+//             callback(null, true);
+//         } else {
+//             callback(new Error("Not allowed by CORS"));
+//         }
 
-    },
+//     },
+//     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+//     allowedHeaders: ["Content-Type", "Authorization"],
+//     credentials: true
+// }));
+const corsOptions = {
+    origin: [
+        "http://localhost:5173",
+        "https://rental-project-94ezx9uff-geniushits-projects.vercel.app",
+        "https://rental-project.vercel.app"
+    ],
+    credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true
-}));
+    allowedHeaders: ["Content-Type", "Authorization"]
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 app.use(express.json());
-
-app.use("/", router);
-
 app.use(cookieParser)
+
+const router = require("./routes/router.js");
+app.use("/", router);
 
 app.use("/uploads", express.static("uploads"));
 
