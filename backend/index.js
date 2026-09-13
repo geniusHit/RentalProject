@@ -36,10 +36,14 @@ app.get("/", (req, res) => {
 const router = require("./routes/router.js");
 app.use("/", router);
 
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads",
+    express.static(path.join(__dirname, "../uploads"))
+);
 
-const port = process.env.PORT || 8000;
+module.exports = app;
 
-app.listen(port, () => {
-    console.log(`App is listening at port ${port}`);
-});
+// const port = process.env.PORT || 8000;
+
+// app.listen(port, () => {
+//     console.log(`App is listening at port ${port}`);
+// });
