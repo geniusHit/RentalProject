@@ -174,7 +174,7 @@ const Catalog = () => {
                         console.log("prod : ", prod)
                         return <div className='product' key={index}>
                             <div className='img' style={{
-                                backgroundImage: `url(http://localhost:8000/uploads/${prod.imageNames[0]})`
+                                backgroundImage: `url(${API_URL}/uploads/${prod.imageNames[0]})`
                             }}></div>
                             <div className='details'>
                                 <div className='prodName'>{prod.name}</div>
