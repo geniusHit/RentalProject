@@ -65,4 +65,6 @@ router.get("/delete-payment-token", controller.deletePaymentToken)
 
 router.post("/logout", controller.logout)
 
+router.post("/delete-product", controller.deleteProduct)
+
 module.exports = router

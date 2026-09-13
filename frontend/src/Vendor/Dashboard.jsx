@@ -10,6 +10,7 @@ import {
 import "../Style/VendorDashboardStyle.css";
 import { Link } from "react-router-dom";
 import Logo from "../assets/Logo.png"
+import { MdDelete } from "react-icons/md";
 
 const VendorDashboard = () => {
     const [activePage, setActivePage] = React.useState("dashboard");
@@ -23,6 +24,7 @@ const VendorDashboard = () => {
     const [showMessage, setShowMessage] = useState(false)
     const [deliveryStatus, setDeliveryStatus] = useState([])
     const [availableProducts, setAvailableProducts] = useState(0)
+    const [message, setMessage] = useState("")
 
     const browseFiles = (e) => {
         let images2 = browseInput.current.files;
@@ -53,6 +55,9 @@ const VendorDashboard = () => {
             },
             body: JSON.stringify(data2)
         })
+
+        setShowMessage(true)
+        setMessage("Product added.")
     }
 
     const getRentalProducts = async () => {
@@ -88,6 +93,9 @@ const VendorDashboard = () => {
             },
             body: JSON.stringify(item)
         })
+
+        setShowMessage(true)
+        setMessage("Request sent for delivery.")
     }
 
     const saveInventory = async () => {
@@ -100,6 +108,7 @@ const VendorDashboard = () => {
         })
 
         setShowMessage(true)
+        setMessage("Inventory saved.")
     }
 
     const getDeliveryStatus = async () => {
@@ -113,6 +122,32 @@ const VendorDashboard = () => {
             setAvailableProducts((prev) => Number(prev + prod.quantity))
         })
     }, [products])
+
+    const deleteProduct = async (id) => {
+        try {
+            const deleteProd = await fetch("http://localhost:8000/delete-product", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    _id: id
+                })
+            })
+
+            if (!deleteProd.ok) {
+                throw new Error("Unable to delete item.");
+            }
+
+            setShowMessage(true)
+            setMessage("Product deleted.")
+        }
+        catch (err) {
+            console.log(err)
+            setShowMessage(true)
+            setMessage("Unable to delete product.")
+        }
+    }
 
     return (
         <div className="vendor-dashboard">
@@ -208,14 +243,14 @@ const VendorDashboard = () => {
                                         <th>Material</th>
                                         <th>Price</th>
                                         <th>Quantity</th>
-                                        <th>Return <br/> Policy</th>
-                                        <th>Assembly <br/> Required</th>
-                                        <th>Delivery <br/> Charge</th>
+                                        <th>Return <br /> Policy</th>
+                                        <th>Assembly <br /> Required</th>
+                                        <th>Delivery <br /> Charge</th>
                                         <th>Description</th>
-                                        <th>Security <br/> Deposit</th>
-                                        <th>Stock <br/> Keeping <br/> Unit</th>
+                                        <th>Security <br /> Deposit</th>
+                                        <th>Stock <br /> Keeping <br /> Unit</th>
                                         <th>Notes</th>
-                                        <th>Rent <br/> Days</th>
+                                        <th>Rent <br /> Days</th>
                                         <th>Email</th>
                                     </tr>
                                 </thead>
@@ -402,26 +437,6 @@ const VendorDashboard = () => {
                                             {...register("quantity")}
                                         />
                                     </div>
-
-                                    <div>
-                                        <label>Security Deposit</label>
-
-                                        <input
-                                            type="number"
-                                            placeholder="2000"
-                                            {...register("securityDeposit")}
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label>Stock Keeping Unit</label>
-
-                                        <input
-                                            type="number"
-                                            placeholder="10"
-                                            {...register("stockKeepingUnit")}
-                                        />
-                                    </div>
                                 </div>
                             </div>
 
@@ -495,14 +510,14 @@ const VendorDashboard = () => {
                                         <th>Material</th>
                                         <th>Price</th>
                                         <th>Quantity</th>
-                                        <th>Return <br/> Policy</th>
-                                        <th>Assembly <br/> Required</th>
-                                        <th>Delivery <br/> Charge</th>
+                                        <th>Return <br /> Policy</th>
+                                        <th>Assembly <br /> Required</th>
+                                        <th>Delivery <br /> Charge</th>
                                         <th>Description</th>
-                                        <th>Security <br/> Deposit</th>
-                                        <th>Stock <br/> Keeping <br/> Unit</th>
+                                        <th>Security <br /> Deposit</th>
+                                        <th>Stock <br /> Keeping <br /> Unit</th>
                                         <th>Notes</th>
-                                        {}
+                                        <th>Delete</th>
                                     </tr>
                                 </thead>
 
@@ -651,16 +666,19 @@ const VendorDashboard = () => {
                                                 }
                                             } /></td>
 
-                                            {}
+                                            <td className="deleteProduct" onClick={() => deleteProduct(item?._id)}>
+                                                <MdDelete />
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>
                             </table>
 
                             <br />
-                            <div>
-                                <button className="inventorySave" onClick={saveInventory}>Save</button>
-                            </div>
+                        </div>
+
+                        <div>
+                            <button className="inventorySave" onClick={saveInventory}>Save</button>
                         </div>
                     </div>
                 ) : activePage === "rentals" ? (
@@ -681,17 +699,17 @@ const VendorDashboard = () => {
                                         <th>Material</th>
                                         <th>Price</th>
                                         <th>Quantity</th>
-                                        <th>Return <br/> Policy</th>
-                                        <th>Assembly <br/> Required</th>
-                                        <th>Delivery <br/> Charge</th>
+                                        <th>Return <br /> Policy</th>
+                                        <th>Assembly <br /> Required</th>
+                                        <th>Delivery <br /> Charge</th>
                                         <th>Description</th>
-                                        <th>Security <br/> Deposit</th>
-                                        <th>Stock <br/> Keeping <br/> Unit</th>
+                                        <th>Security <br /> Deposit</th>
+                                        <th>Stock <br /> Keeping <br /> Unit</th>
                                         <th>Notes</th>
-                                        <th>Rent <br/> Days</th>
-                                        <th>User <br/> Name</th>
+                                        <th>Rent <br /> Days</th>
+                                        <th>User <br /> Name</th>
                                         <th>Action</th>
-                                        {}
+                                        { }
                                     </tr>
                                 </thead>
 
@@ -731,11 +749,11 @@ const VendorDashboard = () => {
 
                                             <td>
                                                 {
-                                                item?.deliveryStatus === "PENDING"? 
-                                                    <button className="deliverBtn" onClick={() => deliverItem(item)}>Deliver Item</button> : `Delivered`}
+                                                    item?.deliveryStatus === "PENDING" ?
+                                                        <button className="deliverBtn" onClick={() => deliverItem(item)}>Deliver Item</button> : `Delivered`}
                                             </td>
 
-                                            {}
+                                            { }
                                         </tr>
                                     ))}
                                 </tbody>
@@ -760,17 +778,17 @@ const VendorDashboard = () => {
                                         <th>Material</th>
                                         <th>Price</th>
                                         <th>Quantity</th>
-                                        <th>Return <br/> Policy</th>
-                                        <th>Assembly <br/> Required</th>
-                                        <th>Delivery <br/> Charge</th>
+                                        <th>Return <br /> Policy</th>
+                                        <th>Assembly <br /> Required</th>
+                                        <th>Delivery <br /> Charge</th>
                                         <th>Description</th>
-                                        <th>Security <br/> Deposit</th>
-                                        <th>Stock <br/> Keeping <br/> Unit</th>
+                                        <th>Security <br /> Deposit</th>
+                                        <th>Stock <br /> Keeping <br /> Unit</th>
                                         <th>Notes</th>
-                                        <th>Rent<br/> Days</th>
-                                        <th>User<br/> Name</th>
-                                        <th>Rented <br/> Date</th>
-                                        <th>Delivery <br/> Status</th>
+                                        <th>Rent<br /> Days</th>
+                                        <th>User<br /> Name</th>
+                                        <th>Rented <br /> Date</th>
+                                        <th>Delivery <br /> Status</th>
                                     </tr>
                                 </thead>
 
@@ -820,7 +838,6 @@ const VendorDashboard = () => {
                 )}
             </main>
 
-
             {showMessage === true
                 &&
                 <div className="modal show d-block" tabIndex="-1">
@@ -828,13 +845,25 @@ const VendorDashboard = () => {
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title">Message</h5>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setShowMessage(false)}></button>
+                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => {
+                                    setShowMessage(false)
+                                    getRentalProducts()
+                                    getProducts()
+                                    getAllRentals()
+                                    getDeliveryStatus()
+                                }}></button>
                             </div>
                             <div className="modal-body">
-                                <p>Inventory updated successfully.</p>
+                                <p>{message}</p>
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setShowMessage(false)}>Close</button>
+                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => {
+                                    setShowMessage(false)
+                                    getRentalProducts()
+                                    getProducts()
+                                    getAllRentals()
+                                    getDeliveryStatus()
+                                }}>Close</button>
                             </div>
                         </div>
                     </div>

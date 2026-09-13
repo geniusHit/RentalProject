@@ -104,12 +104,6 @@ const products = mongoose.Schema({
     quantity: {
         type: Number
     },
-    securityDeposit: {
-        type: Number
-    },
-    stockKeepingUnit: {
-        type: Number
-    },
     deliveryCharge: {
         type: Number
     },
@@ -514,5 +508,15 @@ exports.logout = async (req, res) => {
     }
     catch (err) {
         return res.status(400).json({ success: false, message: "Unable to logout" })
+    }
+}
+
+exports.deleteProduct = async (req, res) => {
+    try{
+        const deleteProd = await productsModel.findByIdAndDelete(req.body._id)
+        res.send(deleteProd)
+    }
+    catch(err){
+        return res.status(400).json({ success: false, message: "Unable to delete item." })
     }
 }

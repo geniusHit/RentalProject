@@ -10,6 +10,14 @@ import bedroom from '../assets/istockphoto-2185177891-612x612.jpg'
 import office from '../assets/ho-m5-1-1740657447-4ba63.avif'
 import outdoor from '../assets/203.webp'
 import working from '../assets/Screenshot 2026-06-08 193814.png'
+import sofa from "../assets/WSFABCLPC22CFVDO_1.avif"
+import bed from "../assets/WSWB7860ARIGB_1.webp"
+import chair from "../assets/black_0.webp"
+import table from "../assets/3009computertablecopy_fd810c37-4f90-4de3-9e94-22881083c05d.webp"
+import tv from "../assets/2023-tv-buying-guide-what-is-smart-tv-f00-mo.avif"
+import fridge from "../assets/refer-s-x-s-masthead_mobile3.avif"
+import washingMachine from "../assets/washer-dryer-banner-750x730-1.avif"
+
 import Carousel from 'bootstrap/js/dist/carousel';
 import NavBar from "../Components/NavBar.jsx"
 import Footer from '../Components/Footer.jsx'
@@ -90,21 +98,33 @@ const Home = () => {
                 <h4>Featured Categories</h4>
 
                 <div className='category-options'>
-                    <div className='category-option' onClick={()=> searchProducts("Living Room")}>
-                        <div className='img' style={{ backgroundImage: `url(${livingRoom})` }}></div>
-                        <div className='title'>Living Room</div>
+                    <div className='category-option' onClick={()=> searchProducts("Sofa")}>
+                        <div className='img' style={{ backgroundImage: `url(${sofa})` }}></div>
+                        <div className='title'>Sofa</div>
                     </div>
-                    <div className='category-option' onClick={()=> searchProducts("Bedroom")}>
-                        <div className='img' style={{ backgroundImage: `url(${bedroom})` }}></div>
-                        <div className='title'>Bedroom</div>
+                    <div className='category-option' onClick={()=> searchProducts("Bed")}>
+                        <div className='img' style={{ backgroundImage: `url(${bed})` }}></div>
+                        <div className='title'>Bed</div>
                     </div>
-                    <div className='category-option' onClick={()=> searchProducts("Office")}>
-                        <div className='img' style={{ backgroundImage: `url(${office})` }}></div>
-                        <div className='title'>Office</div>
+                    <div className='category-option' onClick={()=> searchProducts("Chair")}>
+                        <div className='img' style={{ backgroundImage: `url(${chair})` }}></div>
+                        <div className='title'>Chair</div>
                     </div>
-                    <div className='category-option' onClick={()=> searchProducts("Outdoor")}>
-                        <div className='img' style={{ backgroundImage: `url(${outdoor})` }}></div>
-                        <div className='title'>Outdoor</div>
+                    <div className='category-option' onClick={()=> searchProducts("Table")}>
+                        <div className='img' style={{ backgroundImage: `url(${table})` }}></div>
+                        <div className='title'>Table</div>
+                    </div>
+                    <div className='category-option' onClick={()=> searchProducts("TV")}>
+                        <div className='img' style={{ backgroundImage: `url(${tv})` }}></div>
+                        <div className='title'>Tv</div>
+                    </div>
+                    <div className='category-option' onClick={()=> searchProducts("Fridge")}>
+                        <div className='img' style={{ backgroundImage: `url(${fridge})` }}></div>
+                        <div className='title'>Fridge</div>
+                    </div>
+                    <div className='category-option' onClick={()=> searchProducts("Washing machine")}>
+                        <div className='img' style={{ backgroundImage: `url(${washingMachine})` }}></div>
+                        <div className='title'>Washing Machine</div>
                     </div>
                 </div>
             </div>

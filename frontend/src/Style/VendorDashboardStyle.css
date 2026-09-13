@@ -39,7 +39,7 @@ body {
     border-right: 1px solid #e5e5e5;
     padding: 30px 20px;
 
-    
+
     position: sticky;
     top: 0;
     height: 100vh;
@@ -411,7 +411,7 @@ td {
     margin-top: 20px;
 }
 
-.form-grid > div {
+.form-grid>div {
     min-width: 0;
 }
 
@@ -505,7 +505,6 @@ textarea {
     border-radius: 4px;
     cursor: pointer;
     border: 1px solid #ddd;
-    background: #fff;
 }
 
 .inventorySave:hover {
@@ -560,11 +559,22 @@ textarea {
     justify-content: flex-end;
 }
 
+.deleteProduct {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-/* =========================================================
-   LARGE LAPTOP / TABLET
-   1200px
-========================================================= */
+.deleteProduct * {
+    height: 30px;
+    scale: 1.2;
+}
+
+.deleteProduct * :hover {
+    color: red;
+    cursor: pointer;
+}
+
 
 @media (max-width: 1200px) {
 

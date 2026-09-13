@@ -96,19 +96,19 @@
 }
 
 .navbar-toggler {
-    border: 1px solid #4d7c44 !important;
+    border: none !important;
     padding: 6px 9px;
     border-radius: 6px;
     box-shadow: none !important;
 }
 
 .navbar-toggler:focus {
-    box-shadow: 0 0 0 2px rgba(77, 124, 68, 0.2) !important;
+    box-shadow: none !important;
 }
 
 .navbar-toggler-icon {
-    width: 25px;
-    height: 25px;
+    width: 20px;
+    height: 20px;
 }
 
 
@@ -188,10 +188,5 @@
 
     .navbar-toggler {
         padding: 5px 8px;
-    }
-
-    .navbar-toggler-icon {
-        width: 22px;
-        height: 22px;
     }
 }
