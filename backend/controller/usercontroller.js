@@ -55,10 +55,11 @@ exports.sendSignupOtp = async (req, res) => {
     }
 
     auth.sendMail(receiver, (error, emailResponse) => {
-        if (error)
+        if (error){
             throw error;
+            return;
+        }
         console.log("success!")
-        res.end()
     })
 
     res.send({signup_otp: a})
