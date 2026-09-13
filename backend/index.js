@@ -26,8 +26,15 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser())
 
+app.get("/", (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: "Rental backend is working"
+    });
+});
+
 const router = require("./routes/router.js");
-app.use(router);
+app.use("/", router);
 
 app.use("/uploads", express.static("uploads"));
 

@@ -57,7 +57,7 @@ const Catalog = () => {
     }, [])
 
     useEffect(() => {
-        getLoginUser()
+        IP !== "" && getLoginUser()
     }, [IP])
 
     useEffect(() => {

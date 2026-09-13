@@ -470,7 +470,9 @@ exports.manageLoggedUsers = async (req, res) => {
 }
 
 exports.getLoginUser = async (req, res) => {
+    console.log("req.body.IP : ", req.body.IP)
     const loggedUser = await loggedUsersModel.findOne({ IP: req.body.IP })
+    console.log("loggedUser : ", loggedUser)
     const user = loggedUser !== null && await usersModel.findOne({ email: loggedUser.email })
 
     res.send({ loggedUser: loggedUser, user: user })
