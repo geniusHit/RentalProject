@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
         console.log("API_URL : ", API_URL)
         // cb(
         //     null,
-        //     `${API_URL}/uploads/${file.fieldname}-${uniqueSuffix}${path.extname(file.originalname)}`
+        //     `/uploads/${file.fieldname}-${uniqueSuffix}${path.extname(file.originalname)}`
         // );
     }
 });

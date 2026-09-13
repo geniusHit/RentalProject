@@ -41,7 +41,7 @@ const Login = () => {
         expiry.setDate(expiry.getDate() + 1);
 
         try {
-            var login = await fetch(`${API_URL}/login-user`, {
+            var login = await fetch(`/login-user`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -62,7 +62,7 @@ const Login = () => {
             return
         }
 
-        const currentLogin = await fetch(`${API_URL}/manage-logged-users`, {
+        const currentLogin = await fetch(`/manage-logged-users`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

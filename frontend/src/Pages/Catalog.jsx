@@ -25,7 +25,7 @@ const Catalog = () => {
     const navigate = useNavigate()
 
     const getProducts = async () => {
-        const response = await fetch(`${API_URL}/get-products`)
+        const response = await fetch(`/get-products`)
         const result = await response.json()
         setProducts(result)
     }
@@ -37,7 +37,7 @@ const Catalog = () => {
     };
 
     const getLoginUser = async () => {
-        const response = await fetch(`${API_URL}/get-login-user`, {
+        const response = await fetch(`/get-login-user`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -72,7 +72,7 @@ const Catalog = () => {
 
     const rentNow = async (product) => {
         if (loginUser) {
-            const payment = await fetch(`${API_URL}/create-test-payment-link`, {
+            const payment = await fetch(`/create-test-payment-link`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -81,7 +81,7 @@ const Catalog = () => {
             })
             const paymentData = await payment.json()
             setPaymentData(paymentData)
-            const savePaymentToken = await fetch(`${API_URL}/save-payment-token`, {
+            const savePaymentToken = await fetch(`/save-payment-token`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -96,7 +96,7 @@ const Catalog = () => {
     }
 
     const getPaymentToken = async (req, res) => {
-        const response = await fetch(`${API_URL}/get-payment-token`)
+        const response = await fetch(`/get-payment-token`)
         const data = await response.json()
         setPaymentToken(data)
     }
@@ -106,7 +106,7 @@ const Catalog = () => {
         setPaymentData(paymentData2)
 
         if (paymentData2 !== null) {
-            const verifyPayment = await fetch(`${API_URL}/verify-payment-link`, {
+            const verifyPayment = await fetch(`/verify-payment-link`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -120,7 +120,7 @@ const Catalog = () => {
     }
 
     const addRental = async () => {
-        const rentNow = await fetch(`${API_URL}/add-rental-item`, {
+        const rentNow = await fetch(`/add-rental-item`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -132,7 +132,7 @@ const Catalog = () => {
         setItemMessage(result.message)
         setShowMessage((prevValue) => !prevValue)
 
-        const deleteToken = await fetch(`${API_URL}/delete-payment-token`)
+        const deleteToken = await fetch(`/delete-payment-token`)
         const result2 = await deleteToken.json()
     }
 
@@ -143,7 +143,7 @@ const Catalog = () => {
             localStorage.setItem("search", data?.search)
         }
 
-        const prods = await fetch(`${API_URL}/search-products`, {
+        const prods = await fetch(`/search-products`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -180,7 +180,7 @@ const Catalog = () => {
                     products.map((prod, index) => {
                         return <div className='product' key={index}>
                             <div className='img' style={{
-                                backgroundImage: `url(${API_URL}/uploads/${prod.imageNames[0]})`
+                                backgroundImage: `url(/uploads/${prod.imageNames[0]})`
                             }}></div>
                             <div className='details'>
                                 <div className='prodName'>{prod.name}</div>

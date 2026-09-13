@@ -17,7 +17,7 @@ const MyRentalItems = () => {
     const [IP, setIP] = useState("")
 
     const getLoginUser = async () => {
-        const response = await fetch(`${API_URL}/get-login-user`, {
+        const response = await fetch(`/get-login-user`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -38,7 +38,7 @@ const MyRentalItems = () => {
 
     const searchItems = async (req, res) => {
         if (loginUser !== undefined && loginUser?.loggedUser !== null) {
-            const rentalItems = await fetch(`${API_URL}/my-rental-items`, {
+            const rentalItems = await fetch(`/my-rental-items`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
