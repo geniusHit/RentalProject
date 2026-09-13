@@ -10,7 +10,7 @@ const MyRentalItems = () => {
     const [IP, setIP] = useState("")
 
     const getLoginUser = async () => {
-        const response = await fetch(`http://localhost:8000/get-login-user`, {
+        const response = await fetch(`https://rental-project-opal.vercel.app/get-login-user`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -31,7 +31,7 @@ const MyRentalItems = () => {
 
     const searchItems = async (req, res) => {
         if (loginUser !== undefined && loginUser?.loggedUser!==null) {
-            const rentalItems = await fetch("http://localhost:8000/my-rental-items", {
+            const rentalItems = await fetch("https://rental-project-opal.vercel.app/my-rental-items", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -70,7 +70,7 @@ const MyRentalItems = () => {
                     products.map((prod, index) => {
                         return <div className='product' key={index}>
                             <div className='img' style={{
-                                backgroundImage: `url(http://localhost:8000/uploads/${prod.imageNames[0]})`
+                                backgroundImage: `url(https://rental-project-opal.vercel.app/uploads/${prod.imageNames[0]})`
                             }}></div>
                             <div className='details'>
                                 <div className='prodName'>{prod.name}</div>

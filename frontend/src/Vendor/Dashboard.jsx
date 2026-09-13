@@ -41,14 +41,14 @@ const VendorDashboard = () => {
         for (let img of browseInput.current.files) {
             formData.append("image", img)
         }
-        const saveImages = await fetch("http://localhost:8000/save-product-images", {
+        const saveImages = await fetch("https://rental-project-opal.vercel.app/save-product-images", {
             method: "POST",
             body: formData,
         })
         const saveImagesName = await saveImages.json()
 
         let data2 = { ...data, imageNames: saveImagesName }
-        const result = await fetch("http://localhost:8000/add-product", {
+        const result = await fetch("https://rental-project-opal.vercel.app/add-product", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -61,19 +61,19 @@ const VendorDashboard = () => {
     }
 
     const getRentalProducts = async () => {
-        const rp = await fetch("http://localhost:8000/all-rentals")
+        const rp = await fetch("https://rental-project-opal.vercel.app/all-rentals")
         const result = await rp.json()
         setRentalProducts(result)
     }
 
     const getProducts = async () => {
-        const response = await fetch(`http://localhost:8000/get-products`)
+        const response = await fetch(`https://rental-project-opal.vercel.app/get-products`)
         const result = await response.json()
         setProducts(result)
     }
 
     const getAllRentals = async () => {
-        const response = await fetch("http://localhost:8000/all-rentals")
+        const response = await fetch("https://rental-project-opal.vercel.app/all-rentals")
         const result = await response.json()
         setAllRentals(result)
     }
@@ -86,7 +86,7 @@ const VendorDashboard = () => {
     }, [])
 
     const deliverItem = async (item) => {
-        const response = await fetch("http://localhost:8000/deliver-item", {
+        const response = await fetch("https://rental-project-opal.vercel.app/deliver-item", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -99,7 +99,7 @@ const VendorDashboard = () => {
     }
 
     const saveInventory = async () => {
-        const saveApi = await fetch("http://localhost:8000/update-inventory", {
+        const saveApi = await fetch("https://rental-project-opal.vercel.app/update-inventory", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -112,7 +112,7 @@ const VendorDashboard = () => {
     }
 
     const getDeliveryStatus = async () => {
-        const items = await fetch("http://localhost:8000/items-delivery-status")
+        const items = await fetch("https://rental-project-opal.vercel.app/items-delivery-status")
         const result = await items.json()
         setDeliveryStatus(result)
     }
@@ -125,7 +125,7 @@ const VendorDashboard = () => {
 
     const deleteProduct = async (id) => {
         try {
-            const deleteProd = await fetch("http://localhost:8000/delete-product", {
+            const deleteProd = await fetch("https://rental-project-opal.vercel.app/delete-product", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

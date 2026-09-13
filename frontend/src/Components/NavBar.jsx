@@ -11,7 +11,7 @@ const NavBar = () => {
 
     const logout = async () => {
         try {
-            const logoutQuery = await fetch("http://localhost:8000/logout", {
+            const logoutQuery = await fetch("https://rental-project-opal.vercel.app/logout", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
