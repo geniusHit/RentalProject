@@ -13,6 +13,13 @@ import Logo from "../assets/Logo.png"
 import { MdDelete } from "react-icons/md";
 
 const VendorDashboard = () => {
+    const API_URL =
+        window.location.hostname === "localhost"
+            ? "http://localhost:8000"
+            : "https://rental-project-backend.vercel.app";
+
+    console.log("API_URL : ", API_URL)
+
     const [activePage, setActivePage] = React.useState("dashboard");
     const browseInput = useRef()
     const { register, handleSubmit } = useForm()
@@ -41,14 +48,14 @@ const VendorDashboard = () => {
         for (let img of browseInput.current.files) {
             formData.append("image", img)
         }
-        const saveImages = await fetch("https://rental-project-backend.vercel.app/save-product-images", {
+        const saveImages = await fetch(`${API_URL}/save-product-images`, {
             method: "POST",
             body: formData,
         })
         const saveImagesName = await saveImages.json()
 
         let data2 = { ...data, imageNames: saveImagesName }
-        const result = await fetch("https://rental-project-backend.vercel.app/add-product", {
+        const result = await fetch(`${API_URL}/add-product`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -61,19 +68,19 @@ const VendorDashboard = () => {
     }
 
     const getRentalProducts = async () => {
-        const rp = await fetch("https://rental-project-backend.vercel.app/all-rentals")
+        const rp = await fetch(`${API_URL}/all-rentals`)
         const result = await rp.json()
         setRentalProducts(result)
     }
 
     const getProducts = async () => {
-        const response = await fetch(`https://rental-project-backend.vercel.app/get-products`)
+        const response = await fetch(`${API_URL}/get-products`)
         const result = await response.json()
         setProducts(result)
     }
 
     const getAllRentals = async () => {
-        const response = await fetch("https://rental-project-backend.vercel.app/all-rentals")
+        const response = await fetch(`${API_URL}/all-rentals`)
         const result = await response.json()
         setAllRentals(result)
     }
@@ -86,7 +93,7 @@ const VendorDashboard = () => {
     }, [])
 
     const deliverItem = async (item) => {
-        const response = await fetch("https://rental-project-backend.vercel.app/deliver-item", {
+        const response = await fetch(`${API_URL}/deliver-item`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -99,7 +106,7 @@ const VendorDashboard = () => {
     }
 
     const saveInventory = async () => {
-        const saveApi = await fetch("https://rental-project-backend.vercel.app/update-inventory", {
+        const saveApi = await fetch(`${API_URL}/update-inventory`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -112,7 +119,7 @@ const VendorDashboard = () => {
     }
 
     const getDeliveryStatus = async () => {
-        const items = await fetch("https://rental-project-backend.vercel.app/items-delivery-status")
+        const items = await fetch(`${API_URL}/items-delivery-status`)
         const result = await items.json()
         setDeliveryStatus(result)
     }
@@ -125,7 +132,7 @@ const VendorDashboard = () => {
 
     const deleteProduct = async (id) => {
         try {
-            const deleteProd = await fetch("https://rental-project-backend.vercel.app/delete-product", {
+            const deleteProd = await fetch(`${API_URL}/delete-product`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

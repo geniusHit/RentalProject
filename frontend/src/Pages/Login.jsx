@@ -15,6 +15,13 @@ import Footer from "../Components/Footer";
 import { useEffect } from "react";
 
 const Login = () => {
+    const API_URL =
+        window.location.hostname === "localhost"
+            ? "http://localhost:8000"
+            : "https://rental-project-backend.vercel.app";
+
+    console.log("API_URL : ", API_URL)
+
     const { register, handleSubmit, formState: { errors }, setError } = useForm()
     const [isLogin, setIsLogin] = useState(false)
     const [IP, setIP] = useState("")
@@ -34,7 +41,7 @@ const Login = () => {
         expiry.setDate(expiry.getDate() + 1);
 
         try {
-            var login = await fetch("https://rental-project-backend.vercel.app/login-user", {
+            var login = await fetch(`${API_URL}/login-user`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -55,7 +62,7 @@ const Login = () => {
             return
         }
 
-        const currentLogin = await fetch("https://rental-project-backend.vercel.app/manage-logged-users", {
+        const currentLogin = await fetch(`${API_URL}/manage-logged-users`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

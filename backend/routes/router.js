@@ -13,6 +13,12 @@ const storage = multer.diskStorage({
     filename: (req, file, cb) => {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
         cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+        const API_URL = `${req.protocol}://${req.get("host")}`;
+        console.log("API_URL : ", API_URL)
+        // cb(
+        //     null,
+        //     `${API_URL}/uploads/${file.fieldname}-${uniqueSuffix}${path.extname(file.originalname)}`
+        // );
     }
 });
 const upload = multer({
@@ -65,6 +71,6 @@ router.get("/delete-payment-token", controller.deletePaymentToken)
 
 router.post("/logout", controller.logout)
 
-// router.post("/delete-product", controller.deleteProduct)
+router.post("/delete-product", controller.deleteProduct)
 
 module.exports = router

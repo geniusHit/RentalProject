@@ -4,6 +4,7 @@ const connection = require("./connection/database.js");
 const express = require("express");
 const cors = require("cors");
 const router = require("./routes/router.js");
+const path = require("path");
 
 const app = express();
 
@@ -28,9 +29,8 @@ app.use(cors({
     credentials: true
 }));
 
-app.options("*", cors());
-
 app.use(express.json());
+
 app.use(router);
 
 app.use("/uploads", express.static("uploads"));

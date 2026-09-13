@@ -13,6 +13,13 @@ import { useForm } from "react-hook-form"
 import Footer from "../Components/Footer";
 
 const Signup = () => {
+    const API_URL =
+        window.location.hostname === "localhost"
+            ? "http://localhost:8000"
+            : "https://rental-project-backend.vercel.app";
+
+    console.log("API_URL : ", API_URL)
+
     const { register, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
             otp: ""
@@ -32,7 +39,7 @@ const Signup = () => {
         let expiry = new Date();
         expiry.setDate(expiry.getDate() + 1);
 
-        const sendOtp = userData?.otp === "" || userData === undefined ? await fetch(`https://rental-project-backend.vercel.app/send-signup-otp`, {
+        const sendOtp = userData?.otp === "" || userData === undefined ? await fetch(`${API_URL}/send-signup-otp`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -49,7 +56,7 @@ const Signup = () => {
             let expiry = new Date();
             expiry.setDate(expiry.getDate() + 1);
 
-            const user = await fetch(`https://rental-project-backend.vercel.app/add-user`, {
+            const user = await fetch(`${API_URL}/add-user`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
