@@ -104,6 +104,12 @@ const products = mongoose.Schema({
     quantity: {
         type: Number
     },
+    securityDeposit: {
+        type: Number
+    },
+    stockKeepingUnit: {
+        type: Number
+    },
     deliveryCharge: {
         type: Number
     },
@@ -371,7 +377,7 @@ exports.createTestPaymentLink = async (req, res) => {
             send_email: false
         },
         link_meta: {
-            return_url: `http://localhost:5173/catalog`
+            return_url: "https://rental-project.vercel.app/catalog"
         }
     };
 
@@ -508,15 +514,5 @@ exports.logout = async (req, res) => {
     }
     catch (err) {
         return res.status(400).json({ success: false, message: "Unable to logout" })
-    }
-}
-
-exports.deleteProduct = async (req, res) => {
-    try{
-        const deleteProd = await productsModel.findByIdAndDelete(req.body._id)
-        res.send(deleteProd)
-    }
-    catch(err){
-        return res.status(400).json({ success: false, message: "Unable to delete item." })
     }
 }

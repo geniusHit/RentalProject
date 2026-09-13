@@ -151,6 +151,11 @@ const Catalog = () => {
         searchProds()
     }, [])
 
+    console.log(itemMessage)
+    console.log(showMessage)
+    console.log(paymentData)
+    console.log(paymentStatus)
+
     return (
         <div>
             <NavBar />
