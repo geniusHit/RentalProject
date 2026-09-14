@@ -37,6 +37,7 @@ const Signup = () => {
 
     const submit = async (data) => {
         setUserData(data)
+        console.log("data : ", data)
 
         let expiry = new Date();
         expiry.setDate(expiry.getDate() + 1);
