@@ -72,9 +72,9 @@ const MyRentalItems = () => {
 
             <h4 className='heading'>My Rental Items</h4>
 
-            <div className={products.length>0?`products`: ""}>
+            <div className="products">
                 {
-                    products.length > 0 ? products.map((prod, index) => {
+                    products.map((prod, index) => {
                         return <div className='product' key={index}>
                             <div className='img' style={{
                                 backgroundImage: `url(https://rental-project-backend.vercel.app/uploads/${prod.imageNames[0]})`
@@ -85,12 +85,6 @@ const MyRentalItems = () => {
                             </div>
                         </div>
                     })
-                        :
-                        <div className='spinner-box'>
-                            <div className="spinner-border" role="status">
-                                <span className="visually-hidden">Loading...</span>
-                            </div>
-                        </div>
                 }
             </div>
 
