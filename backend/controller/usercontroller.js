@@ -39,7 +39,7 @@ exports.sendSignupOtp = async (req, res) => {
     a = Math.ceil(a * 999999)
 
     const auth = nodemailer.createTransport({
-        service: "gmail",
+        service: "smtp.gmail.com",
         secure: true,
         port: 465,
         auth: {
