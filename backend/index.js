@@ -17,10 +17,10 @@ app.use("/uploads",
 
 app.use("/", router);
 
-// module.exports = app;
+module.exports = app;
 
-const port = process.env.PORT || 8000;
+// const port = process.env.PORT || 8000;
 
-app.listen(port, () => {
-    console.log(`App is listening at port ${port}`);
-});
+// app.listen(port, () => {
+//     console.log(`App is listening at port ${port}`);
+// });
