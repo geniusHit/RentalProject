@@ -353,6 +353,7 @@ exports.deliverItem = async (req, res) => {
 }
 
 exports.createTestPaymentLink = async (req, res) => {
+    console.log("req.body : ", req.body)
     const url = "https://sandbox.cashfree.com/pg/links";
     const linkId = `link_${Date.now()}`;
     const { email, } = req.body;
