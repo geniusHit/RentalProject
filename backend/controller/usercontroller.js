@@ -49,8 +49,6 @@ exports.sendSignupOtp = async (req, res) => {
         }
     })
 
-    await auth.verify();
-
     const receiver = {
         from: "rohitthakur792002@gmail.com",
         to: `${req.body?.email}`,
