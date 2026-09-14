@@ -129,6 +129,7 @@ exports.addProduct = async (req, res) => {
 }
 
 exports.getProducts = async (req, res) => {
+    console.log("SECRET : ", SECRET)
     const result = await productsModel.find({})
 
     res.status(200).json(result)
