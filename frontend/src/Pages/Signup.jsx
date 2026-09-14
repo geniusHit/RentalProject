@@ -39,7 +39,7 @@ const Signup = () => {
         let expiry = new Date();
         expiry.setDate(expiry.getDate() + 1);
 
-        const sendOtp = userData?.otp === "" || userData === undefined ? await fetch(`/send-signup-otp`, {
+        const sendOtp = userData?.otp === "" || userData === undefined ? await fetch(`${API_URL}/send-signup-otp`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
