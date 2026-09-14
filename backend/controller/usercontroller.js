@@ -60,9 +60,8 @@ exports.sendSignupOtp = async (req, res) => {
             return;
         }
         console.log("success!")
+        res.send({signup_otp: a})
     })
-
-    res.send({signup_otp: a})
 }
 
 exports.addUser = async (req, res) => {
