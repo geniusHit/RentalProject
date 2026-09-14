@@ -16,7 +16,7 @@ const VendorDashboard = () => {
     const API_URL =
         window.location.hostname === "localhost"
             ? "http://localhost:8000"
-            : "https://rental-project-backend.vercel.app";
+            : "https://rental-project-u2yo.vercel.app";
 
     console.log("API_URL : ", API_URL)
 
@@ -55,7 +55,7 @@ const VendorDashboard = () => {
         const saveImagesName = await saveImages.json()
 
         let data2 = { ...data, imageNames: saveImagesName }
-        const result = await fetch(`/add-product`, {
+        const result = await fetch(`${API_URL}/add-product`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -68,7 +68,7 @@ const VendorDashboard = () => {
     }
 
     const getRentalProducts = async () => {
-        const rp = await fetch(`/all-rentals`)
+        const rp = await fetch(`${API_URL}/all-rentals`)
         const result = await rp.json()
         setRentalProducts(result)
     }
