@@ -1,865 +1,398 @@
-// const mongoose = require("mongoose")
-// const jwt = require("jsonwebtoken")
-// const SECRET = process.env.JWT_SECRET
-// const nodemailer = require("nodemailer")
-// const bcrypt = require("bcryptjs")
-
-// const users = mongoose.Schema({
-//     name: {
-//         type: String
-//     },
-//     email: {
-//         type: String
-//     },
-//     phone: {
-//         type: String
-//     },
-//     password: {
-//         type: String
-//     },
-//     pincode: {
-//         type: Number
-//     },
-//     address: {
-//         type: String
-//     },
-//     loggedInIPS: [{
-//         IP: {
-//             type: String,
-//         },
-//         expireAt: {
-//             type: Date,
-//         }
-//     }],
-// })
-// const usersModel = mongoose.model("users", users)
-// const nodemailer = require("nodemailer");
-// exports.sendSignupOtp = async (req, res) => {
-//     let a = Math.random()
-//     a = Math.ceil(a * 999999)
-
-//     const auth = nodemailer.createTransport({
-//         service: "gmail",
-//         secure: true,
-//         port: 465,
-//         auth: {
-//             user: "rohitthakur792002@gmail.com",
-//             pass: "omzd rsxw zwql xvrb"
-//         }
-//     })
-
-//     const receiver = {
-//         from: "rohitthakur792002@gmail.com",
-//         to: `${req.body?.email}`,
-//         subject: `Team Rental Items. Signup otp.`,
-//         html: `Your Otp is ${a}`
-//     }
-
-//     auth.sendMail(receiver, (error, emailResponse) => {
-//         if (error){
-//             console.log(error)
-//             return;
-//         }
-//         console.log("success!")
-//         res.send({signup_otp: a})
-//     })
-// }
-
-// exports.addUser = async (req, res) => {
-//     const saltRounds = 10;
-//     const hashedPassword = await bcrypt.hash(req.body.password, saltRounds)
-//     const user = await new usersModel({ ...req.body, password: hashedPassword })
-//     const result = await user.save();
-
-//     res.send(result)
-// }
-
-// const products = mongoose.Schema({
-//     imageNames: {
-//         type: [String]
-//     },
-//     name: {
-//         type: String
-//     },
-//     sku: {
-//         type: String
-//     },
-//     category: {
-//         type: String
-//     },
-//     condition: {
-//         type: String
-//     },
-//     brand: {
-//         type: String
-//     },
-//     material: {
-//         type: String
-//     },
-//     description: {
-//         type: String
-//     },
-//     price: {
-//         type: Number
-//     },
-//     quantity: {
-//         type: Number
-//     },
-//     deliveryCharge: {
-//         type: Number
-//     },
-//     returnPolicy: {
-//         type: String
-//     },
-//     assemblyRequired: {
-//         type: String
-//     },
-//     notes: {
-//         type: String
-//     }
-// })
-// const productsModel = mongoose.model("product", products)
-// exports.addProduct = async (req, res) => {
-//     const product = await new productsModel(req.body)
-//     const result = await product.save()
-
-//     res.status(200).json({
-//         success: true
-//     })
-// }
-
-// exports.getProducts = async (req, res) => {
-//     const result = await productsModel.find({})
-
-//     res.status(200).json(result)
-// }
-
-// exports.loginUser = async (req, res) => {
-//     try {
-//         const user = await usersModel.findOne({ email: req.body.email })
-//         const match = await bcrypt.compare(req.body.password, user?.password)
-//         const userId = user._id.toString()
-//         const currentLogin = await usersModel.findOne({ _id: userId })
-//         const currentLoginIPS = currentLogin.loggedInIPS;
-//         const newLoginIPS = currentLoginIPS.filter((el) => el.IP !== req.body.IP)
-//         const newIPS = [...newLoginIPS, { IP: req.body.IP, expireAt: req.body.expiry }]
-//         const loginInSystem = await usersModel.findByIdAndUpdate(userId, { loggedInIPS: newIPS })
-//         const token = jwt.sign({ name: user.name, email: user.email, phone: user.phone, password: user.password, city: user.city, address: user.address }, SECRET, { expiresIn: "1h" })
-//         const decodedToken = jwt.verify(token, SECRET)
-
-//         res.send({ ...user, jwtToken: token })
-//     }
-//     catch (err) {
-//         return res.status(400).json({ success: false, message: err.message })
-//     }
-// }
-
-// const rentalItemsSchema = mongoose.Schema({
-//     user: {
-//         name: { type: String },
-//         email: { type: String },
-//         pincode: { type: String },
-//         address: { type: String },
-//     },
-
-//     name: {
-//         type: String
-//     },
-
-//     imageNames: {
-//         type: [String]
-//     },
-
-//     productName: {
-//         type: String
-//     },
-
-//     sku: {
-//         type: String
-//     },
-
-//     condition: {
-//         type: String
-//     },
-
-//     brand: {
-//         type: String
-//     },
-
-//     material: {
-//         type: String
-//     },
-
-//     description: {
-//         type: String
-//     },
-
-//     price: {
-//         type: Number
-//     },
-
-//     quantity: {
-//         type: Number
-//     },
-
-//     securityDeposit: {
-//         type: Number
-//     },
-
-//     stockKeepingUnit: {
-//         type: Number
-//     },
-
-//     deliveryCharge: {
-//         type: Number
-//     },
-
-//     returnPolicy: {
-//         type: String
-//     },
-
-//     assemblyRequired: {
-//         type: String
-//     },
-
-//     notes: {
-//         type: String
-//     },
-
-//     rentDays: {
-//         type: Number,
-//         default: 5,
-//     },
-
-//     rentedDate: {
-//         type: String
-//     },
-
-//     deliveryStatus: {
-//         type: String,
-//         default: "PENDING"
-//     }
-// })
-// const rentalItems = mongoose.model("rentalItems", rentalItemsSchema)
-// exports.addRentalItems = async (req, res) => {
-//     const { email, name, userName, sku, quantity } = req.body;
-//     const user = await usersModel.findOne({ email: email })
-//     const existingProduct = await rentalItems.findOne({ "user.email": email, "user.name": userName, name: name });
-//     if (existingProduct) {
-//         res.send({ message: "Product is already in Rental Items!" });
-//         return;
-//     }
-
-//     let expiryDate = new Date();
-//     expiryDate.setDate(expiryDate.getDate() + 1);
-//     const data = req.body;
-//     const data2 = {
-//         name: data.name,
-//         imageNames: data.imageNames,
-//         sku: data.sku,
-//         condition: data.condition,
-//         brand: data.brand,
-//         material: data.material,
-//         description: data.description,
-//         price: data.price,
-//         quantity: data.quantity,
-//         securityDeposit: data.securityDeposit,
-//         stockKeepingUnit: data.stockKeepingUnit,
-//         deliveryCharge: data.deliveryCharge,
-//         returnPolicy: data.returnPolicy,
-//         assemblyRequired: data.assemblyRequired,
-//         notes: data.notes,
-//         rentDays: data.rentDays,
-//         rentedDate: new Date(),
-//         deliveryStatus: "PENDING",
-//     }
-//     const item = new rentalItems({
-//         ...data2, user: {
-//             name: userName,
-//             email: email,
-//             pincode: user.pincode,
-//             address: user.address
-//         }
-//     })
-//     const result = await item.save()
-
-//     const updateQuantity = await productsModel.findOneAndUpdate({sku: sku}, {quantity: (quantity-1)})
-
-//     res.send({ message: "Product added to Rental Items" })
-// }
-
-// exports.myRentalItems = async (req, res) => {
-//     const { name, email } = req.body;
-//     const items = await rentalItems.find({ "user.email": email })
-
-//     res.send(items)
-// }
-
-// exports.allRentals = async (req, res) => {
-//     const allR = await rentalItems.find({})
-//     res.send(allR)
-// }
-
-// exports.searchProducts = async (req, res) => {
-//     const searchKey = req.body.search;
-//     const products = await productsModel.find({
-//         $or: [
-//             { name: { $regex: `${searchKey}`, $options: 'i' } },
-//             { brand: { $regex: `${searchKey}`, $options: 'i' } },
-//             { condition: { $regex: `${searchKey}`, $options: 'i' } },
-//             { description: { $regex: `${searchKey}`, $options: 'i' } },
-//             { notes: { $regex: `${searchKey}`, $options: 'i' } },
-//             { category: { $regex: `${searchKey}`, $options: 'i' } },
-//         ]
-//     });
-
-//     res.send(products)
-// }
-
-// exports.deliverItem = async (req, res) => {
-//     const { name, email, city, address } = req.body.user;
-//     const data = req.body
-//     const updatedData = { ...data, deliveryStatus: "DELIVERED" }
-
-//     const updateRentalItems = await rentalItems.findByIdAndUpdate(data._id,
-//         { $set: updatedData }
-//     )
-
-//     const auth = nodemailer.createTransport({
-//         service: "gmail",
-//         secure: true,
-//         port: 465,
-//         auth: {
-//             user: "rohitthakur792002@gmail.com",
-//             pass: "pnsg ismb vdou ccax"
-//         }
-//     })
-//     const receiver = {
-//         from: "rohitthakur792002@gmail.com",
-//         to: `${email}`,
-//         subject: `Team Rental Items. Item ${req.body.name} has been shipped to your provided address.`,
-//         html: `<b>Hello</b> ${name}. Your ordered item ${req.body.name} has been shipped to your provided address ${address}. It will be delived in 5 days.`
-//     }
-
-//     auth.sendMail(receiver, (error, emailResponse) => {
-//         if (error)
-//             throw error;
-//         console.log("success!")
-//         res.end()
-//     })
-
-//     res.end()
-// }
-
-// exports.createTestPaymentLink = async (req, res) => {
-//     console.log("req.body : ", req.body)
-//     const url = "https://sandbox.cashfree.com/pg/links";
-//     const linkId = `link_${Date.now()}`;
-//     const { email, } = req.body;
-//     const user = await usersModel.findOne({ email: email })
-
-//     const payload = {
-//         link_id: linkId,
-//         link_amount: Number(req.body.price),
-//         link_currency: "INR",
-//         link_purpose: "Test payment for project",
-//         customer_details: {
-//             customer_phone: `1234567890`,
-//             customer_email: `${user?.email}`,
-//             customer_name: `${user?.name}`
-//         },
-//         link_notify: {
-//             send_sms: false,
-//             send_email: false
-//         },
-//         link_meta: {
-//             return_url: `https://rental-project-sigma.vercel.app/catalog`
-//         }
-//     };
-
-//     const response = await fetch(url, {
-//         method: "POST",
-//         headers: {
-//             "Content-Type": "application/json",
-//             "x-api-version": "2023-08-01",
-//             "x-client-id": process.env.CASHFREE_CLIENT_ID,
-//             "x-client-secret": process.env.CASHFREE_SECRET_KEY
-//         },
-//         body: JSON.stringify(payload)
-//     });
-
-//     const data = await response.json();
-//     const token = jwt.sign({ ...req.body, link_id: data.link_id }, process.env.JWT_SECRET, { expiresIn: "1h" })
-
-//     res.send({ ...data, payment_token: token })
-// }
-
-// exports.verifyPaymentLink = async (req, res) => {
-//     try {
-//         const { link_id } = req.body;
-//         const url = `https://sandbox.cashfree.com/pg/links/${link_id}`;
-
-//         const response = await fetch(url, {
-//             method: "GET",
-//             headers: {
-//                 "x-api-version": "2023-08-01",
-//                 "x-client-id": process.env.CASHFREE_CLIENT_ID,
-//                 "x-client-secret": process.env.CASHFREE_SECRET_KEY,
-//             },
-//         });
-
-//         const data = await response.json();
-
-//         res.send(data)
-//     } catch (error) {
-//         return res.status(500).json({ success: false, message: error.message });
-//     }
-// };
-
-// exports.updateInventory = async (req, res) => {
-//     try {
-//         const data = req.body;
-//         data.map(async (product, index) => {
-//             const { _id, ...updateData } = product;
-//             const updatedProduct = await productsModel.findByIdAndUpdate(
-//                 _id,
-//                 { $set: updateData },
-//             );
-//         })
-
-//         res.send({ message: "Inventory has been updated." })
-//     }
-//     catch (err) {
-//         return res.status(400).json({ success: false, message: err.message })
-//     }
-// }
-
-// exports.itemsDeliveryStatus = async (req, res) => {
-//     try {
-//         const pending = await rentalItems.find({ deliveryStatus: "PENDING" })
-//         const delivered = await rentalItems.find({ deliveryStatus: "DELIVERED" });
-//         res.json({ pending: pending, delivered: delivered })
-//     }
-//     catch (err) {
-//         return res.status(400).json({ success: false, message: err.message })
-//     }
-// }
-
-// const loggedUsers = mongoose.Schema({
-//     email: {
-//         type: String,
-//     },
-//     IP: {
-//         type: String,
-//     },
-//     expiry: {
-//         type: Date
-//     }
-// })
-// const loggedUsersModel = mongoose.model("loggedUsers", loggedUsers)
-// exports.manageLoggedUsers = async (req, res) => {
-//     try {
-//         const deleteOldLogins = await loggedUsersModel.deleteMany({ IP: req.body.IP })
-//         const newLoggedUser = await new loggedUsersModel(req.body)
-//         await newLoggedUser.save()
-
-//         res.send(newLoggedUser)
-//     }
-//     catch (err) {
-//         return res.status(400).json({ success: false, message: err.message })
-//     }
-// }
-
-// exports.getLoginUser = async (req, res) => {
-//     console.log("req.body.IP : ", req.body.IP)
-//     const loggedUser = await loggedUsersModel.findOne({ IP: req.body.IP })
-//     console.log("loggedUser : ", loggedUser)
-//     const user = loggedUser !== null && await usersModel.findOne({ email: loggedUser.email })
-
-//     res.send({ loggedUser: loggedUser, user: user })
-// }
-
-
-// const paymentToken = mongoose.Schema({
-//     payment_token: {
-//         type: String,
-//     }
-// })
-// const paymentTokenModel = mongoose.model("paymentToken", paymentToken)
-// exports.savePaymentToken = async (req, res) => {
-//     const token = await new paymentTokenModel(req.body)
-//     await token.save()
-
-//     res.send("Payment token saved successfully.")
-// }
-
-// exports.getPaymentToken = async (req, res) => {
-//     const token = await paymentTokenModel.find({})
-
-//     res.send(token)
-// }
-
-// exports.deletePaymentToken = async (req, res) => {
-//     const deleteToken = await paymentTokenModel.deleteMany({})
-
-//     res.send(deleteToken)
-// }
-
-// exports.logout = async (req, res) => {
-//     try {
-//         const logout = await loggedUsersModel.deleteMany({ IP: req.body.IP })
-//         res.send(logout)
-//     }
-//     catch (err) {
-//         return res.status(400).json({ success: false, message: "Unable to logout" })
-//     }
-// }
-
-// exports.deleteProduct = async (req, res) => {
-//     try{
-//         const deleteProd = await productsModel.findByIdAndDelete(req.body._id)
-//         res.send(deleteProd)
-//     }
-//     catch(err){
-//         return res.status(400).json({ success: false, message: "Unable to delete item." })
-//     }
-// }
-
-const mongoose = require("mongoose");
-const jwt = require("jsonwebtoken");
-const nodemailer = require("nodemailer");
-const bcrypt = require("bcryptjs");
-
-const SECRET = process.env.JWT_SECRET;
-
-// 1. Safe model registration helper to prevent OverwriteModelError
-const getOrCreateModel = (modelName, schema) => {
-    return mongoose.models[modelName] || mongoose.model(modelName, schema);
-};
-
-// --- SCHEMAS & MODELS ---
-const usersSchema = new mongoose.Schema({
-    name: { type: String },
-    email: { type: String },
-    phone: { type: String },
-    password: { type: String },
-    pincode: { type: Number },
-    address: { type: String },
-    loggedInIPS: [
-        {
-            IP: { type: String },
-            expireAt: { type: Date }
+const mongoose = require("mongoose")
+const jwt = require("jsonwebtoken")
+const SECRET = process.env.JWT_SECRET
+const nodemailer = require("nodemailer")
+const bcrypt = require("bcryptjs")
+
+const users = mongoose.Schema({
+    name: {
+        type: String
+    },
+    email: {
+        type: String
+    },
+    phone: {
+        type: String
+    },
+    password: {
+        type: String
+    },
+    pincode: {
+        type: Number
+    },
+    address: {
+        type: String
+    },
+    loggedInIPS: [{
+        IP: {
+            type: String,
+        },
+        expireAt: {
+            type: Date,
         }
-    ]
-});
-const usersModel = getOrCreateModel("users", usersSchema);
+    }],
+})
+const usersModel = mongoose.model("users", users)
+const nodemailer = require("nodemailer");
+exports.sendSignupOtp = async (req, res) => {
+    let a = Math.random()
+    a = Math.ceil(a * 999999)
 
-const productsSchema = new mongoose.Schema({
-    imageNames: { type: [String] },
-    name: { type: String },
-    sku: { type: String },
-    category: { type: String },
-    condition: { type: String },
-    brand: { type: String },
-    material: { type: String },
-    description: { type: String },
-    price: { type: Number },
-    quantity: { type: Number },
-    deliveryCharge: { type: Number },
-    returnPolicy: { type: String },
-    assemblyRequired: { type: String },
-    notes: { type: String }
-});
-const productsModel = getOrCreateModel("product", productsSchema);
+    const auth = nodemailer.createTransport({
+        service: "gmail",
+        secure: true,
+        port: 465,
+        auth: {
+            user: "rohitthakur792002@gmail.com",
+            pass: "omzd rsxw zwql xvrb"
+        }
+    })
 
-const rentalItemsSchema = new mongoose.Schema({
+    const receiver = {
+        from: "rohitthakur792002@gmail.com",
+        to: `${req.body?.email}`,
+        subject: `Team Rental Items. Signup otp.`,
+        html: `Your Otp is ${a}`
+    }
+
+    auth.sendMail(receiver, (error, emailResponse) => {
+        if (error){
+            console.log(error)
+            return;
+        }
+        console.log("success!")
+        res.send({signup_otp: a})
+    })
+}
+
+exports.addUser = async (req, res) => {
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(req.body.password, saltRounds)
+    const user = await new usersModel({ ...req.body, password: hashedPassword })
+    const result = await user.save();
+
+    res.send(result)
+}
+
+const products = mongoose.Schema({
+    imageNames: {
+        type: [String]
+    },
+    name: {
+        type: String
+    },
+    sku: {
+        type: String
+    },
+    category: {
+        type: String
+    },
+    condition: {
+        type: String
+    },
+    brand: {
+        type: String
+    },
+    material: {
+        type: String
+    },
+    description: {
+        type: String
+    },
+    price: {
+        type: Number
+    },
+    quantity: {
+        type: Number
+    },
+    deliveryCharge: {
+        type: Number
+    },
+    returnPolicy: {
+        type: String
+    },
+    assemblyRequired: {
+        type: String
+    },
+    notes: {
+        type: String
+    }
+})
+const productsModel = mongoose.model("product", products)
+exports.addProduct = async (req, res) => {
+    const product = await new productsModel(req.body)
+    const result = await product.save()
+
+    res.status(200).json({
+        success: true
+    })
+}
+
+exports.getProducts = async (req, res) => {
+    const result = await productsModel.find({})
+
+    res.status(200).json(result)
+}
+
+exports.loginUser = async (req, res) => {
+    try {
+        const user = await usersModel.findOne({ email: req.body.email })
+        const match = await bcrypt.compare(req.body.password, user?.password)
+        const userId = user._id.toString()
+        const currentLogin = await usersModel.findOne({ _id: userId })
+        const currentLoginIPS = currentLogin.loggedInIPS;
+        const newLoginIPS = currentLoginIPS.filter((el) => el.IP !== req.body.IP)
+        const newIPS = [...newLoginIPS, { IP: req.body.IP, expireAt: req.body.expiry }]
+        const loginInSystem = await usersModel.findByIdAndUpdate(userId, { loggedInIPS: newIPS })
+        const token = jwt.sign({ name: user.name, email: user.email, phone: user.phone, password: user.password, city: user.city, address: user.address }, SECRET, { expiresIn: "1h" })
+        const decodedToken = jwt.verify(token, SECRET)
+
+        res.send({ ...user, jwtToken: token })
+    }
+    catch (err) {
+        return res.status(400).json({ success: false, message: err.message })
+    }
+}
+
+const rentalItemsSchema = mongoose.Schema({
     user: {
         name: { type: String },
         email: { type: String },
         pincode: { type: String },
-        address: { type: String }
+        address: { type: String },
     },
-    name: { type: String },
-    imageNames: { type: [String] },
-    productName: { type: String },
-    sku: { type: String },
-    condition: { type: String },
-    brand: { type: String },
-    material: { type: String },
-    description: { type: String },
-    price: { type: Number },
-    quantity: { type: Number },
-    securityDeposit: { type: Number },
-    stockKeepingUnit: { type: Number },
-    deliveryCharge: { type: Number },
-    returnPolicy: { type: String },
-    assemblyRequired: { type: String },
-    notes: { type: String },
-    rentDays: { type: Number, default: 5 },
-    rentedDate: { type: String },
-    deliveryStatus: { type: String, default: "PENDING" }
-});
-const rentalItems = getOrCreateModel("rentalItems", rentalItemsSchema);
 
-const loggedUsersSchema = new mongoose.Schema({
-    email: { type: String },
-    IP: { type: String },
-    expiry: { type: Date }
-});
-const loggedUsersModel = getOrCreateModel("loggedUsers", loggedUsersSchema);
+    name: {
+        type: String
+    },
 
-const paymentTokenSchema = new mongoose.Schema({
-    payment_token: { type: String }
-});
-const paymentTokenModel = getOrCreateModel("paymentToken", paymentTokenSchema);
+    imageNames: {
+        type: [String]
+    },
 
-// --- SHARED TRANSPORTER ---
-const transporter = nodemailer.createTransport({
-    service: "gmail",
-    secure: true,
-    port: 465,
-    auth: {
-        user: process.env.EMAIL_USER || "rohitthakur792002@gmail.com",
-        pass: process.env.EMAIL_PASS || "omzd rsxw zwql xvrb"
+    productName: {
+        type: String
+    },
+
+    sku: {
+        type: String
+    },
+
+    condition: {
+        type: String
+    },
+
+    brand: {
+        type: String
+    },
+
+    material: {
+        type: String
+    },
+
+    description: {
+        type: String
+    },
+
+    price: {
+        type: Number
+    },
+
+    quantity: {
+        type: Number
+    },
+
+    securityDeposit: {
+        type: Number
+    },
+
+    stockKeepingUnit: {
+        type: Number
+    },
+
+    deliveryCharge: {
+        type: Number
+    },
+
+    returnPolicy: {
+        type: String
+    },
+
+    assemblyRequired: {
+        type: String
+    },
+
+    notes: {
+        type: String
+    },
+
+    rentDays: {
+        type: Number,
+        default: 5,
+    },
+
+    rentedDate: {
+        type: String
+    },
+
+    deliveryStatus: {
+        type: String,
+        default: "PENDING"
     }
-});
-
-// --- CONTROLLERS ---
-
-exports.sendSignupOtp = async (req, res) => {
-    try {
-        const otp = Math.ceil(Math.random() * 999999);
-
-        const receiver = {
-            from: process.env.EMAIL_USER || "rohitthakur792002@gmail.com",
-            to: req.body?.email,
-            subject: `Team Rental Items. Signup otp.`,
-            html: `Your Otp is ${otp}`
-        };
-
-        // Use await instead of callbacks in serverless
-        await transporter.sendMail(receiver);
-        return res.status(200).json({ signup_otp: otp });
-    } catch (error) {
-        console.error("Nodemailer error:", error);
-        return res.status(500).json({ success: false, message: error.message });
-    }
-};
-
-exports.addUser = async (req, res) => {
-    try {
-        const saltRounds = 10;
-        const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
-        const user = new usersModel({ ...req.body, password: hashedPassword });
-        const result = await user.save();
-        return res.status(200).json(result);
-    } catch (err) {
-        return res.status(500).json({ success: false, message: err.message });
-    }
-};
-
-exports.addProduct = async (req, res) => {
-    try {
-        const product = new productsModel(req.body);
-        await product.save();
-        return res.status(200).json({ success: true });
-    } catch (err) {
-        return res.status(500).json({ success: false, message: err.message });
-    }
-};
-
-exports.getProducts = async (req, res) => {
-    try {
-        const result = await productsModel.find({});
-        return res.status(200).json(result);
-    } catch (err) {
-        return res.status(500).json({ success: false, message: err.message });
-    }
-};
-
-exports.loginUser = async (req, res) => {
-    try {
-        const user = await usersModel.findOne({ email: req.body.email });
-        if (!user) return res.status(404).json({ success: false, message: "User not found" });
-
-        const match = await bcrypt.compare(req.body.password, user.password);
-        if (!match) return res.status(401).json({ success: false, message: "Invalid credentials" });
-
-        const userId = user._id.toString();
-        const currentLogin = await usersModel.findById(userId);
-        const currentLoginIPS = currentLogin.loggedInIPS || [];
-        const newLoginIPS = currentLoginIPS.filter((el) => el.IP !== req.body.IP);
-        const newIPS = [...newLoginIPS, { IP: req.body.IP, expireAt: req.body.expiry }];
-
-        await usersModel.findByIdAndUpdate(userId, { loggedInIPS: newIPS });
-
-        const token = jwt.sign(
-            {
-                name: user.name,
-                email: user.email,
-                phone: user.phone,
-                city: user.city,
-                address: user.address
-            },
-            SECRET,
-            { expiresIn: "1h" }
-        );
-
-        const userObj = user.toObject();
-        delete userObj.password;
-
-        return res.status(200).json({ ...userObj, jwtToken: token });
-    } catch (err) {
-        return res.status(400).json({ success: false, message: err.message });
-    }
-};
-
+})
+const rentalItems = mongoose.model("rentalItems", rentalItemsSchema)
 exports.addRentalItems = async (req, res) => {
-    try {
-        const { email, name, userName, sku, quantity } = req.body;
-        const user = await usersModel.findOne({ email });
-        const existingProduct = await rentalItems.findOne({ "user.email": email, "user.name": userName, name });
-
-        if (existingProduct) {
-            return res.status(400).json({ message: "Product is already in Rental Items!" });
-        }
-
-        const data = req.body;
-        const item = new rentalItems({
-            name: data.name,
-            imageNames: data.imageNames,
-            sku: data.sku,
-            condition: data.condition,
-            brand: data.brand,
-            material: data.material,
-            description: data.description,
-            price: data.price,
-            quantity: data.quantity,
-            securityDeposit: data.securityDeposit,
-            stockKeepingUnit: data.stockKeepingUnit,
-            deliveryCharge: data.deliveryCharge,
-            returnPolicy: data.returnPolicy,
-            assemblyRequired: data.assemblyRequired,
-            notes: data.notes,
-            rentDays: data.rentDays || 5,
-            rentedDate: new Date().toISOString(),
-            deliveryStatus: "PENDING",
-            user: {
-                name: userName,
-                email: email,
-                pincode: user?.pincode,
-                address: user?.address
-            }
-        });
-
-        await item.save();
-        await productsModel.findOneAndUpdate({ sku }, { quantity: quantity - 1 });
-
-        return res.status(200).json({ message: "Product added to Rental Items" });
-    } catch (err) {
-        return res.status(500).json({ success: false, message: err.message });
+    const { email, name, userName, sku, quantity } = req.body;
+    const user = await usersModel.findOne({ email: email })
+    const existingProduct = await rentalItems.findOne({ "user.email": email, "user.name": userName, name: name });
+    if (existingProduct) {
+        res.send({ message: "Product is already in Rental Items!" });
+        return;
     }
-};
+
+    let expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + 1);
+    const data = req.body;
+    const data2 = {
+        name: data.name,
+        imageNames: data.imageNames,
+        sku: data.sku,
+        condition: data.condition,
+        brand: data.brand,
+        material: data.material,
+        description: data.description,
+        price: data.price,
+        quantity: data.quantity,
+        securityDeposit: data.securityDeposit,
+        stockKeepingUnit: data.stockKeepingUnit,
+        deliveryCharge: data.deliveryCharge,
+        returnPolicy: data.returnPolicy,
+        assemblyRequired: data.assemblyRequired,
+        notes: data.notes,
+        rentDays: data.rentDays,
+        rentedDate: new Date(),
+        deliveryStatus: "PENDING",
+    }
+    const item = new rentalItems({
+        ...data2, user: {
+            name: userName,
+            email: email,
+            pincode: user.pincode,
+            address: user.address
+        }
+    })
+    const result = await item.save()
+
+    const updateQuantity = await productsModel.findOneAndUpdate({sku: sku}, {quantity: (quantity-1)})
+
+    res.send({ message: "Product added to Rental Items" })
+}
 
 exports.myRentalItems = async (req, res) => {
-    try {
-        const items = await rentalItems.find({ "user.email": req.body.email });
-        return res.status(200).json(items);
-    } catch (err) {
-        return res.status(500).json({ success: false, message: err.message });
-    }
-};
+    const { name, email } = req.body;
+    const items = await rentalItems.find({ "user.email": email })
+
+    res.send(items)
+}
 
 exports.allRentals = async (req, res) => {
-    try {
-        const allR = await rentalItems.find({});
-        return res.status(200).json(allR);
-    } catch (err) {
-        return res.status(500).json({ success: false, message: err.message });
-    }
-};
+    const allR = await rentalItems.find({})
+    res.send(allR)
+}
 
 exports.searchProducts = async (req, res) => {
-    try {
-        const searchKey = req.body.search || "";
-        const products = await productsModel.find({
-            $or: [
-                { name: { $regex: searchKey, $options: "i" } },
-                { brand: { $regex: searchKey, $options: "i" } },
-                { condition: { $regex: searchKey, $options: "i" } },
-                { description: { $regex: searchKey, $options: "i" } },
-                { notes: { $regex: searchKey, $options: "i" } },
-                { category: { $regex: searchKey, $options: "i" } }
-            ]
-        });
-        return res.status(200).json(products);
-    } catch (err) {
-        return res.status(500).json({ success: false, message: err.message });
-    }
-};
+    const searchKey = req.body.search;
+    const products = await productsModel.find({
+        $or: [
+            { name: { $regex: `${searchKey}`, $options: 'i' } },
+            { brand: { $regex: `${searchKey}`, $options: 'i' } },
+            { condition: { $regex: `${searchKey}`, $options: 'i' } },
+            { description: { $regex: `${searchKey}`, $options: 'i' } },
+            { notes: { $regex: `${searchKey}`, $options: 'i' } },
+            { category: { $regex: `${searchKey}`, $options: 'i' } },
+        ]
+    });
+
+    res.send(products)
+}
 
 exports.deliverItem = async (req, res) => {
-    try {
-        const { name, email, address } = req.body.user;
-        const data = req.body;
+    const { name, email, city, address } = req.body.user;
+    const data = req.body
+    const updatedData = { ...data, deliveryStatus: "DELIVERED" }
 
-        await rentalItems.findByIdAndUpdate(data._id, { $set: { ...data, deliveryStatus: "DELIVERED" } });
+    const updateRentalItems = await rentalItems.findByIdAndUpdate(data._id,
+        { $set: updatedData }
+    )
 
-        const receiver = {
-            from: process.env.EMAIL_USER || "rohitthakur792002@gmail.com",
-            to: email,
-            subject: `Team Rental Items. Item ${req.body.name} has been shipped to your provided address.`,
-            html: `<b>Hello</b> ${name}. Your ordered item ${req.body.name} has been shipped to your provided address ${address}. It will be delivered in 5 days.`
-        };
-
-        await transporter.sendMail(receiver);
-        return res.status(200).json({ success: true, message: "Item delivered and notification sent." });
-    } catch (err) {
-        console.error("deliverItem error:", err);
-        return res.status(500).json({ success: false, message: err.message });
+    const auth = nodemailer.createTransport({
+        service: "gmail",
+        secure: true,
+        port: 465,
+        auth: {
+            user: "rohitthakur792002@gmail.com",
+            pass: "pnsg ismb vdou ccax"
+        }
+    })
+    const receiver = {
+        from: "rohitthakur792002@gmail.com",
+        to: `${email}`,
+        subject: `Team Rental Items. Item ${req.body.name} has been shipped to your provided address.`,
+        html: `<b>Hello</b> ${name}. Your ordered item ${req.body.name} has been shipped to your provided address ${address}. It will be delived in 5 days.`
     }
-};
+
+    auth.sendMail(receiver, (error, emailResponse) => {
+        if (error)
+            throw error;
+        console.log("success!")
+        res.end()
+    })
+
+    res.end()
+}
 
 exports.createTestPaymentLink = async (req, res) => {
-    try {
-        const url = "https://sandbox.cashfree.com/pg/links";
-        const linkId = `link_${Date.now()}`;
-        const { email } = req.body;
-        const user = await usersModel.findOne({ email });
+    console.log("req.body : ", req.body)
+    const url = "https://sandbox.cashfree.com/pg/links";
+    const linkId = `link_${Date.now()}`;
+    const { email, } = req.body;
+    const user = await usersModel.findOne({ email: email })
 
-        const payload = {
-            link_id: linkId,
-            link_amount: Number(req.body.price),
-            link_currency: "INR",
-            link_purpose: "Test payment for project",
-            customer_details: {
-                customer_phone: "1234567890",
-                customer_email: user?.email,
-                customer_name: user?.name
-            },
-            link_notify: { send_sms: false, send_email: false },
-            link_meta: { return_url: "https://rental-project-sigma.vercel.app/catalog" }
-        };
+    const payload = {
+        link_id: linkId,
+        link_amount: Number(req.body.price),
+        link_currency: "INR",
+        link_purpose: "Test payment for project",
+        customer_details: {
+            customer_phone: `1234567890`,
+            customer_email: `${user?.email}`,
+            customer_name: `${user?.name}`
+        },
+        link_notify: {
+            send_sms: false,
+            send_email: false
+        },
+        link_meta: {
+            return_url: `https://rental-project-sigma.vercel.app/catalog`
+        }
+    };
 
-        const response = await fetch(url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "x-api-version": "2023-08-01",
-                "x-client-id": process.env.CASHFREE_CLIENT_ID,
-                "x-client-secret": process.env.CASHFREE_SECRET_KEY
-            },
-            body: JSON.stringify(payload)
-        });
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "x-api-version": "2023-08-01",
+            "x-client-id": process.env.CASHFREE_CLIENT_ID,
+            "x-client-secret": process.env.CASHFREE_SECRET_KEY
+        },
+        body: JSON.stringify(payload)
+    });
 
-        const data = await response.json();
-        const token = jwt.sign({ ...req.body, link_id: data.link_id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    const data = await response.json();
+    const token = jwt.sign({ ...req.body, link_id: data.link_id }, process.env.JWT_SECRET, { expiresIn: "1h" })
 
-        return res.status(200).json({ ...data, payment_token: token });
-    } catch (err) {
-        return res.status(500).json({ success: false, message: err.message });
-    }
-};
+    res.send({ ...data, payment_token: token })
+}
 
 exports.verifyPaymentLink = async (req, res) => {
     try {
@@ -871,12 +404,13 @@ exports.verifyPaymentLink = async (req, res) => {
             headers: {
                 "x-api-version": "2023-08-01",
                 "x-client-id": process.env.CASHFREE_CLIENT_ID,
-                "x-client-secret": process.env.CASHFREE_SECRET_KEY
-            }
+                "x-client-secret": process.env.CASHFREE_SECRET_KEY,
+            },
         });
 
         const data = await response.json();
-        return res.status(200).json(data);
+
+        res.send(data)
     } catch (error) {
         return res.status(500).json({ success: false, message: error.message });
     }
@@ -885,93 +419,108 @@ exports.verifyPaymentLink = async (req, res) => {
 exports.updateInventory = async (req, res) => {
     try {
         const data = req.body;
-        // Use Promise.all to ensure all async updates complete before responding
-        await Promise.all(
-            data.map((product) => {
-                const { _id, ...updateData } = product;
-                return productsModel.findByIdAndUpdate(_id, { $set: updateData });
-            })
-        );
+        data.map(async (product, index) => {
+            const { _id, ...updateData } = product;
+            const updatedProduct = await productsModel.findByIdAndUpdate(
+                _id,
+                { $set: updateData },
+            );
+        })
 
-        return res.status(200).json({ message: "Inventory has been updated." });
-    } catch (err) {
-        return res.status(400).json({ success: false, message: err.message });
+        res.send({ message: "Inventory has been updated." })
     }
-};
+    catch (err) {
+        return res.status(400).json({ success: false, message: err.message })
+    }
+}
 
 exports.itemsDeliveryStatus = async (req, res) => {
     try {
-        const pending = await rentalItems.find({ deliveryStatus: "PENDING" });
+        const pending = await rentalItems.find({ deliveryStatus: "PENDING" })
         const delivered = await rentalItems.find({ deliveryStatus: "DELIVERED" });
-        return res.status(200).json({ pending, delivered });
-    } catch (err) {
-        return res.status(400).json({ success: false, message: err.message });
+        res.json({ pending: pending, delivered: delivered })
     }
-};
+    catch (err) {
+        return res.status(400).json({ success: false, message: err.message })
+    }
+}
 
+const loggedUsers = mongoose.Schema({
+    email: {
+        type: String,
+    },
+    IP: {
+        type: String,
+    },
+    expiry: {
+        type: Date
+    }
+})
+const loggedUsersModel = mongoose.model("loggedUsers", loggedUsers)
 exports.manageLoggedUsers = async (req, res) => {
     try {
-        await loggedUsersModel.deleteMany({ IP: req.body.IP });
-        const newLoggedUser = new loggedUsersModel(req.body);
-        await newLoggedUser.save();
-        return res.status(200).json(newLoggedUser);
-    } catch (err) {
-        return res.status(400).json({ success: false, message: err.message });
+        const deleteOldLogins = await loggedUsersModel.deleteMany({ IP: req.body.IP })
+        const newLoggedUser = await new loggedUsersModel(req.body)
+        await newLoggedUser.save()
+
+        res.send(newLoggedUser)
     }
-};
+    catch (err) {
+        return res.status(400).json({ success: false, message: err.message })
+    }
+}
 
 exports.getLoginUser = async (req, res) => {
-    try {
-        const loggedUser = await loggedUsersModel.findOne({ IP: req.body.IP });
-        const user = loggedUser ? await usersModel.findOne({ email: loggedUser.email }) : null;
-        return res.status(200).json({ loggedUser, user });
-    } catch (err) {
-        return res.status(500).json({ success: false, message: err.message });
-    }
-};
+    console.log("req.body.IP : ", req.body.IP)
+    const loggedUser = await loggedUsersModel.findOne({ IP: req.body.IP })
+    console.log("loggedUser : ", loggedUser)
+    const user = loggedUser !== null && await usersModel.findOne({ email: loggedUser.email })
 
-exports.savePaymentToken = async (req, res) => {
-    try {
-        const token = new paymentTokenModel(req.body);
-        await token.save();
-        return res.status(200).send("Payment token saved successfully.");
-    } catch (err) {
-        return res.status(500).json({ success: false, message: err.message });
+    res.send({ loggedUser: loggedUser, user: user })
+}
+
+
+const paymentToken = mongoose.Schema({
+    payment_token: {
+        type: String,
     }
-};
+})
+const paymentTokenModel = mongoose.model("paymentToken", paymentToken)
+exports.savePaymentToken = async (req, res) => {
+    const token = await new paymentTokenModel(req.body)
+    await token.save()
+
+    res.send("Payment token saved successfully.")
+}
 
 exports.getPaymentToken = async (req, res) => {
-    try {
-        const token = await paymentTokenModel.find({});
-        return res.status(200).json(token);
-    } catch (err) {
-        return res.status(500).json({ success: false, message: err.message });
-    }
-};
+    const token = await paymentTokenModel.find({})
+
+    res.send(token)
+}
 
 exports.deletePaymentToken = async (req, res) => {
-    try {
-        const deleteToken = await paymentTokenModel.deleteMany({});
-        return res.status(200).json(deleteToken);
-    } catch (err) {
-        return res.status(500).json({ success: false, message: err.message });
-    }
-};
+    const deleteToken = await paymentTokenModel.deleteMany({})
+
+    res.send(deleteToken)
+}
 
 exports.logout = async (req, res) => {
     try {
-        const logoutRes = await loggedUsersModel.deleteMany({ IP: req.body.IP });
-        return res.status(200).json(logoutRes);
-    } catch (err) {
-        return res.status(400).json({ success: false, message: "Unable to logout" });
+        const logout = await loggedUsersModel.deleteMany({ IP: req.body.IP })
+        res.send(logout)
     }
-};
+    catch (err) {
+        return res.status(400).json({ success: false, message: "Unable to logout" })
+    }
+}
 
 exports.deleteProduct = async (req, res) => {
-    try {
-        const deleteProd = await productsModel.findByIdAndDelete(req.body._id);
-        return res.status(200).json(deleteProd);
-    } catch (err) {
-        return res.status(400).json({ success: false, message: "Unable to delete item." });
+    try{
+        const deleteProd = await productsModel.findByIdAndDelete(req.body._id)
+        res.send(deleteProd)
     }
-};
+    catch(err){
+        return res.status(400).json({ success: false, message: "Unable to delete item." })
+    }
+}
