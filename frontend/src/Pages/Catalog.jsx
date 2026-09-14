@@ -70,6 +70,8 @@ const Catalog = () => {
 
     const rentNow = async (product) => {
         if (loginUser) {
+            console.log("rent now is called")
+            console.log("loginUser : ", loginUser)
             const payment = await fetch(`${API_URL}/create-test-payment-link`, {
                 method: "POST",
                 headers: {
