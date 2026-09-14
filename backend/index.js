@@ -5,6 +5,7 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const cookieParser = require("cookie-parser");
+const router = require("./routes/router.js");
 
 const app = express();
 
@@ -33,12 +34,11 @@ app.get("/", (req, res) => {
     });
 });
 
-const router = require("./routes/router.js");
-app.use("/", router);
-
 app.use("/uploads",
     express.static(path.join(__dirname, "uploads"))
 );
+
+app.use("/", router);
 
 module.exports = app;
 

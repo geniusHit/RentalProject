@@ -12,8 +12,8 @@ const storage = multer.diskStorage({
     filename: (req, file, cb) => {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
         cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-        const API_URL = `${req.protocol}://${req.get("host")}`;
-        console.log("API_URL : ", API_URL)
+        // const API_URL = `${req.protocol}://${req.get("host")}`;
+        // console.log("API_URL : ", API_URL)
         // cb(
         //     null,
         //     `/uploads/${file.fieldname}-${uniqueSuffix}${path.extname(file.originalname)}`
