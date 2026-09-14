@@ -80,6 +80,7 @@ const Catalog = () => {
                 body: JSON.stringify({ ...product, email: loginUser?.user?.email, userName: loginUser?.user?.name })
             })
             const paymentData = await payment.json()
+            console.log("paymentData : ", paymentData)
             setPaymentData(paymentData)
             const savePaymentToken = await fetch(`${API_URL}/save-payment-token`, {
                 method: "POST",
