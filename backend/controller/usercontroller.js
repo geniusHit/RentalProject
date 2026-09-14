@@ -44,7 +44,7 @@ exports.sendSignupOtp = async (req, res) => {
         port: 465,
         auth: {
             user: "rohitthakur792002@gmail.com",
-            pass: "pnsg ismb vdou ccax"
+            pass: "omzd rsxw zwql xvrb"
         }
     })
 
