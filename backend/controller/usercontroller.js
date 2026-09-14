@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken")
 const SECRET = process.env.JWT_SECRET
 const nodemailer = require("nodemailer")
 const bcrypt = require("bcryptjs")
-import { NextResponse } from 'next/server';
 
 const users = mongoose.Schema({
     name: {
@@ -62,52 +61,9 @@ exports.sendSignupOtp = async (req, res) => {
             return;
         }
         console.log("success!")
-        return NextResponse.json({signup_otp: a})
+        res.send({signup_otp: a})
     })
 }
-// exports.sendSignupOtp = async (req, res) => {
-//     try {
-//         const otp = Math.floor(100000 + Math.random() * 900000);
-
-//         const transporter = nodemailer.createTransport({
-//             host: "smtp.gmail.com",
-//             port: 465,
-//             secure: true,
-//             auth: {
-//                 user: process.env.GMAIL_USER,
-//                 pass: process.env.GMAIL_APP_PASSWORD
-//             }
-//         });
-
-//         await transporter.verify();
-
-//         await transporter.sendMail({
-//             from: process.env.GMAIL_USER,
-//             to: `${req.body?.email}`,
-//             subject: "Team Rental Items - Signup OTP",
-//             html: `
-//                 <h2>Your Signup OTP</h2>
-//                 <p>Your OTP is:</p>
-//                 <h1>${otp}</h1>
-//                 <p>This OTP is valid for a limited time.</p>
-//             `
-//         });
-
-//         console.log("OTP email sent successfully");
-
-//         return res.status(200).json({
-//             signup_otp: otp
-//         });
-
-//     } catch (error) {
-//         console.error("Email sending error:", error);
-
-//         return res.status(500).json({
-//             message: "Failed to send OTP",
-//             error: error.message
-//         });
-//     }
-// };
 
 exports.addUser = async (req, res) => {
     const saltRounds = 10;
