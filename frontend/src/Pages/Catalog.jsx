@@ -168,7 +168,7 @@ const Catalog = () => {
 
             <br /><br />
 
-            <div className={`${products.length>0? "products": ""}`}>
+            <div className={`${products.length > 0 ? "products" : ""}`}>
                 {
                     products.length > 0 ? products.map((prod, index) => {
                         console.log("prod : ", prod)
