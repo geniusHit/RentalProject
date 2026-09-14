@@ -284,10 +284,6 @@ const VendorDashboard = () => {
 
                                             <td>{item.description}</td>
 
-                                            <td>{item.securityDeposit}</td>
-
-                                            <td>{item.stockKeepingUnit}</td>
-
                                             <td>{item.notes}</td>
 
                                             <td>{item.rentDays}</td>
@@ -638,26 +634,6 @@ const VendorDashboard = () => {
                                                     );
                                                 }} /></td>
 
-                                            <td><input type="text" className="inventoryInput" value={item.securityDeposit} onChange={
-                                                (e) => {
-                                                    const updatedValue = e.target.value;
-                                                    setProducts((prevProducts) =>
-                                                        prevProducts.map((prod, i) =>
-                                                            i === index ? { ...prod, securityDeposit: updatedValue } : prod
-                                                        )
-                                                    );
-                                                }} /></td>
-
-                                            <td><input type="text" className="inventoryInput" value={item.stockKeepingUnit} onChange={
-                                                (e) => {
-                                                    const updatedValue = e.target.value;
-                                                    setProducts((prevProducts) =>
-                                                        prevProducts.map((prod, i) =>
-                                                            i === index ? { ...prod, stockKeepingUnit: updatedValue } : prod
-                                                        )
-                                                    );
-                                                }} /></td>
-
                                             <td><input type="text" className="inventoryInput" value={item.notes} onChange={
                                                 (e) => {
                                                     const updatedValue = e.target.value;
@@ -737,10 +713,6 @@ const VendorDashboard = () => {
                                             <td>{item.deliveryCharge}</td>
 
                                             <td>{item.description}</td>
-
-                                            <td>{item.securityDeposit}</td>
-
-                                            <td>{item.stockKeepingUnit}</td>
 
                                             <td>{item.notes}</td>
 
