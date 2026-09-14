@@ -77,7 +77,7 @@ const MyRentalItems = () => {
                     products.map((prod, index) => {
                         return <div className='product' key={index}>
                             <div className='img' style={{
-                                backgroundImage: `url(https://rental-project-backend.vercel.app/uploads/${prod.imageNames[0]})`
+                                backgroundImage: `url(${API_URL}/uploads/${prod.imageNames[0]})`
                             }}></div>
                             <div className='details'>
                                 <div className='prodName'>{prod.name}</div>
@@ -87,7 +87,6 @@ const MyRentalItems = () => {
                     })
                 }
             </div>
-
             <Footer />
         </div>
     )
