@@ -33,36 +33,82 @@ const users = mongoose.Schema({
     }],
 })
 const usersModel = mongoose.model("users", users)
+// exports.sendSignupOtp = async (req, res) => {
+//     let a = Math.random()
+//     a = Math.ceil(a * 999999)
+
+//     const auth = nodemailer.createTransport({
+//         service: "gmail",
+//         secure: true,
+//         port: 465,
+//         auth: {
+//             user: "rohitthakur792002@gmail.com",
+//             pass: "pnsg ismb vdou ccax"
+//         }
+//     })
+
+//     await auth.verify();
+
+//     const receiver = {
+//         from: "rohitthakur792002@gmail.com",
+//         to: `${req.body?.email}`,
+//         subject: `Team Rental Items. Signup otp.`,
+//         html: `Your Otp is ${a}`
+//     }
+
+//     auth.sendMail(receiver, (error, emailResponse) => {
+//         if (error){
+//             throw error;
+//             return;
+//         }
+//         console.log("success!")
+//         res.send({signup_otp: a})
+//     })
+// }
+const nodemailer = require("nodemailer");
 exports.sendSignupOtp = async (req, res) => {
-    let a = Math.random()
-    a = Math.ceil(a * 999999)
+    try {
+        const otp = Math.floor(100000 + Math.random() * 900000);
 
-    const auth = nodemailer.createTransport({
-        service: "gmail",
-        secure: true,
-        port: 465,
-        auth: {
-            user: "rohitthakur792002@gmail.com",
-            pass: "pnsg ismb vdou ccax"
-        }
-    })
+        const transporter = nodemailer.createTransport({
+            host: "smtp.gmail.com",
+            port: 465,
+            secure: true,
+            auth: {
+                user: "rohitthakur792002@gmail.com",
+                pass: "pnsg ismb vdou ccax"
+            }
+        });
 
-    const receiver = {
-        from: "rohitthakur792002@gmail.com",
-        to: `${req.body?.email}`,
-        subject: `Team Rental Items. Signup otp.`,
-        html: `Your Otp is ${a}`
+        await transporter.verify();
+
+        await transporter.sendMail({
+            from: "rohitthakur792002@gmail.com",
+            to: `${req.body?.email}`,
+            subject: "Team Rental Items - Signup OTP",
+            html: `
+                <h2>Your Signup OTP</h2>
+                <p>Your OTP is:</p>
+                <h1>${otp}</h1>
+                <p>This OTP is valid for a limited time.</p>
+            `
+        });
+
+        console.log("OTP email sent successfully");
+
+        return res.status(200).json({
+            signup_otp: otp
+        });
+
+    } catch (error) {
+        console.error("Email sending error:", error);
+
+        return res.status(500).json({
+            message: "Failed to send OTP",
+            error: error.message
+        });
     }
-
-    auth.sendMail(receiver, (error, emailResponse) => {
-        if (error){
-            throw error;
-            return;
-        }
-        console.log("success!")
-        res.send({signup_otp: a})
-    })
-}
+};
 
 exports.addUser = async (req, res) => {
     const saltRounds = 10;
