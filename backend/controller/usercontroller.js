@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken")
 const SECRET = process.env.JWT_SECRET
 const nodemailer = require("nodemailer")
 const bcrypt = require("bcryptjs")
+import { NextResponse } from 'next/server';
 
 const users = mongoose.Schema({
     name: {
@@ -33,6 +34,7 @@ const users = mongoose.Schema({
     }],
 })
 const usersModel = mongoose.model("users", users)
+const nodemailer = require("nodemailer");
 exports.sendSignupOtp = async (req, res) => {
     let a = Math.random()
     a = Math.ceil(a * 999999)
@@ -58,14 +60,13 @@ exports.sendSignupOtp = async (req, res) => {
 
     auth.sendMail(receiver, (error, emailResponse) => {
         if (error){
-            throw error;
+            console.log(error)
             return;
         }
         console.log("success!")
-        res.send({signup_otp: a})
+        return NextResponse.json({signup_otp: a})
     })
 }
-const nodemailer = require("nodemailer");
 // exports.sendSignupOtp = async (req, res) => {
 //     try {
 //         const otp = Math.floor(100000 + Math.random() * 900000);
