@@ -52,6 +52,7 @@ const Signup = () => {
         const otp2 = sendOtp !== "" ? await sendOtp.json() : "";
         otp2 !== "" && setOtp(otp2)
     }
+    console.log(`otp : `, otp)
 
     const submit2 = async (data) => {
         if (Number(data?.otp) === Number(otp?.signup_otp)) {

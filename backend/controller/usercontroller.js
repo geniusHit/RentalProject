@@ -364,7 +364,7 @@ exports.createTestPaymentLink = async (req, res) => {
         link_currency: "INR",
         link_purpose: "Test payment for project",
         customer_details: {
-            customer_phone: `${user?.phone}`,
+            customer_phone: `1234567890`,
             customer_email: `${user?.email}`,
             customer_name: `${user?.name}`
         },
