@@ -2,7 +2,7 @@ const mongoose = require("mongoose")
 const jwt = require("jsonwebtoken")
 const SECRET = process.env.JWT_SECRET
 const nodemailer = require("nodemailer")
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcryptjs")
 
 const users = mongoose.Schema({
     name: {
