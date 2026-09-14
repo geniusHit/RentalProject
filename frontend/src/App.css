@@ -43,7 +43,7 @@
 .search-form {
     display: flex;
     justify-content: center;
-    margin-top: 40px;
+    margin: 20px 30px;
 }
 
 .categories {
@@ -58,14 +58,14 @@
 }
 
 .category-options {
-    display: flex;
+    display: grid;
+    grid-template-columns: 17% 17% 17% 17% 17%;
+    row-gap: 47px;
     justify-content: space-between;
     padding: 40px;
 }
 
 .category-options .img {
-    width: 250px;
-    height: 300px;
     background-size: cover;
     background-position: center;
 }
@@ -74,10 +74,16 @@
     border-radius: 20px;
     overflow: hidden;
     border: 1px solid lightgray;
+    cursor: pointer;
+}
+
+.category-option:hover{
+    scale: 1.04;
+    transition: 0.1s;
 }
 
 .category-option .title {
-    padding: 20px;
+    padding: 16px;
     text-align: center;
     font-weight: 500;
 }
@@ -88,4 +94,78 @@
     width: 95%;
     height: 600px;
     margin: auto;
+}
+
+.hide {
+    display: none !important;
+}
+
+.navbar-expand-lg .navbar-collapse {
+    justify-content: space-between;
+}
+
+
+@media screen and (max-width: 1180px) {
+    .category-options {
+        display: grid;
+        grid-template-columns: 30% 30% 30%;
+        row-gap: 20px;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    .category-options {
+        display: grid;
+        grid-template-columns: 48% 48%;
+        row-gap: 20px;
+    }
+
+    .category-options .img {
+        height: 220px;
+    }
+
+    .working {
+        height: 142px;
+    }
+
+    .carousel-text {
+        font-size: 10pt;
+        padding: 10px;
+    }
+
+    .carousel-text2 {
+        font-size: 9pt;
+    }
+
+    .carousel-btn {
+        font-size: 7pt;
+    }
+
+    .carousel-btn {
+        padding: 6px;
+    }
+
+    .carousel-indicators [data-bs-target]{
+        height: 2px !important;
+        width: 10px !important;
+    }
+
+    .category-options {
+        padding: 20px;
+    }
+}
+
+@media screen and (min-width: 600px) and (max-width: 800px) {
+    .category-options .img {
+        height: 220px;
+    }
+}
+
+@media screen and (min-width: 800px) {
+    .category-options .img {
+        height: 320px;
+    }
+    .category-options{
+        row-gap: 40px;
+    }
 }
