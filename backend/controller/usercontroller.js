@@ -75,15 +75,15 @@ exports.sendSignupOtp = async (req, res) => {
             port: 465,
             secure: true,
             auth: {
-                user: "rohitthakur792002@gmail.com",
-                pass: "pnsg ismb vdou ccax"
+                user: process.env.GMAIL_USER,
+                pass: process.env.GMAIL_APP_PASSWORD
             }
         });
 
         await transporter.verify();
 
         await transporter.sendMail({
-            from: "rohitthakur792002@gmail.com",
+            from: process.env.GMAIL_USER,
             to: `${req.body?.email}`,
             subject: "Team Rental Items - Signup OTP",
             html: `
