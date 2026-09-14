@@ -254,8 +254,6 @@ const VendorDashboard = () => {
                                         <th>Assembly <br /> Required</th>
                                         <th>Delivery <br /> Charge</th>
                                         <th>Description</th>
-                                        <th>Security <br /> Deposit</th>
-                                        <th>Stock <br /> Keeping <br /> Unit</th>
                                         <th>Notes</th>
                                         <th>Rent <br /> Days</th>
                                         <th>Email</th>
@@ -521,8 +519,6 @@ const VendorDashboard = () => {
                                         <th>Assembly <br /> Required</th>
                                         <th>Delivery <br /> Charge</th>
                                         <th>Description</th>
-                                        <th>Security <br /> Deposit</th>
-                                        <th>Stock <br /> Keeping <br /> Unit</th>
                                         <th>Notes</th>
                                         <th>Delete</th>
                                     </tr>
@@ -710,8 +706,6 @@ const VendorDashboard = () => {
                                         <th>Assembly <br /> Required</th>
                                         <th>Delivery <br /> Charge</th>
                                         <th>Description</th>
-                                        <th>Security <br /> Deposit</th>
-                                        <th>Stock <br /> Keeping <br /> Unit</th>
                                         <th>Notes</th>
                                         <th>Rent <br /> Days</th>
                                         <th>User <br /> Name</th>
@@ -789,8 +783,6 @@ const VendorDashboard = () => {
                                         <th>Assembly <br /> Required</th>
                                         <th>Delivery <br /> Charge</th>
                                         <th>Description</th>
-                                        <th>Security <br /> Deposit</th>
-                                        <th>Stock <br /> Keeping <br /> Unit</th>
                                         <th>Notes</th>
                                         <th>Rent<br /> Days</th>
                                         <th>User<br /> Name</th>
@@ -822,10 +814,6 @@ const VendorDashboard = () => {
                                             <td>{item.deliveryCharge}</td>
 
                                             <td>{item.description}</td>
-
-                                            <td>{item.securityDeposit}</td>
-
-                                            <td>{item.stockKeepingUnit}</td>
 
                                             <td>{item.notes}</td>
 
