@@ -89,7 +89,7 @@ const Catalog = () => {
                 },
                 body: JSON.stringify({ payment_token: paymentData?.payment_token })
             })
-            window.location.href = paymentData?.link_url
+            // window.location.href = paymentData?.link_url;
         }
         else {
             navigate("/login")
