@@ -363,16 +363,16 @@ exports.createTestPaymentLink = async (req, res) => {
         link_currency: "INR",
         link_purpose: "Test payment for project",
         customer_details: {
-            customer_phone: "9999999999",
-            customer_email: `${user.email}`,
-            customer_name: `${user.name}`
+            customer_phone: `${user?.phone}`,
+            customer_email: `${user?.email}`,
+            customer_name: `${user?.name}`
         },
         link_notify: {
             send_sms: false,
             send_email: false
         },
         link_meta: {
-            return_url: "https://rental-project-opal.vercel.app/catalog"
+            return_url: `https://rental-project-backend.vercel.app/catalog`
         }
     };
 

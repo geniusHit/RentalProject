@@ -33,6 +33,8 @@ const Signup = () => {
     const [userData, setUserData] = useState()
     const [otp, setOtp] = useState()
 
+    console.log("userData : ", userData)
+
     const submit = async (data) => {
         setUserData(data)
 
@@ -56,7 +58,7 @@ const Signup = () => {
             let expiry = new Date();
             expiry.setDate(expiry.getDate() + 1);
 
-            const user = await fetch(`/add-user`, {
+            const user = await fetch(`${API_URL}/add-user`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
