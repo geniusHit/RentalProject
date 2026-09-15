@@ -67,8 +67,8 @@ exports.sendSignupOtp = async (req, res) => {
 exports.addUser = async (req, res) => {
     const saltRounds = 10;
     console.log("req.body : ", req.body)
-    const hashedPassword = await bcrypt.hash(req.body.password, saltRounds)
-    const user = await new usersModel({ ...req.body, password: hashedPassword })
+    // const hashedPassword = await bcrypt.hash(req.body.password, saltRounds)
+    const user = await new usersModel(req.body)
     const result = await user.save();
 
     res.send(result)
@@ -137,26 +137,21 @@ exports.getProducts = async (req, res) => {
 exports.loginUser = async (req, res) => {
     try {
         console.log("req.body : ", req.body)
-        const user = await usersModel.findOne({ email: req.body.email })
+        const user = await usersModel.findOne({ email: req.body.email, password: req.body.password })
         console.log("user : ", user)
-        const match = await bcrypt.compare(req.body.password, user?.password)
-        console.log(match)
-        if (match === true) {
-            const userId = user._id.toString()
-            const currentLogin = await usersModel.findOne({ _id: userId })
-            console.log("currentLogin : ", currentLogin)
-            const currentLoginIPS = currentLogin.loggedInIPS;
-            const newLoginIPS = currentLoginIPS.filter((el) => el.IP !== req.body.IP)
-            const newIPS = [...newLoginIPS, { IP: req.body.IP, expireAt: req.body.expiry }]
-            const loginInSystem = await usersModel.findByIdAndUpdate(userId, { loggedInIPS: newIPS })
-            const token = jwt.sign({ name: user.name, email: user.email, phone: user.phone, password: user.password, city: user.city, address: user.address }, SECRET, { expiresIn: "1h" })
-            const decodedToken = jwt.verify(token, SECRET)
+        // const match = await bcrypt.compare(req.body.password, user?.password)
+        // console.log(match)
+        const userId = user._id.toString()
+        const currentLogin = await usersModel.findOne({ _id: userId })
+        console.log("currentLogin : ", currentLogin)
+        const currentLoginIPS = currentLogin.loggedInIPS;
+        const newLoginIPS = currentLoginIPS.filter((el) => el.IP !== req.body.IP)
+        const newIPS = [...newLoginIPS, { IP: req.body.IP, expireAt: req.body.expiry }]
+        const loginInSystem = await usersModel.findByIdAndUpdate(userId, { loggedInIPS: newIPS })
+        const token = jwt.sign({ name: user.name, email: user.email, phone: user.phone, password: user.password, city: user.city, address: user.address }, SECRET, { expiresIn: "1h" })
+        const decodedToken = jwt.verify(token, SECRET)
 
-            res.json({ ...user, jwtToken: token, success: true })
-        }
-        else{
-            return res.status(400).json({ success: false, message: "Password is incorrect" })
-        }
+        res.json({ ...user, jwtToken: token, success: true })
     }
     catch (err) {
         return res.status(400).json({ success: false, message: err.message })
