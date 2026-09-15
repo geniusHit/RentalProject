@@ -136,12 +136,15 @@ exports.getProducts = async (req, res) => {
 
 exports.loginUser = async (req, res) => {
     try {
+        console.log("req.body : ", req.body)
         const user = await usersModel.findOne({ email: req.body.email })
+        console.log("user : ", user)
         const match = await bcrypt.compare(req.body.password, user?.password)
         console.log(match)
         if (match === true) {
             const userId = user._id.toString()
             const currentLogin = await usersModel.findOne({ _id: userId })
+            console.log("currentLogin : ", currentLogin)
             const currentLoginIPS = currentLogin.loggedInIPS;
             const newLoginIPS = currentLoginIPS.filter((el) => el.IP !== req.body.IP)
             const newIPS = [...newLoginIPS, { IP: req.body.IP, expireAt: req.body.expiry }]
