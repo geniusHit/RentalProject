@@ -58,13 +58,13 @@ const Login = () => {
             }
 
             setIsLogin(true);
-            const currentLogin = await fetch(`${API_URL}/manage-logged-users`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ ...data, IP: IP, expiry: expiry })
-            })
+            // const currentLogin = await fetch(`${API_URL}/manage-logged-users`, {
+            //     method: "POST",
+            //     headers: {
+            //         "Content-Type": "application/json"
+            //     },
+            //     body: JSON.stringify({ ...data, IP: IP, expiry: expiry })
+            // })
             navigate("/")
         }
         catch (err) {
