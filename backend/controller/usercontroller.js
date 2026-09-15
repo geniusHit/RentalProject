@@ -262,14 +262,6 @@ const rentalItemsSchema = mongoose.Schema({
         type: Number
     },
 
-    securityDeposit: {
-        type: Number
-    },
-
-    stockKeepingUnit: {
-        type: Number
-    },
-
     deliveryCharge: {
         type: Number
     },
@@ -323,8 +315,6 @@ exports.addRentalItems = async (req, res) => {
         description: data.description,
         price: data.price,
         quantity: data.quantity,
-        securityDeposit: data.securityDeposit,
-        stockKeepingUnit: data.stockKeepingUnit,
         deliveryCharge: data.deliveryCharge,
         returnPolicy: data.returnPolicy,
         assemblyRequired: data.assemblyRequired,
