@@ -60,15 +60,43 @@ const Signup = () => {
             let expiry = new Date();
             expiry.setDate(expiry.getDate() + 1);
 
-            const user = await fetch(`${API_URL}/add-user`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ ...userData, IP: IP, expiry: expiry })
-            })
+            // const user = await fetch(`${API_URL}/add-user`, {
+            //     method: "POST",
+            //     headers: {
+            //         "Content-Type": "application/json"
+            //     },
+            //     body: JSON.stringify({ ...userData, IP: IP, expiry: expiry })
+            // })
 
-            navigate("/login")
+            // navigate("/login");
+
+            try {
+                const user = await fetch(`${API_URL}/add-user`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        ...userData,
+                        IP: IP,
+                        expiry: expiry
+                    })
+                });
+
+                const result = await user.json();
+
+                console.log("Add user response:", result);
+
+                if (!user.ok) {
+                    console.error("Add user failed:", result);
+                    return;
+                }
+
+                navigate("/login");
+
+            } catch (error) {
+                console.error("Add user fetch error:", error);
+            }
         }
     }
 
