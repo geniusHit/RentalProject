@@ -16,7 +16,7 @@ const Signup = () => {
     const API_URL =
         window.location.hostname === "localhost"
             ? "http://localhost:8000"
-            : "https://rental-project-u2yo.vercel.app";
+            : "https://rental-project-u2yo-hyklfx8xp-rohit-9631.vercel.app";
 
     console.log("API_URL : ", API_URL)
 
