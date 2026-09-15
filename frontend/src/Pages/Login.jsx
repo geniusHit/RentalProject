@@ -49,11 +49,14 @@ const Login = () => {
                 body: JSON.stringify({ ...data, IP: IP, expiry: expiry })
             })
 
-            if (!login.ok) {
+            const result = await login.json();
+
+            if (result?.success == false) {
                 throw new Error("Password is incorrect")
             }
 
-            const result = await login.json();
+            setIsLogin(true);
+            navigate("/")
         }
         catch (err) {
             console.log(err)
@@ -70,9 +73,6 @@ const Login = () => {
             },
             body: JSON.stringify({ ...data, IP: IP, expiry: expiry })
         })
-
-        setIsLogin(true);
-        navigate("/")
     }
 
     return (
