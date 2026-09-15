@@ -33,7 +33,6 @@ const users = mongoose.Schema({
     }],
 })
 const usersModel = mongoose.model("users", users)
-const nodemailer = require("nodemailer");
 exports.sendSignupOtp = async (req, res) => {
     let a = Math.random()
     a = Math.ceil(a * 999999)
