@@ -133,7 +133,7 @@ const Catalog = () => {
 
         const result = await rentNow.json()
         setItemMessage(result.message)
-        setShowMessage((prevValue) => !prevValue)
+        setShowMessage(true)
 
         const deleteToken = await fetch(`${API_URL}/delete-payment-token`)
         const result2 = await deleteToken.json()
