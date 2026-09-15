@@ -50,6 +50,7 @@ const MyRentalItems = () => {
             })
 
             const result = await rentalItems.json()
+            console.log(result)
             setProducts(result)
         }
         else {
@@ -62,6 +63,9 @@ const MyRentalItems = () => {
     }, [])
 
     // !loginUser?.user?.email && getLoginUser()
+
+    console.log("loginUser : ", loginUser)
+    console.log("products : ", products)
 
     useEffect(() => {
         searchItems()
