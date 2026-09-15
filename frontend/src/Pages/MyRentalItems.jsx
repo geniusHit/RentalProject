@@ -59,8 +59,11 @@ const MyRentalItems = () => {
     }
     useEffect(() => {
         getIP()
-        getLoginUser()
     }, [])
+
+    useEffect(() => {
+        IP !== "" && getLoginUser()
+    }, [IP])
 
     // !loginUser?.user?.email && getLoginUser()
 
