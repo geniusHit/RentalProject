@@ -433,7 +433,8 @@ exports.createTestPaymentLink = async (req, res) => {
             send_email: false
         },
         link_meta: {
-            return_url: `https://rental-project-seven.vercel.app/catalog`
+            return_url: `https://rental-project-seven.vercel.app/catalog`,
+            // return_url: `https://localhost:8000/catalog`
         }
     };
 
@@ -517,18 +518,6 @@ const loggedUsers = mongoose.Schema({
     }
 })
 const loggedUsersModel = mongoose.model("loggedUsers", loggedUsers)
-exports.manageLoggedUsers = async (req, res) => {
-    try {
-        const deleteOldLogins = await loggedUsersModel.deleteMany({ IP: req.body.IP })
-        const newLoggedUser = await new loggedUsersModel(req.body)
-        await newLoggedUser.save()
-
-        res.send(newLoggedUser)
-    }
-    catch (err) {
-        return res.status(400).json({ success: false, message: err.message })
-    }
-}
 
 exports.getLoginUser = async (req, res) => {
     console.log("req.body.IP : ", req.body.IP)

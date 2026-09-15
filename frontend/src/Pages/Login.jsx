@@ -40,8 +40,6 @@ const Login = () => {
         let expiry = new Date();
         expiry.setDate(expiry.getDate() + 1);
 
-        localStorage.setItem("login-user", JSON.stringify(data))
-
         try {
             var login = await fetch(`${API_URL}/login-user`, {
                 method: "POST",
@@ -58,13 +56,6 @@ const Login = () => {
             }
 
             setIsLogin(true);
-            // const currentLogin = await fetch(`${API_URL}/manage-logged-users`, {
-            //     method: "POST",
-            //     headers: {
-            //         "Content-Type": "application/json"
-            //     },
-            //     body: JSON.stringify({ ...data, IP: IP, expiry: expiry })
-            // })
             navigate("/")
         }
         catch (err) {

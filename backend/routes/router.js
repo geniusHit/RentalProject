@@ -52,8 +52,6 @@ router.post("/update-inventory", controller.updateInventory)
 
 router.get("/items-delivery-status", controller.itemsDeliveryStatus)
 
-router.post("/manage-logged-users", controller.manageLoggedUsers)
-
 router.post("/get-login-user", controller.getLoginUser)
 
 router.post("/save-payment-token", controller.savePaymentToken)

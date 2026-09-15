@@ -16,7 +16,7 @@ const Catalog = () => {
     const [itemMessage, setItemMessage] = useState("")
     const [showMessage, setShowMessage] = useState(false)
     const [IP, setIP] = useState("")
-    const [loginUser, setLoginUser] = useState({})
+    const [loginUser, setLoginUser] = useState()
     const [paymentToken, setPaymentToken] = useState([])
     const [paymentData, setPaymentData] = useState()
     const [paymentStatus, setPaymentStatus] = useState()
@@ -48,6 +48,8 @@ const Catalog = () => {
         setLoginUser(data)
     }
 
+    console.log("loginUser : ", loginUser)
+
     useEffect(() => {
         getProducts()
         getIP()
@@ -69,7 +71,7 @@ const Catalog = () => {
     }, [paymentStatus])
 
     const rentNow = async (product) => {
-        if (loginUser) {
+        if (loginUser !== undefined) {
             console.log("rent now is called")
             console.log("loginUser : ", loginUser)
             const payment = await fetch(`${API_URL}/create-test-payment-link`, {
