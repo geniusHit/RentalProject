@@ -48,7 +48,7 @@ exports.sendSignupOtp = async (req, res) => {
     })
 
     const receiver = {
-        from: "rohitthakur792002@gmail.com",
+        from: process.env.GMAIL_USER,
         to: `${req.body?.email}`,
         subject: `Team Rental Items. Signup otp.`,
         html: `Your Otp is ${a}`
@@ -62,12 +62,11 @@ exports.sendSignupOtp = async (req, res) => {
         res.status(200).send({
             signup_otp: otp
         });
-
     } catch (error) {
         console.log("Email error:", error);
 
         res.status(500).send({
-            message: "Failed to send OTP"
+            message: `Failed to send OTP. ${error}`
         });
     }
 
