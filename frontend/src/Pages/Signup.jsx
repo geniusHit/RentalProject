@@ -25,7 +25,6 @@ const Signup = () => {
             otp: ""
         }
     })
-    const port = import.meta.env.PORT;
     const [IP, setIP] = useState()
     const navigate = useNavigate()
     const [disableSignup, setDisableSignup] = useState(false)
@@ -51,6 +50,7 @@ const Signup = () => {
         }) : "";
 
         const otp2 = sendOtp !== "" ? await sendOtp.json() : "";
+        console.log("otp2 : ", otp2)
         otp2 !== "" && setOtp(otp2)
     }
     console.log(`otp : `, otp)
@@ -59,6 +59,8 @@ const Signup = () => {
         if (Number(data?.otp) === Number(otp?.signup_otp)) {
             let expiry = new Date();
             expiry.setDate(expiry.getDate() + 1);
+
+            console.log("Adding user...")
 
             // const user = await fetch(`${API_URL}/add-user`, {
             //     method: "POST",

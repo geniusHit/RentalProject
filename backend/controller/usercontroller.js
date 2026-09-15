@@ -34,51 +34,91 @@ const users = mongoose.Schema({
 })
 const usersModel = mongoose.model("users", users)
 exports.sendSignupOtp = async (req, res) => {
-    let otp = Math.random()
-    otp = Math.ceil(otp * 999999)
+    let a = Math.random()
+    a = Math.ceil(a * 999999)
 
     const auth = nodemailer.createTransport({
-        host: "smtp.gmail.com",
+        service: "gmail",
         secure: true,
         port: 465,
         auth: {
-            user: process.env.GMAIL_USER,
-            pass: process.env.GMAIL_USER_PASS
+            user: "rohitthakur792002@gmail.com",
+            pass: "omzd rsxw zwql xvrb"
         }
     })
 
     const receiver = {
-        from: process.env.GMAIL_USER,
+        from: "rohitthakur792002@gmail.com",
         to: `${req.body?.email}`,
         subject: `Team Rental Items. Signup otp.`,
-        html: `Your Otp is ${otp}`
+        html: `Your Otp is ${a}`
     }
 
-    try {
-        await auth.sendMail(receiver);
-
-        console.log("OTP sent successfully");
-
-        res.status(200).send({
-            signup_otp: otp
-        });
-    } catch (error) {
-        console.log("Email error:", error);
-
-        res.status(500).send({
-            message: `Failed to send OTP. ${error}`
-        });
-    }
-
-    // auth.sendMail(receiver, (error, emailResponse) => {
-    //     if (error){
-    //         console.log(error)
-    //         return;
-    //     }
-    //     console.log("success!")
-    //     res.send({signup_otp: a})
-    // })
+    auth.sendMail(receiver, (error, emailResponse) => {
+        if (error) {
+            throw error;
+            return;
+        }
+        console.log("success!")
+        res.send({ signup_otp: a })
+    })
 }
+// exports.sendSignupOtp = async (req, res) => {
+//     let otp = Math.random()
+//     otp = Math.ceil(otp * 999999)
+
+//     const auth = nodemailer.createTransport({
+//         service: "gmail",
+//         secure: true,
+//         port: 465,
+//         auth: {
+//             user: "rohitthakur792002@gmail.com",
+//             pass: "omzd rsxw zwql xvrb"
+//         }
+//     })
+
+//     const receiver = {
+//         from: "rohitthakur792002@gmail.com",
+//         to: `${req.body?.email}`,
+//         subject: `Team Rental Items. Signup otp.`,
+//         html: `Your Otp is ${otp}`
+//     }
+
+//     try {
+//         // await auth.sendMail(receiver);
+//         await auth.sendMail(receiver, (error, emailResponse) => {
+//             if (error) {
+//                 console.log(error)
+//                 return;
+//             }
+//             console.log("success!")
+//             res.status(200).send({
+//                 signup_otp: otp
+//             });
+//         })
+
+//         console.log("OTP sent successfully");
+
+//         // res.status(200).send({
+//         //     signup_otp: otp
+//         // });
+//     } catch (error) {
+//         console.log("Email error:", error);
+
+//         res.status(500).send({
+//             message: `Failed to send OTP. ${error}`
+//         });
+//     }
+
+//     // auth.sendMail(receiver, (error, emailResponse) => {
+//     //     if (error){
+//     //         console.log(error)
+//     //         return;
+//     //     }
+//     //     console.log("success!")
+//     //     res.send({signup_otp: a})
+//     // })
+// }
 
 exports.addUser = async (req, res) => {
     const saltRounds = 10;
