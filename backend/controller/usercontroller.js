@@ -34,8 +34,8 @@ const users = mongoose.Schema({
 })
 const usersModel = mongoose.model("users", users)
 exports.sendSignupOtp = async (req, res) => {
-    let a = Math.random()
-    a = Math.ceil(a * 999999)
+    let otp = Math.random()
+    otp = Math.ceil(otp * 999999)
 
     const auth = nodemailer.createTransport({
         host: "smtp.gmail.com",
@@ -51,7 +51,7 @@ exports.sendSignupOtp = async (req, res) => {
         from: process.env.GMAIL_USER,
         to: `${req.body?.email}`,
         subject: `Team Rental Items. Signup otp.`,
-        html: `Your Otp is ${a}`
+        html: `Your Otp is ${otp}`
     }
 
     try {
