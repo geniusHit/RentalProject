@@ -142,8 +142,11 @@ exports.loginUser = async (req, res) => {
         if (user?.email) {
             const newLoggedUser = await new loggedUsersModel({email: req.body.email, IP: req.body.IP, expiry: req.body.expiry})
             await newLoggedUser.save()
-
-            res.send(newLoggedUser)
+            
+            res.json({ ...newLoggedUser, success: true })
+        }
+        else{
+            res.json({ success: false })
         }
         // const match = await bcrypt.compare(req.body.password, user?.password)
         // console.log(match)
@@ -156,8 +159,6 @@ exports.loginUser = async (req, res) => {
         // const loginInSystem = await usersModel.findByIdAndUpdate(userId, { loggedInIPS: newIPS })
         // const token = jwt.sign({ name: user.name, email: user.email, phone: user.phone, password: user.password, city: user.city, address: user.address }, SECRET, { expiresIn: "1h" })
         // const decodedToken = jwt.verify(token, SECRET)
-
-        res.json({ ...user, success: true })
     }
     catch (err) {
         return res.status(400).json({ success: false, message: err.message })
