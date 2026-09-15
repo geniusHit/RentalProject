@@ -82,7 +82,6 @@ exports.addUser = async (req, res) => {
     catch (err) {
         res.status(400).json({ success: false, message: `Unable to add user. ${err.message}` })
     }
-
 }
 
 const products = mongoose.Schema({

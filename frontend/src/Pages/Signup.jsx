@@ -62,16 +62,6 @@ const Signup = () => {
 
             console.log("Adding user...")
 
-            // const user = await fetch(`${API_URL}/add-user`, {
-            //     method: "POST",
-            //     headers: {
-            //         "Content-Type": "application/json"
-            //     },
-            //     body: JSON.stringify({ ...userData, IP: IP, expiry: expiry })
-            // })
-
-            // navigate("/login");
-
             try {
                 const user = await fetch(`${API_URL}/add-user`, {
                     method: "POST",
@@ -95,7 +85,6 @@ const Signup = () => {
                 }
 
                 navigate("/login");
-
             } catch (error) {
                 console.error("Add user fetch error:", error);
             }
