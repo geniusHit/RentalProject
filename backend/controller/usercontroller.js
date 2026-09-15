@@ -322,7 +322,7 @@ exports.deliverItem = async (req, res) => {
         port: 465,
         auth: {
             user: "rohitthakur792002@gmail.com",
-            pass: "pnsg ismb vdou ccax"
+            pass: "omzd rsxw zwql xvrb"
         }
     })
     const receiver = {
@@ -364,8 +364,8 @@ exports.createTestPaymentLink = async (req, res) => {
             send_email: false
         },
         link_meta: {
-            // return_url: `https://rental-project-seven.vercel.app/catalog`,
-            return_url: `http://localhost:5173/catalog`
+            return_url: `https://rental-project-seven.vercel.app/catalog`,
+            // return_url: `http://localhost:5173/catalog`
         }
     };
 

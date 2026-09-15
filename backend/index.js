@@ -11,6 +11,13 @@ app.use(cors());
 app.use(express.json());
 app.use(cookieParser())
 
+app.get("/", (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: "Rental backend is working"
+    });
+});
+
 const router = require("./routes/router.js");
 app.use("/", router);
 
@@ -18,10 +25,10 @@ app.use("/uploads",
     express.static(path.join(__dirname, "uploads"))
 );
 
-// module.exports = app;
+module.exports = app;
 
-const port = process.env.PORT || 8000;
+// const port = process.env.PORT || 8000;
 
-app.listen(port, () => {
-    console.log(`App is listening at port ${port}`);
-});
+// app.listen(port, () => {
+//     console.log(`App is listening at port ${port}`);
+// });
