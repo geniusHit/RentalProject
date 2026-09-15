@@ -137,6 +137,7 @@ exports.getProducts = async (req, res) => {
 exports.loginUser = async (req, res) => {
     try {
         console.log("req.body : ", req.body)
+        const deletePreviousLogins = await loggedUsersModel.deleteMany({IP: req.body.IP})
         const user = await usersModel.findOne({ email: req.body.email, password: req.body.password })
         console.log("user : ", user)
         if (user?.email) {
@@ -148,71 +149,11 @@ exports.loginUser = async (req, res) => {
         else{
             res.json({ success: false })
         }
-        // const match = await bcrypt.compare(req.body.password, user?.password)
-        // console.log(match)
-        // const userId = user._id.toString()
-        // const currentLogin = await usersModel.findOne({ _id: userId })
-        // console.log("currentLogin : ", currentLogin)
-        // const currentLoginIPS = currentLogin.loggedInIPS;
-        // const newLoginIPS = currentLoginIPS.filter((el) => el.IP !== req.body.IP)
-        // const newIPS = [...newLoginIPS, { IP: req.body.IP, expireAt: req.body.expiry }]
-        // const loginInSystem = await usersModel.findByIdAndUpdate(userId, { loggedInIPS: newIPS })
-        // const token = jwt.sign({ name: user.name, email: user.email, phone: user.phone, password: user.password, city: user.city, address: user.address }, SECRET, { expiresIn: "1h" })
-        // const decodedToken = jwt.verify(token, SECRET)
     }
     catch (err) {
         return res.status(400).json({ success: false, message: err.message })
     }
 }
-// exports.loginUser = async (req, res) => {
-//     try {
-//         const { email, password, IP, expiry } = req.body;
-
-//         if (!email || !password) {
-//             return res.status(400).json({ success: false, message: "Email and password are required" });
-//         }
-
-//         // 1. .lean() ensures 'user' is a plain JavaScript object, preventing serialization crashes
-//         const user = await usersModel.findOne({ email }).lean();
-//         if (!user) {
-//             return res.status(400).json({ success: false, message: "Invalid email or password" });
-//         }
-
-//         const match = await bcrypt.compare(password, user.password);
-//         if (!match) {
-//             return res.status(400).json({ success: false, message: "Invalid email or password" });
-//         }
-
-//         const userId = user._id.toString();
-
-//         // 2. Safe array operations (handling undefined loggedInIPS)
-//         const currentLoginIPS = Array.isArray(user.loggedInIPS) ? user.loggedInIPS : [];
-//         const newLoginIPS = currentLoginIPS.filter((el) => el.IP !== IP);
-//         const newIPS = [...newLoginIPS, { IP, expireAt: expiry }];
-
-//         await usersModel.findByIdAndUpdate(userId, { loggedInIPS: newIPS });
-
-//         // 3. NEVER put the hashed password in the JWT payload
-//         const secret = process.env.SECRET || SECRET;
-//         const token = jwt.sign(
-//             { id: userId, email: user.email, name: user.name },
-//             secret,
-//             { expiresIn: "1h" }
-//         );
-
-//         // 4. Strip sensitive data before sending
-//         delete user.password;
-
-//         return res.status(200).json({
-//             ...user,
-//             jwtToken: token,
-//             success: true
-//         });
-//     } catch (err) {
-//         console.error("Login error:", err);
-//         return res.status(500).json({ success: false, message: err.message });
-//     }
-// };
 
 const rentalItemsSchema = mongoose.Schema({
     user: {
@@ -423,8 +364,8 @@ exports.createTestPaymentLink = async (req, res) => {
             send_email: false
         },
         link_meta: {
-            return_url: `https://rental-project-seven.vercel.app/catalog`,
-            // return_url: `https://localhost:8000/catalog`
+            // return_url: `https://rental-project-seven.vercel.app/catalog`,
+            return_url: `http://localhost:5173/catalog`
         }
     };
 
