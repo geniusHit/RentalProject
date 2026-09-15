@@ -44,7 +44,7 @@ exports.sendSignupOtp = async (req, res) => {
         port: 465,
         auth: {
             user: process.env.GMAIL_USER,
-            pass: "omzd rsxw zwql xvrb"
+            pass: process.env.GMAIL_USER_PASS
         }
     })
 
