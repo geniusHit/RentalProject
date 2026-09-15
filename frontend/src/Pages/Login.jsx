@@ -51,7 +51,7 @@ const Login = () => {
 
             const result = await login.json();
 
-            if (result?.success == false) {
+            if (result?.success !== true) {
                 throw new Error("Password is incorrect")
             }
 
