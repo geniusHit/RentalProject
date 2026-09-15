@@ -433,7 +433,7 @@ exports.createTestPaymentLink = async (req, res) => {
             send_email: false
         },
         link_meta: {
-            return_url: `https://rental-project-sigma.vercel.app/catalog`
+            return_url: `https://rental-project-seven.vercel.app//catalog`
         }
     };
 
