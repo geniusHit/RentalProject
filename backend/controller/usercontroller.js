@@ -68,7 +68,7 @@ exports.addUser = async (req, res) => {
     const saltRounds = 10;
     console.log("req.body : ", req.body)
     const hashedPassword = await bcrypt.hash(req.body.password, saltRounds)
-    const user = await new usersModel({...req.body, password: hashedPassword})
+    const user = await new usersModel({ ...req.body, password: hashedPassword })
     const result = await user.save();
 
     res.send(result)
@@ -138,16 +138,22 @@ exports.loginUser = async (req, res) => {
     try {
         const user = await usersModel.findOne({ email: req.body.email })
         const match = await bcrypt.compare(req.body.password, user?.password)
-        const userId = user._id.toString()
-        const currentLogin = await usersModel.findOne({ _id: userId })
-        const currentLoginIPS = currentLogin.loggedInIPS;
-        const newLoginIPS = currentLoginIPS.filter((el) => el.IP !== req.body.IP)
-        const newIPS = [...newLoginIPS, { IP: req.body.IP, expireAt: req.body.expiry }]
-        const loginInSystem = await usersModel.findByIdAndUpdate(userId, { loggedInIPS: newIPS })
-        const token = jwt.sign({ name: user.name, email: user.email, phone: user.phone, password: user.password, city: user.city, address: user.address }, SECRET, { expiresIn: "1h" })
-        const decodedToken = jwt.verify(token, SECRET)
+        console.log(match)
+        if (match === true) {
+            const userId = user._id.toString()
+            const currentLogin = await usersModel.findOne({ _id: userId })
+            const currentLoginIPS = currentLogin.loggedInIPS;
+            const newLoginIPS = currentLoginIPS.filter((el) => el.IP !== req.body.IP)
+            const newIPS = [...newLoginIPS, { IP: req.body.IP, expireAt: req.body.expiry }]
+            const loginInSystem = await usersModel.findByIdAndUpdate(userId, { loggedInIPS: newIPS })
+            const token = jwt.sign({ name: user.name, email: user.email, phone: user.phone, password: user.password, city: user.city, address: user.address }, SECRET, { expiresIn: "1h" })
+            const decodedToken = jwt.verify(token, SECRET)
 
-        res.send({ ...user, jwtToken: token })
+            res.send({ ...user, jwtToken: token })
+        }
+        else{
+            return res.status(400).json({ success: false, message: "Password is incorrect" })
+        }
     }
     catch (err) {
         return res.status(400).json({ success: false, message: err.message })
