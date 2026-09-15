@@ -39,11 +39,11 @@ exports.sendSignupOtp = async (req, res) => {
     a = Math.ceil(a * 999999)
 
     const auth = nodemailer.createTransport({
-        service: "smtp.gmail.com",
+        host: "smtp.gmail.com",
         secure: true,
         port: 465,
         auth: {
-            user: "rohitthakur792002@gmail.com",
+            user: process.env.GMAIL_USER,
             pass: "omzd rsxw zwql xvrb"
         }
     })
@@ -55,14 +55,31 @@ exports.sendSignupOtp = async (req, res) => {
         html: `Your Otp is ${a}`
     }
 
-    auth.sendMail(receiver, (error, emailResponse) => {
-        if (error){
-            console.log(error)
-            return;
-        }
-        console.log("success!")
-        res.send({signup_otp: a})
-    })
+    try {
+        await auth.sendMail(receiver);
+
+        console.log("OTP sent successfully");
+
+        res.status(200).send({
+            signup_otp: otp
+        });
+
+    } catch (error) {
+        console.log("Email error:", error);
+
+        res.status(500).send({
+            message: "Failed to send OTP"
+        });
+    }
+
+    // auth.sendMail(receiver, (error, emailResponse) => {
+    //     if (error){
+    //         console.log(error)
+    //         return;
+    //     }
+    //     console.log("success!")
+    //     res.send({signup_otp: a})
+    // })
 }
 
 exports.addUser = async (req, res) => {
@@ -283,7 +300,7 @@ exports.addRentalItems = async (req, res) => {
     })
     const result = await item.save()
 
-    const updateQuantity = await productsModel.findOneAndUpdate({sku: sku}, {quantity: (quantity-1)})
+    const updateQuantity = await productsModel.findOneAndUpdate({ sku: sku }, { quantity: (quantity - 1) })
 
     res.send({ message: "Product added to Rental Items" })
 }
@@ -516,11 +533,11 @@ exports.logout = async (req, res) => {
 }
 
 exports.deleteProduct = async (req, res) => {
-    try{
+    try {
         const deleteProd = await productsModel.findByIdAndDelete(req.body._id)
         res.send(deleteProd)
     }
-    catch(err){
+    catch (err) {
         return res.status(400).json({ success: false, message: "Unable to delete item." })
     }
 }
