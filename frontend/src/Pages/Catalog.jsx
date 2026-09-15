@@ -155,6 +155,8 @@ const Catalog = () => {
         setProducts(result)
     }
 
+    console.log("products : ", products)
+
     useEffect(() => {
         searchProds()
     }, [])
@@ -171,9 +173,9 @@ const Catalog = () => {
 
             <br /><br />
 
-            <div className={`${products.length > 0 ? "products" : ""}`}>
+            <div className="products">
                 {
-                    products.length > 0 ? products.map((prod, index) => {
+                    products.map((prod, index) => {
                         console.log("prod : ", prod)
                         return <div className='product' key={index}>
                             <div className='img' style={{
@@ -203,12 +205,6 @@ const Catalog = () => {
                             </div>
                         </div>
                     })
-                        :
-                        <div className='spinner-box'>
-                            <div className="spinner-border" role="status">
-                                <span className="visually-hidden">Loading...</span>
-                            </div>
-                        </div>
                 }
             </div>
 
