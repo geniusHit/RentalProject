@@ -16,7 +16,7 @@ const VendorDashboard = () => {
     const API_URL =
         window.location.hostname === "localhost"
             ? "http://localhost:8000"
-            : "https://rental-project-b2ps.vercel.app";
+            : "https://rental-project-backend.vercel.app";
 
     console.log("API_URL : ", API_URL)
 
