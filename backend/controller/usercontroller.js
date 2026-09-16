@@ -563,3 +563,30 @@ exports.deleteProduct = async (req, res) => {
         return res.status(400).json({ success: false, message: "Unable to delete item." })
     }
 }
+
+const adminSchema = mongoose.Schema({
+    email: {
+        type: String
+    },
+    password: {
+        type: String
+    }
+})
+const adminModel = mongoose.model("admin", adminSchema)
+exports.loginAdmin = async (req, res) => {
+    try{
+        const {email, password} = req.body;
+        const admin = await adminModel.findOne({email: email, password: password})
+
+        if(admin?.email){
+            res.json({...admin, success: true})
+        }
+        else{
+            res.json({success: false})
+        }
+    }
+    catch(err){
+        console.log(err)
+        res.status(400).json({success: false, message: `Unable to login. ${err}`})
+    }
+}

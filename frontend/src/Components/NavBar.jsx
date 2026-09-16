@@ -148,7 +148,7 @@ const NavBar = () => {
 
                             <NavDropdown.Item
                                 as={Link}
-                                to="/vendor-dashboard"
+                                to="/vendor-login"
                                 onClick={closeMenu}
                             >
                                 Vendor Dashboard

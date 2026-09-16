@@ -64,4 +64,6 @@ router.post("/logout", controller.logout)
 
 router.post("/delete-product", controller.deleteProduct)
 
+router.post("/login-admin", controller.loginAdmin)
+
 module.exports = router

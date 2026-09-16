@@ -10,6 +10,7 @@ import MyRentalItems from './Pages/MyRentalItems'
 import HowItWorks from './Pages/HowItWorks'
 import Contact from './Pages/Contact'
 import MyProfile from './Pages/MyProfile'
+import VendorLogin from './Vendor/VendorLogin'
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
         <Route path='/how-it-works' element={<HowItWorks />} />
         <Route path='/contact' element={<Contact />} />
         <Route path='/myprofile' element={<MyProfile />} />
+        <Route path='/vendor-login' element={<VendorLogin />} />
       </Routes>
     </BrowserRouter>
   )
