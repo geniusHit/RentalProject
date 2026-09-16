@@ -59,11 +59,7 @@ const Signup = () => {
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({
-                        ...userData,
-                        IP: IP,
-                        expiry: expiry
-                    })
+                    body: JSON.stringify(userData)
                 });
 
                 const result = await user.json();
@@ -102,9 +98,10 @@ const Signup = () => {
                         className="login-left"
                     >
                         <div className="overlay-content">
-                            <Link to="/">
+                            <Link to="/" className="signup-logo">
                                 <div className="logo">
-                                    <img src={Logo} width="200" />
+                                    {/* <img src={Logo} width="200" /> */}
+                                    RentHive
                                 </div>
                             </Link>
 

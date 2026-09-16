@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import {
-    FaArrowRight,
     FaTruck,
     FaHeadset,
     FaShieldAlt,
+    FaArrowRight,
 } from "react-icons/fa";
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 import "../Style/LoginStyle.css";
-import Logo from '../assets/Logo.png'
 import { Link } from "react-router-dom"
 import livingRoom from '../assets/ChatGPT Image Jun 11, 2026, 05_03_13 PM.png'
 import Footer from "../Components/Footer";
@@ -19,9 +18,7 @@ const Login = () => {
         window.location.hostname === "localhost"
             ? "http://localhost:8000"
             : "https://rental-project-backend.vercel.app";
-
     const { register, handleSubmit, formState: { errors }, setError } = useForm()
-    const [isLogin, setIsLogin] = useState(false)
     const [IP, setIP] = useState("")
     const navigate = useNavigate()
 
@@ -39,7 +36,7 @@ const Login = () => {
         expiry.setDate(expiry.getDate() + 1);
 
         try {
-            var login = await fetch(`${API_URL}/login-user`, {
+            const loginResponse = await fetch(`${API_URL}/login-user`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -47,21 +44,22 @@ const Login = () => {
                 body: JSON.stringify({ ...data, IP: IP, expiry: expiry })
             })
 
-            const result = await login.json();
+            const result = await loginResponse.json();
 
             if (result?.success !== true) {
-                throw new Error("Password is incorrect")
+                setError("password", {
+                    message: "Incorrect password"
+                })
+                throw new Error("Incorrect password")
             }
 
-            setIsLogin(true);
             navigate("/")
         }
         catch (err) {
             console.log(err)
             setError("password", {
-                message: "Password is incorrect"
+                message: "Incorrect password"
             })
-            return
         }
     }
 
@@ -118,14 +116,16 @@ const Login = () => {
                                         <input
                                             type="password"
                                             placeholder="Enter your password"
-                                            {...register("password")}
+                                            {...register("password", {
+                                                required: { value: true, message: "Password is required" },
+                                            })}
                                         />
 
                                         <div className="error">{errors?.password?.message}</div>
                                     </div>
                                 </div>
 
-                                <button className="login-btn">
+                                <button className="login-btn" type="submit">
                                     Login <FaArrowRight />
                                 </button>
 

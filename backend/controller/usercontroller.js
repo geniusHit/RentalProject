@@ -23,14 +23,6 @@ const users = mongoose.Schema({
     address: {
         type: String
     },
-    loggedInIPS: [{
-        IP: {
-            type: String,
-        },
-        expireAt: {
-            type: Date,
-        }
-    }],
 })
 const usersModel = mongoose.model("users", users)
 exports.sendSignupOtp = async (req, res) => {
@@ -158,17 +150,17 @@ exports.loginUser = async (req, res) => {
         const deletePreviousLogins = await loggedUsersModel.deleteMany({ IP: IP })
 
         const user = await usersModel.findOne({ email: email })
-        if (user.length > 0) {
-            const match = bcrypt.compare(req.body, user?.password)
+        if (user?.email) {
+            const match = await bcrypt.compare(password, user?.password)
 
             if (match === true) {
                 const newLoggedUser = await new loggedUsersModel({ email: email, IP: IP, expiry: expiry })
                 await newLoggedUser.save()
 
-                res.json({ ...newLoggedUser, success: true })
+                res.send({ ...user, success: true })
             }
             else {
-                res.json({ success: false })
+                res.json({ success: false, message: "Incorrect password." })
             }
         }
     }

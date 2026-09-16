@@ -107,6 +107,11 @@ body {
     margin-bottom: 24px;
 }
 
+.input-group:not(.has-validation)>:not(:last-child):not(.dropdown-toggle):not(.dropdown-menu):not(.form-floating){
+    border-top-right-radius: 10px !important;
+    border-bottom-right-radius: 10px !important;
+}
+
 .input-box {
     width: 100%;
 }
@@ -281,6 +286,12 @@ body {
     text-decoration: none;
     font-size: 20pt;
     text-align: left !important;
+}
+
+.signup-logo{
+    color: rgb(31, 58, 31);
+    text-decoration: none;
+    font-size: 20pt;
 }
 
 @media (max-width: 992px) {
