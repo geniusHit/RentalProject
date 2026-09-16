@@ -571,13 +571,10 @@ textarea {
     .sidebar {
         width: 100%;
         min-width: 100%;
-
         height: auto;
         position: relative;
-
         border-right: none;
         border-bottom: 1px solid #e5e5e5;
-
         padding: 15px;
     }
 
