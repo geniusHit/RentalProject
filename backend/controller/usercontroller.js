@@ -535,7 +535,7 @@ exports.savePaymentToken = async (req, res) => {
 exports.getPaymentToken = async (req, res) => {
     try {
         const token = await paymentTokenModel.find({})
-        res.send(token)
+        res.json(token)
     }
     catch (err) {
         return res.status(400).json({ success: false, message: `Unable to get payment token. ${err.message}` })

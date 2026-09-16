@@ -166,6 +166,7 @@ const Catalog = () => {
     console.log("paymentStatus : ", paymentStatus)
     console.log("itemMessage : ", itemMessage)
     console.log("showMessage : ", showMessage)
+    console.log("paymentToken : ", paymentToken)
 
     return (
         <div>
