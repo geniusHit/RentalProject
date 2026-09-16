@@ -69,7 +69,7 @@ const Catalog = () => {
     }, [paymentStatus])
 
     const rentNow = async (product) => {
-        if (loginUser !== undefined) {
+        if (loginUser!==undefined && loginUser?.loggedUser!==null) {
             const payment = await fetch(`${API_URL}/create-test-payment-link`, {
                 method: "POST",
                 headers: {
