@@ -121,7 +121,7 @@ const Contact = () => {
 
                             <h3>Visit Us</h3>
 
-                            <p>Mohali, Punjab</p>
+                            <p>Mohali Punjab, India</p>
 
                             <span>Mon - Sat : 10 AM - 7 PM</span>
 

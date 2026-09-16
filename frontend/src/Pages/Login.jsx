@@ -75,11 +75,12 @@ const Login = () => {
                         className="login-left"
                     >
                         <div className="overlay-content">
-                            <Link to="/">
-                                <div className="logo">
-                                    <img src={Logo} width="200" />
+                            <Link to="/" className="logo-link">
+                                <div className="login-logo">
+                                    {/* <img src={Logo} width="200" /> */}
+                                    RentHive
                                 </div>
-                            </Link>
+                            </Link><br />
 
                             <div className="welcome-text">
                                 <h2>Welcome Back!</h2>
@@ -167,10 +168,6 @@ const Login = () => {
             </div>
 
             <Footer />
-
-            <div className="copyright">
-                © 2024 FurniRent. All rights reserved.
-            </div>
         </>
     );
 };

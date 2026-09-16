@@ -61,6 +61,10 @@ body {
     margin-top: 5px;
 }
 
+.logo-link {
+    color: #1f3a1f;
+}
+
 .welcome-text {
     margin-bottom: 140px;
 }
@@ -113,7 +117,7 @@ body {
 
 .input-box input {
     width: 100%;
-    
+
     outline: none;
     font-size: 15px;
 }
@@ -215,10 +219,8 @@ body {
     font-weight: 600;
 }
 
-
-
 .features {
-    
+
     grid-template-columns: repeat(3, 1fr);
     gap: 25px;
     margin-top: 30px;
@@ -227,7 +229,8 @@ body {
     border-radius: 20px;
 }
 
-.features-2, .features-3 {
+.features-2,
+.features-3 {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 25px;
@@ -274,7 +277,11 @@ body {
     padding: 10px;
 }
 
-
+.logo-link {
+    text-decoration: none;
+    font-size: 20pt;
+    text-align: left !important;
+}
 
 @media (max-width: 992px) {
     .login-container {
@@ -294,12 +301,30 @@ body {
     }
 }
 
-@media (max-width:750px){
-    .features-2{
+@media (max-width:750px) {
+    .features-2 {
         grid-template-columns: none;
     }
 
     .login-box {
         padding: 20px;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .welcome-text h2 {
+        font-size: 30pt;
+    }
+
+    .welcome-text p {
+        font-size: 15pt;
+    }
+
+    .login-card {
+        padding: 20px 20px;
+    }
+
+    .features-2{
+        padding: 0px;
     }
 }

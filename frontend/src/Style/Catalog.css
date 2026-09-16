@@ -2,7 +2,7 @@
     display: grid;
     grid-template-columns: 18% 18% 18% 18% 18%;
     justify-content: space-between;
-    padding: 0px 30px;
+    padding: 0px 10px;
     row-gap: 30px;
 }
 
@@ -46,24 +46,61 @@
     gap: 10px;
 }
 
-.search-btn{
+.search-btn {
     width: 100px;
-    margin-left: 20px;
+    margin-left: 10px;
 }
 
-.spinner-box{
+.spinner-box {
     display: flex;
     justify-content: center;
 }
 
-@media screen and (max-width: 750px){
-    .products{
+.search-form {
+    margin: 0 !important;
+    padding: 4px 10px !important;
+}
+
+@media screen and (max-width: 750px) {
+    .products {
         grid-template-columns: 30% 30% 30%;
     }
 }
 
-@media screen and (max-width: 500px){
-    .products{
+@media screen and (max-width: 500px) {
+    .products {
         grid-template-columns: 47% 47%;
+        padding: 0px 10px;
+    }
+
+    .details {
+        font-size: 10px;
+    }
+
+    .prodName {
+        font-size: 12px;
+    }
+
+    .rent input {
+        height: 10px;
+    }
+
+    .rentNowButton {
+        font-size: 10px;
+    }
+
+    .search-form {
+        padding: 4px 10px !important;
+    }
+
+    .search-input {
+        box-shadow: 0px 0px 3px lightgray !important;
+        height: 40px;
+        font-size: 10px;
+    }
+
+    .search-btn {
+        height: 40px;
+        font-size: 10px;
     }
 }

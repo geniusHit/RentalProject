@@ -178,7 +178,7 @@ const Catalog = () => {
                 <input type='submit' className='search-btn' value="Search" />
             </form>
 
-            <br /><br />
+            <br />
 
             <div className="products">
                 {
@@ -192,7 +192,7 @@ const Catalog = () => {
                                 <div className='prodName'>{prod.name}</div>
                                 <div className='price'>₹{prod.price} / month</div>
                                 <div className='available'>Available <b>{prod?.quantity}</b></div>
-                                <div>
+                                <div className='rent'>
                                     <label>Days for Rent</label>
 
                                     <input
@@ -236,13 +236,9 @@ const Catalog = () => {
                 </div>
             }
 
-            <br />
-
             <Footer />
 
-            <div className="copyright">
-                © 2024 FurniRent. All rights reserved.
-            </div>
+            
         </div>
     )
 }

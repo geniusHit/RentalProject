@@ -1,14 +1,9 @@
-'use client';
 import React, { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import livingRoom from '../assets/15adafbb-ddea-45f5-a2ec-afd9008065f0.webp'
 import cimg5 from '../assets/nathan-fertig-FBXuXp57eM0-unsplash.jpg'
 import cimg6 from '../assets/sherzod-gulomov-P0q_HK_-GGM-unsplash (1).jpg'
 import cimg7 from '../assets/spacejoy-RqO6kwm4tZY-unsplash.jpg'
 import cimg8 from '../assets/naomi-hebert-MP0bgaS_d1c-unsplash.jpg'
-import bedroom from '../assets/istockphoto-2185177891-612x612.jpg'
-import office from '../assets/ho-m5-1-1740657447-4ba63.avif'
-import outdoor from '../assets/203.webp'
 import working from '../assets/Screenshot 2026-06-08 193814.png'
 import sofa from "../assets/WSFABCLPC22CFVDO_1.avif"
 import bed from "../assets/WSWB7860ARIGB_1.webp"
@@ -17,7 +12,11 @@ import table from "../assets/3009computertablecopy_fd810c37-4f90-4de3-9e94-22881
 import tv from "../assets/2023-tv-buying-guide-what-is-smart-tv-f00-mo.avif"
 import fridge from "../assets/refer-s-x-s-masthead_mobile3.avif"
 import washingMachine from "../assets/washer-dryer-banner-750x730-1.avif"
-
+import washingMachine2 from "../assets/WashingMachine.png"
+import tv2 from "../assets/TV.png"
+import fridge2 from "../assets/Fridge.png"
+import bed2 from "../assets/Bed.png"
+import table2 from "../assets/Table.png"
 import Carousel from 'bootstrap/js/dist/carousel';
 import NavBar from "../Components/NavBar.jsx"
 import Footer from '../Components/Footer.jsx'
@@ -72,17 +71,20 @@ const Home = () => {
                 </div>
                 <div className="carousel-inner">
                     <div className="carousel-item active">
-                        <img src={cimg5} className="d-block w-100" />
+                        <img src={washingMachine2} className="d-block w-100" />
                     </div>
                     <div className="carousel-item">
-                        <img src={cimg6} className="d-block w-100" />
+                        <img src={tv2} className="d-block w-100" />
                     </div>
                     <div className="carousel-item">
-                        <img src={cimg7} className="d-block w-100" />
+                        <img src={fridge2} className="d-block w-100" />
                     </div>
                     <div className="carousel-item">
-                        <img src={cimg8} className="d-block w-100" />
+                        <img src={bed2} className="d-block w-100" />
                     </div>
+                    {/* <div className="carousel-item">
+                        <img src={table2} className="d-block w-100" />
+                    </div> */}
                 </div>
                 <button style={{ display: "none" }} className="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
                     <span className="carousel-control-prev-icon" aria-hidden="true"></span>

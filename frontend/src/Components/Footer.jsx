@@ -1,9 +1,4 @@
-'use client';
-import React from 'react'
-import Logo from '../assets/Logo.png'
-import { NavLink, Link } from 'react-router-dom'
-import { NavDropdown } from 'react-bootstrap';
-import { FaRegUser } from "react-icons/fa";
+import { Link } from 'react-router-dom'
 import '../Style/FooterStyle.css'
 
 const Footer = () => {
@@ -11,32 +6,29 @@ const Footer = () => {
         <div>
             <footer className="footer">
 
-                <div className="footer-logo">
-                    <img src={Logo} width="200" />
-                </div>
+                <Link to="/" className='footer-logo-link'>
+                    <div className="footer-logo">
+                        RentHive
+                    </div>
+                </Link>
 
                 <div className="footer-column">
                     <h3>Quick Links</h3>
-                    <a href="/">Home</a>
-                    <a href="/">Catalog</a>
-                    <NavLink to="/how-it-works">How It Works</NavLink>
-                    <a href="/">Pricing</a>
-                    <a href="/">Contact</a>
-                </div>
-
-                <div className="footer-column">
-                    <h3>Customer Support</h3>
-                    <a href="/">FAQs</a>
-                    <a href="/">Delivery & Returns</a>
-                    <a href="/">Terms & Conditions</a>
-                    <a href="/">Privacy Policy</a>
+                    <Link to="/">Home</Link>
+                    <Link to="/catalog">Catalog</Link>
+                    <Link to="/how-it-works">How It Works</Link>
+                    <Link to="/contact">Contact</Link>
                 </div>
 
                 <div className="footer-column">
                     <h3>Contact Us</h3>
-                    <p>+91 98765 43210</p>
-                    <p>hello@furnirent.com</p>
-                    <p>Bengaluru, Karnataka, India</p>
+                    <p>+91 88474 82208</p>
+                    <p>rohitthakur792002@gmail.com</p>
+                    <p>Mohali Punjab, India</p>
+                </div>
+
+                <div className="copyright">
+                    © 2024 FurniRent. All rights reserved.
                 </div>
             </footer>
         </div>

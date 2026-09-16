@@ -278,9 +278,6 @@ const Signup = () => {
             </div>
 
             <Footer />
-            <div className="copyright">
-                © 2024 FurniRent. All rights reserved.
-            </div>
         </>
     );
 };
