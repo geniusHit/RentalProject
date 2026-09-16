@@ -4,10 +4,6 @@
     box-sizing: border-box;
 }
 
-body {
-    font-family: "Poppins", sans-serif;
-}
-
 .login-page {
     padding: 25px;
 }
