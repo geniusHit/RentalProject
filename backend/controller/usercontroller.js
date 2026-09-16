@@ -72,7 +72,6 @@ exports.sendSignupOtp = async (req, res) => {
 exports.addUser = async (req, res) => {
     try {
         const saltRounds = 10;
-        console.log("req.body : ", req.body)
         const hashedPassword = await bcrypt.hash(req.body.password, saltRounds)
         const user = await new usersModel({ ...req.body, password: hashedPassword })
         const result = await user.save();
@@ -155,12 +154,10 @@ exports.getProducts = async (req, res) => {
 
 exports.loginUser = async (req, res) => {
     try {
-        console.log("req.body : ", req.body)
         const { email, password, expiry, IP } = req.body;
         const deletePreviousLogins = await loggedUsersModel.deleteMany({ IP: IP })
 
         const user = await usersModel.findOne({ email: email })
-        console.log("user : ", user)
         if (user.length > 0) {
             const match = bcrypt.compare(req.body, user?.password)
 
@@ -394,7 +391,6 @@ exports.deliverItem = async (req, res) => {
 
 exports.createTestPaymentLink = async (req, res) => {
     try {
-        console.log("req.body : ", req.body)
         const url = "https://sandbox.cashfree.com/pg/links";
         const linkId = `link_${Date.now()}`;
         const { email, } = req.body;
@@ -415,8 +411,8 @@ exports.createTestPaymentLink = async (req, res) => {
                 send_email: false
             },
             link_meta: {
-                // return_url: `https://rental-project-opal.vercel.app/catalog`,
-                return_url: `http://localhost:5173/catalog`
+                return_url: `https://rental-project-opal.vercel.app/catalog`,
+                // return_url: `http://localhost:5173/catalog`
             }
         };
 
@@ -507,9 +503,7 @@ const loggedUsersModel = mongoose.model("loggedUsers", loggedUsers)
 
 exports.getLoginUser = async (req, res) => {
     try {
-        console.log("req.body.IP : ", req.body.IP)
         const loggedUser = await loggedUsersModel.findOne({ IP: req.body.IP })
-        console.log("loggedUser : ", loggedUser)
         const user = loggedUser !== null && await usersModel.findOne({ email: loggedUser.email })
 
         res.send({ loggedUser: loggedUser, user: user })

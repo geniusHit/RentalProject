@@ -9,8 +9,6 @@ const MyRentalItems = () => {
             ? "http://localhost:8000"
             : "https://rental-project-backend.vercel.app";
 
-    console.log("API_URL : ", API_URL)
-
     const [products, setProducts] = useState([])
     const [loginUser, setLoginUser] = useState()
     const [IP, setIP] = useState("")
@@ -49,7 +47,6 @@ const MyRentalItems = () => {
             })
 
             const result = await rentalItems.json()
-            console.log(result)
             setProducts(result)
         }
         else {
@@ -63,11 +60,6 @@ const MyRentalItems = () => {
     useEffect(() => {
         IP !== "" && getLoginUser()
     }, [IP])
-
-    // !loginUser?.user?.email && getLoginUser()
-
-    console.log("loginUser : ", loginUser)
-    console.log("products : ", products)
 
     useEffect(() => {
         searchItems()

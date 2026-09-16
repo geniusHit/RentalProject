@@ -18,8 +18,6 @@ const Signup = () => {
             ? "http://localhost:8000"
             : "https://rental-project-backend.vercel.app";
 
-    console.log("API_URL : ", API_URL)
-
     const { register, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
             otp: ""
@@ -32,11 +30,8 @@ const Signup = () => {
     const [userData, setUserData] = useState()
     const [otp, setOtp] = useState()
 
-    console.log("userData : ", userData)
-
     const submit = async (data) => {
         setUserData(data)
-        console.log("data : ", data)
 
         let expiry = new Date();
         expiry.setDate(expiry.getDate() + 1);
@@ -50,17 +45,13 @@ const Signup = () => {
         }) : "";
 
         const otp2 = sendOtp !== "" ? await sendOtp.json() : "";
-        console.log("otp2 : ", otp2)
         otp2 !== "" && setOtp(otp2)
     }
-    console.log(`otp : `, otp)
 
     const submit2 = async (data) => {
         if (Number(data?.otp) === Number(otp?.signup_otp)) {
             let expiry = new Date();
             expiry.setDate(expiry.getDate() + 1);
-
-            console.log("Adding user...")
 
             try {
                 const user = await fetch(`${API_URL}/add-user`, {
@@ -76,8 +67,6 @@ const Signup = () => {
                 });
 
                 const result = await user.json();
-
-                console.log("Add user response:", result);
 
                 if (!user.ok) {
                     console.error("Add user failed:", result);

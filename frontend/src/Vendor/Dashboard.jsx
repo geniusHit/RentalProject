@@ -17,8 +17,6 @@ const VendorDashboard = () => {
             ? "http://localhost:8000"
             : "https://rental-project-backend.vercel.app";
 
-    console.log("API_URL : ", API_URL)
-
     const [activePage, setActivePage] = React.useState("dashboard");
     const browseInput = useRef()
     const { register, handleSubmit } = useForm()

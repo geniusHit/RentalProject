@@ -48,8 +48,6 @@ const Catalog = () => {
         setLoginUser(data)
     }
 
-    console.log("loginUser : ", loginUser)
-
     useEffect(() => {
         getProducts()
         getIP()
@@ -72,8 +70,6 @@ const Catalog = () => {
 
     const rentNow = async (product) => {
         if (loginUser !== undefined) {
-            console.log("rent now is called")
-            console.log("loginUser : ", loginUser)
             const payment = await fetch(`${API_URL}/create-test-payment-link`, {
                 method: "POST",
                 headers: {
@@ -82,7 +78,6 @@ const Catalog = () => {
                 body: JSON.stringify({ ...product, email: loginUser?.user?.email, userName: loginUser?.user?.name })
             })
             const paymentData = await payment.json()
-            console.log("paymentData : ", paymentData)
             setPaymentData(paymentData)
             const savePaymentToken = await fetch(`${API_URL}/save-payment-token`, {
                 method: "POST",
@@ -157,16 +152,9 @@ const Catalog = () => {
         setProducts(result)
     }
 
-    console.log("products : ", products)
-
     useEffect(() => {
         searchProds()
     }, [])
-
-    console.log("paymentStatus : ", paymentStatus)
-    console.log("itemMessage : ", itemMessage)
-    console.log("showMessage : ", showMessage)
-    console.log("paymentToken : ", paymentToken)
 
     return (
         <div>
@@ -183,7 +171,6 @@ const Catalog = () => {
             <div className="products">
                 {
                     products.map((prod, index) => {
-                        console.log("prod : ", prod)
                         return <div className='product' key={index}>
                             <div className='img' style={{
                                 backgroundImage: `url(${API_URL}/uploads/${prod.imageNames[0]})`

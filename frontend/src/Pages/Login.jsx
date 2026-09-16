@@ -20,8 +20,6 @@ const Login = () => {
             ? "http://localhost:8000"
             : "https://rental-project-backend.vercel.app";
 
-    console.log("API_URL : ", API_URL)
-
     const { register, handleSubmit, formState: { errors }, setError } = useForm()
     const [isLogin, setIsLogin] = useState(false)
     const [IP, setIP] = useState("")
