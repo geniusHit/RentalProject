@@ -73,8 +73,8 @@ exports.addUser = async (req, res) => {
     try {
         const saltRounds = 10;
         console.log("req.body : ", req.body)
-        // const hashedPassword = await bcrypt.hash(req.body.password, saltRounds)
-        const user = await new usersModel(req.body)
+        const hashedPassword = await bcrypt.hash(req.body.password, saltRounds)
+        const user = await new usersModel({ ...req.body, password: hashedPassword })
         const result = await user.save();
 
         res.status(200).json(result)
@@ -138,7 +138,7 @@ exports.addProduct = async (req, res) => {
             success: true
         })
     }
-    catch(err){
+    catch (err) {
         res.status(200).json({ success: false, message: `Unable to add product. ${err.message}` })
     }
 }
@@ -156,17 +156,23 @@ exports.getProducts = async (req, res) => {
 exports.loginUser = async (req, res) => {
     try {
         console.log("req.body : ", req.body)
-        const deletePreviousLogins = await loggedUsersModel.deleteMany({ IP: req.body.IP })
-        const user = await usersModel.findOne({ email: req.body.email, password: req.body.password })
-        console.log("user : ", user)
-        if (user?.email) {
-            const newLoggedUser = await new loggedUsersModel({ email: req.body.email, IP: req.body.IP, expiry: req.body.expiry })
-            await newLoggedUser.save()
+        const { email, password, expiry, IP } = req.body;
+        const deletePreviousLogins = await loggedUsersModel.deleteMany({ IP: IP })
 
-            res.json({ ...newLoggedUser, success: true })
-        }
-        else {
-            res.json({ success: false })
+        const user = await usersModel.findOne({ email: email })
+        console.log("user : ", user)
+        if (user.length > 0) {
+            const match = bcrypt.compare(req.body, user?.password)
+
+            if (match === true) {
+                const newLoggedUser = await new loggedUsersModel({ email: email, IP: IP, expiry: expiry })
+                await newLoggedUser.save()
+
+                res.json({ ...newLoggedUser, success: true })
+            }
+            else {
+                res.json({ success: false })
+            }
         }
     }
     catch (err) {

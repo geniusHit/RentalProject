@@ -1,4 +1,3 @@
-'use client';
 import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import NavBar from '../Components/NavBar';

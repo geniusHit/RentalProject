@@ -1,4 +1,3 @@
-'use client';
 import React, { useEffect, useState } from 'react'
 import "../Style/MyRentalItems.css"
 import NavBar from '../Components/NavBar';
