@@ -152,6 +152,8 @@ const Catalog = () => {
         setProducts(result)
     }
 
+    console.log("loginUser : ", loginUser)
+
     useEffect(() => {
         searchProds()
     }, [])

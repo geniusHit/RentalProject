@@ -623,7 +623,6 @@ textarea {
     }
 
     .stats-grid {
-        grid-template-columns: 1fr;
         gap: 12px;
         margin: 20px 0;
     }
