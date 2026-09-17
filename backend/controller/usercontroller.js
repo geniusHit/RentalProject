@@ -403,8 +403,8 @@ exports.createTestPaymentLink = async (req, res) => {
                 send_email: false
             },
             link_meta: {
-                // return_url: `https://rental-project-opal.vercel.app/catalog`,
-                return_url: `http://localhost:5173/catalog`
+                return_url: `https://rental-project-opal.vercel.app/catalog`,
+                // return_url: `http://localhost:5173/catalog`
             }
         };
 

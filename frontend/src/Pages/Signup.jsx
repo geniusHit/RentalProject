@@ -100,7 +100,6 @@ const Signup = () => {
                         <div className="overlay-content">
                             <Link to="/" className="signup-logo">
                                 <div className="logo">
-                                    {/* <img src={Logo} width="200" /> */}
                                     RentHive
                                 </div>
                             </Link>
