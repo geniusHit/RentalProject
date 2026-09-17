@@ -173,12 +173,10 @@ const Catalog = () => {
         })
 
         const images = await imagesResonse.json()
-        setProductImages((prev) => [...prev, images])
+        setProductImages(images)
     }
 
     imageIDs.length > 0 && productImages.length === 0 && getImages();
-
-    console.log(productImages)
 
     const getImageUrl = (imageObj) => {
         productImages.map((item) => {
@@ -200,7 +198,6 @@ const Catalog = () => {
     };
 
     productImages.length>0 && imageUrl.length===0 && getImageUrl();
-    console.log("imageUrl : ", imageUrl)
     
     return (
         <div>
@@ -217,18 +214,14 @@ const Catalog = () => {
             <div className="products">
                 {
                     products.map((prod, index) => {
-                        console.log("prod : ", prod)
                         const currentProductImages = prod?.imageNames.map((image)=> {
                             return imageUrl.filter((image2)=>image2.id===image)
                         })
-                        console.log("currentProductImages : ", currentProductImages)
 
                         return <div className='product' key={index}>
                             {currentProductImages[0][0]?.url && <div className='img' style={{
-                                // backgroundImage: `url(${API_URL}/uploads/${prod.imageNames[0]})`
                                 backgroundImage: `url(${currentProductImages[0][0].url})`
                             }}></div>}
-                            {/* {currentProductImages[0][0]?.url && <img src={`${currentProductImages[0][0]?.url}`} className='img' />} */}
                             <div className='details'>
                                 <div className='prodName'>{prod.name}</div>
                                 <div className='price'>₹{prod.price} / month</div>

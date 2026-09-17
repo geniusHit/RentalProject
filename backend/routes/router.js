@@ -88,7 +88,8 @@ router.post("/login-admin", controller.loginAdmin)
 
 router.post('/images', async (req, res) => {
     try {
-        const image = await ProductImage.findById({_id: req.body.image_ids});
+        const { image_ids } = req.body;
+        const image = await ProductImage.find({_id: { $in: image_ids.map(id => new mongoose.Types.ObjectId(id))}});
         if (!image) {
             return res.status(404).send('Image not found');
         }
