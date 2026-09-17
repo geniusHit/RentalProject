@@ -19,7 +19,7 @@ const VendorDashboard = () => {
 
     const [activePage, setActivePage] = React.useState("dashboard");
     const browseInput = useRef()
-    const { register, handleSubmit } = useForm()
+    const { register, handleSubmit, reset } = useForm()
     const [images, setImages] = useState([])
     const [imageUrls, setImageUrls] = useState([])
     const [rentalProducts, setRentalProducts] = useState([])
@@ -62,6 +62,7 @@ const VendorDashboard = () => {
 
         setShowMessage(true)
         setMessage("Product added.")
+        reset()
     }
 
     const getRentalProducts = async () => {

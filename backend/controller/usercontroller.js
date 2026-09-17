@@ -574,19 +574,19 @@ const adminSchema = mongoose.Schema({
 })
 const adminModel = mongoose.model("admin", adminSchema)
 exports.loginAdmin = async (req, res) => {
-    try{
-        const {email, password} = req.body;
-        const admin = await adminModel.findOne({email: email, password: password})
+    try {
+        const { email, password } = req.body;
+        const admin = await adminModel.findOne({ email: email, password: password })
 
-        if(admin?.email){
-            res.json({...admin, success: true})
+        if (admin?.email) {
+            res.json({ ...admin, success: true })
         }
-        else{
-            res.json({success: false})
+        else {
+            res.json({ success: false })
         }
     }
-    catch(err){
+    catch (err) {
         console.log(err)
-        res.status(400).json({success: false, message: `Unable to login. ${err}`})
+        res.status(400).json({ success: false, message: `Unable to login. ${err}` })
     }
 }

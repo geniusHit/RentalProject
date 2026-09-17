@@ -5,6 +5,7 @@ const multer = require("multer")
 const path = require("path");
 const mongoose = require('mongoose');
 
+router.post("/add-product", controller.addProduct)
 
 const ProductImageSchema = new mongoose.Schema({
     data: Buffer,
@@ -13,16 +14,6 @@ const ProductImageSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now }
 });
 const ProductImage = mongoose.model('ProductImage', ProductImageSchema);
-// router.post("/add-product", controller.addProduct)
-// const storage = multer.diskStorage({
-//     destination: (req, file, cb) => {
-//         cb(null, 'uploads/');
-//     },
-//     filename: (req, file, cb) => {
-//         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-//         cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-//     }
-// });
 const upload = multer({
     storage: multer.memoryStorage(),
     limits: { fileSize: 200 * 1024 * 1024 }
@@ -44,9 +35,8 @@ router.post('/save-product-images', upload.array('image', 10), async (req, res) 
             })
         );
 
-        // Return the image IDs or endpoint URLs to fetch them later
         const imageUrls = savedImages.map(
-            (img) => `/api/images/${img._id}`
+            (img) => `${img._id}`
         );
 
         res.json(imageUrls);
@@ -54,11 +44,6 @@ router.post('/save-product-images', upload.array('image', 10), async (req, res) 
         console.error(error);
         res.status(500).json({ error: 'Failed to save image to MongoDB' });
     }
-    // if (!req.files) {
-    //     return res.send('No file uploaded.');
-    // }
-    // let filesName = req.files.map((file) => file.filename)
-    // res.json(filesName);
 });
 
 router.post("/add-user", controller.addUser)
@@ -100,5 +85,20 @@ router.post("/logout", controller.logout)
 router.post("/delete-product", controller.deleteProduct)
 
 router.post("/login-admin", controller.loginAdmin)
+
+router.post('/images', async (req, res) => {
+    try {
+        const image = await ProductImage.findById({_id: req.body.image_ids});
+        if (!image) {
+            return res.status(404).send('Image not found');
+        }
+
+        res.set('Content-Type', image.contentType);
+        res.set('Cache-Control', 'public, max-age=31536000');
+        res.send(image);
+    } catch (err) {
+        res.status(500).send('Error retrieving image');
+    }
+});
 
 module.exports = router
