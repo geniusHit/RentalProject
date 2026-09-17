@@ -390,7 +390,7 @@ exports.createTestPaymentLink = async (req, res) => {
 
         const payload = {
             link_id: linkId,
-            link_amount: Number(req.body.price),
+            link_amount: Math.floor((Number(req.body.price)/30)*Number(req.body.rentDays)),
             link_currency: "INR",
             link_purpose: "Test payment for project",
             customer_details: {
@@ -403,8 +403,8 @@ exports.createTestPaymentLink = async (req, res) => {
                 send_email: false
             },
             link_meta: {
-                return_url: `https://rental-project-opal.vercel.app/catalog`,
-                // return_url: `http://localhost:5173/catalog`
+                // return_url: `https://rental-project-opal.vercel.app/catalog`,
+                return_url: `http://localhost:5173/catalog`
             }
         };
 

@@ -213,14 +213,10 @@ const Catalog = () => {
             
             <div className="products">
                 {
-                    products.map((prod, index) => {
-                        console.log("prod : ", prod)
-                        
+                    products.map((prod, index) => {                        
                         const currentProductImages = prod?.imageNames.map((image)=> {
                             return imageUrl.filter((image2)=>image2.id===image)
                         })
-
-                        console.log("currentProductImages : ", currentProductImages)
 
                         return <div className='product' key={index}>
                             {currentProductImages[0][0]?.url && <div className='img' style={{
