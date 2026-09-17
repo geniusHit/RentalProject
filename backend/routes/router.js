@@ -97,7 +97,7 @@ router.post('/images', async (req, res) => {
         res.set('Cache-Control', 'public, max-age=31536000');
         res.send(image);
     } catch (err) {
-        res.status(500).send('Error retrieving image');
+        res.status(500).send({success: false, message: 'Error retrieving image'});
     }
 });
 

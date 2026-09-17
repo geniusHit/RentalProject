@@ -202,7 +202,6 @@ const Catalog = () => {
     productImages.length>0 && imageUrl.length===0 && getImageUrl();
     console.log("imageUrl : ", imageUrl)
     
-
     return (
         <div>
             <NavBar />
