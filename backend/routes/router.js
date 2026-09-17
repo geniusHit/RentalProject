@@ -45,6 +45,21 @@ router.post('/save-product-images', upload.array('image', 10), async (req, res) 
         res.status(500).json({ error: 'Failed to save image to MongoDB' });
     }
 });
+router.post('/images', async (req, res) => {
+    try {
+        const { image_ids } = req.body;
+        const image = await ProductImage.find({_id: { $in: image_ids.map(id => new mongoose.Types.ObjectId(id))}});
+        if (!image) {
+            return res.status(404).send('Image not found');
+        }
+
+        res.set('Content-Type', image.contentType);
+        res.set('Cache-Control', 'public, max-age=31536000');
+        res.send(image);
+    } catch (err) {
+        res.status(500).send({success: false, message: 'Error retrieving image'});
+    }
+});
 
 router.post("/add-user", controller.addUser)
 
@@ -85,21 +100,5 @@ router.post("/logout", controller.logout)
 router.post("/delete-product", controller.deleteProduct)
 
 router.post("/login-admin", controller.loginAdmin)
-
-router.post('/images', async (req, res) => {
-    try {
-        const { image_ids } = req.body;
-        const image = await ProductImage.find({_id: { $in: image_ids.map(id => new mongoose.Types.ObjectId(id))}});
-        if (!image) {
-            return res.status(404).send('Image not found');
-        }
-
-        res.set('Content-Type', image.contentType);
-        res.set('Cache-Control', 'public, max-age=31536000');
-        res.send(image);
-    } catch (err) {
-        res.status(500).send({success: false, message: 'Error retrieving image'});
-    }
-});
 
 module.exports = router
