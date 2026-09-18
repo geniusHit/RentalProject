@@ -25,11 +25,11 @@ const Catalog = () => {
     const [imageUrl, setImageUrl] = useState([])
     const navigate = useNavigate()
 
-    const getProducts = async () => {
-        const response = await fetch(`${API_URL}/get-products`)
-        const result = await response.json()
-        setProducts(result)
-    }
+    // const getProducts = async () => {
+    //     const response = await fetch(`${API_URL}/search-products`)
+    //     const result = await response.json()
+    //     setProducts(result)
+    // }
 
     const getIP = async () => {
         const response = await fetch("https://api.ipify.org?format=json");
@@ -51,8 +51,10 @@ const Catalog = () => {
         setLoginUser(data)
     }
 
+    console.log("loginUser : ", loginUser)
+
     useEffect(() => {
-        getProducts()
+        searchProds()
         getIP()
         getPaymentToken()
     }, [])
@@ -73,23 +75,39 @@ const Catalog = () => {
 
     const rentNow = async (product) => {
         if (loginUser !== undefined && loginUser?.loggedUser !== null) {
-            const payment = await fetch(`${API_URL}/create-test-payment-link`, {
+            const isAlreadyRented = await fetch(`${API_URL}/is-already-rented`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({ ...product, email: loginUser?.user?.email, userName: loginUser?.user?.name })
             })
-            const paymentData = await payment.json()
-            setPaymentData(paymentData)
-            const savePaymentToken = await fetch(`${API_URL}/save-payment-token`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ payment_token: paymentData?.payment_token })
-            })
-            window.location.href = paymentData?.link_url;
+
+            const isAlreadyRentedResult = await isAlreadyRented.json()
+
+            if (isAlreadyRentedResult?.success === true) {
+                const payment = await fetch(`${API_URL}/create-test-payment-link`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ ...product, email: loginUser?.user?.email, userName: loginUser?.user?.name })
+                })
+                const paymentData = await payment.json()
+                setPaymentData(paymentData)
+                const savePaymentToken = await fetch(`${API_URL}/save-payment-token`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ payment_token: paymentData?.payment_token })
+                })
+                window.location.href = paymentData?.link_url;
+            }
+            else {
+                setItemMessage(isAlreadyRentedResult?.message)
+                setShowMessage(true)
+            }
         }
         else {
             navigate("/login")
@@ -192,13 +210,15 @@ const Catalog = () => {
             }
 
             const base64 = btoa(binaryString);
-            setImageUrl((prev)=> [...prev, {id:item._id, url:`data:${item.contentType};base64,${base64}`}])
+            setImageUrl((prev) => [...prev, { id: item._id, url: `data:${item.contentType};base64,${base64}` }])
             // return `data:${item.contentType};base64,${base64}`;
         })
     };
 
-    productImages.length>0 && imageUrl.length===0 && getImageUrl();
-    
+    productImages.length > 0 && imageUrl.length === 0 && getImageUrl();
+
+    console.log("paymentData : ", paymentData)
+
     return (
         <div>
             <NavBar />
@@ -210,12 +230,12 @@ const Catalog = () => {
             </form>
 
             <br />
-            
+
             <div className="products">
                 {
-                    products.map((prod, index) => {                        
-                        const currentProductImages = prod?.imageNames.map((image)=> {
-                            return imageUrl.filter((image2)=>image2.id===image)
+                    products.map((prod, index) => {
+                        const currentProductImages = prod?.imageNames.map((image) => {
+                            return imageUrl.filter((image2) => image2.id === image)
                         })
 
                         return <div className='product' key={index}>

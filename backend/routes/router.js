@@ -101,4 +101,6 @@ router.post("/delete-product", controller.deleteProduct)
 
 router.post("/login-admin", controller.loginAdmin)
 
+router.post("/is-already-rented", controller.isAlreadyRented)
+
 module.exports = router

@@ -248,6 +248,21 @@ const rentalItemsSchema = mongoose.Schema({
     }
 })
 const rentalItems = mongoose.model("rentalItems", rentalItemsSchema)
+exports.isAlreadyRented = async (req, res) => {
+    try {
+        const { email, name, userName, sku, quantity } = req.body;
+        const existingProduct = await rentalItems.findOne({ "user.email": email, "user.name": userName, name: name });
+        if (existingProduct) {
+            res.send({ success: false, message: "Product is already in Rental Items!" });
+        }
+        else{
+            res.send({ success: true, message: "" });
+        }
+    }
+    catch (err) {
+        res.status(400).json({ success: false, message: `Unable to add rental items. ${err.message}` })
+    }
+}
 exports.addRentalItems = async (req, res) => {
     try {
         const { email, name, userName, sku, quantity } = req.body;
@@ -390,7 +405,7 @@ exports.createTestPaymentLink = async (req, res) => {
 
         const payload = {
             link_id: linkId,
-            link_amount: Math.floor((Number(req.body.price)/30)*Number(req.body.rentDays)),
+            link_amount: Math.floor((Number(req.body.price) / 30) * Number(req.body.rentDays)),
             link_currency: "INR",
             link_purpose: "Test payment for project",
             customer_details: {
