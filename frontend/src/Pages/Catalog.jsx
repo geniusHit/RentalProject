@@ -51,8 +51,6 @@ const Catalog = () => {
         setLoginUser(data)
     }
 
-    console.log("loginUser : ", loginUser)
-
     useEffect(() => {
         searchProds()
         getIP()
@@ -216,8 +214,6 @@ const Catalog = () => {
     };
 
     productImages.length > 0 && imageUrl.length === 0 && getImageUrl();
-
-    console.log("paymentData : ", paymentData)
 
     return (
         <div>
